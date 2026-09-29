@@ -1,0 +1,48 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/capture
+/.idea
+/.kotlin
+/.minimax
+/sync-contract/build
+
+# Release signing artifacts
+*.jks
+*.keystore
+
+.externalNativeBuild
+.cxx
+local.properties
+
+# Detekt
+config/detekt/detekt-baseline.xml
+build/reports/detekt/
+.hotswan/
+
+# Generated changelog
+app/src/main/assets/changelog.json
+/build
+
+fastlane/report.xml
+fastlane/metadata/**/changelogs/*.bak.*
+
+# Playstore sign config
+app/src/main/assets/adi-registration.properties
+
+# Release signing config
+/keystore.properties
+
+specs/
+.claude/
+.claude/skills/
+.artifacts/
+/fastlane/minus-app-504107-53ece865faf4.json

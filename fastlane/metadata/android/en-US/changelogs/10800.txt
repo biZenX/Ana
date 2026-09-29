@@ -1,0 +1,9 @@
+- refactor: consolidate budget calculations and period rollover handling
+- fix: support concurrent transaction deletions
+- chore: invert and increase saturation on colors calculation
+- feat: subscriptions screen with calendar and due-today focus
+- feat: expand thousands shortcut support for specific currencies
+- refactor: decouple main activity complex fun
+- chore: render correct label when no period is found
+- feat: support unresolved rollover surplus handling
+- fix: enable marquee effect on projection label

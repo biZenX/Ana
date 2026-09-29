@@ -1,0 +1,269 @@
+require "tmpdir"
+default_platform(:android)
+
+platform :android do
+  # Computes the Android `versionCode` for a given version tag string,
+  # matching build.gradle.kts: major * 10_000 + minor * 100 + patch.
+  # Stripped of any pre-release suffix (e.g. `v1.3.4-pre` -> 10304).
+  def version_code_from(version_tag)
+    clean = version_tag.gsub(/^v/, "").split("-")[0]
+    parts = clean.split(".").map(&:to_i)
+    code = (parts[0] || 0) * 10_000 + (parts[1] || 0) * 100 + (parts[2] || 0)
+    code <= 0 ? 1 : code
+  end
+
+  # Walks `git tag --sort=-version:refname` and returns the highest tag
+  # that:
+  #   - is NOT a pre-release (no `-` in the name) — we treat `v1.3.4-pre`
+  #     as invisible when computing a real release's commit range,
+  #   - IS an ancestor of `end_ref` (i.e. reachable from HEAD or the tag).
+  # Returns "" if none found.
+  def latest_non_prerelease_tag_ancestor(end_ref)
+    tags = `git tag --sort=-version:refname`.lines.map(&:strip).reject(&:empty?)
+    tags.each do |tag|
+      next if tag.include?("-") # skip pre-release tags like v1.3.4-pre
+      is_ancestor = system(
+        "git", "merge-base", "--is-ancestor", tag, end_ref,
+        out: File::NULL, err: File::NULL
+      )
+      return tag if is_ancestor
+    end
+    ""
+  end
+
+  # Returns the bulleted changelog body (`- foo\n- bar\n...`) for a given
+  # version_tag, by running `git log` between the previous REAL release
+  # tag and the current ref (the tag itself if it exists, HEAD otherwise).
+  # Pre-release tags like `v1.3.4-pre` are ignored when picking the
+  # previous anchor — `v1.3.4` should always include all commits since
+  # `v1.3.3`, never just those since `v1.3.4-pre`. Robust to the case
+  # where `version_tag` has not been tagged yet (the normal pre-tagging
+  # case during release preparation).
+  def changelog_commits_for(version_tag)
+    end_ref =
+      if `git rev-parse --verify --quiet #{version_tag}^{commit}`.to_s.strip != ""
+        version_tag
+      else
+        "HEAD"
+      end
+
+    previous_tag = latest_non_prerelease_tag_ancestor(end_ref)
+
+    if previous_tag.empty?
+      `git log #{end_ref} --pretty=format:"- %s"`.to_s.strip
+    else
+      `git log #{previous_tag}..#{end_ref} --pretty=format:"- %s"`.to_s.strip
+    end
+  end
+
+  def changelog_path_for(version_tag)
+    "metadata/android/en-US/changelogs/#{version_code_from(version_tag)}.txt"
+  end
+
+  # Google Play rechaza el upload completo si el "whatsnew" de CUALQUIER
+  # locale supera este límite. Chequeamos todos los locales presentes para
+  # el versionCode (en-US, es-ES, los que se agreguen), no sólo en-US.
+  CHANGELOG_CHAR_LIMIT = 500
+
+  def validate_changelog_length!(version_tag)
+    version_code = version_code_from(version_tag)
+    offenders = Dir["metadata/android/*/changelogs/#{version_code}.txt"].filter_map do |path|
+      length = File.read(path).strip.length
+      "  #{path} — #{length} chars (límite #{CHANGELOG_CHAR_LIMIT})" if length > CHANGELOG_CHAR_LIMIT
+    end
+
+    return if offenders.empty?
+
+    UI.user_error!(
+      "Changelog(s) exceden el límite de Google Play:\n#{offenders.join("\n")}\n" \
+      "Editá el/los archivo(s) para acortarlos antes de continuar."
+    )
+  end
+
+  desc "Genera fastlane/metadata/.../changelogs/<versionCode>.txt desde git log entre el tag anterior y el HEAD/tag."
+  desc "Usar ANTES de taggear (ver :prep_release)."
+  lane :generate_changelog do |options|
+    version_tag = options[:version_tag] || ENV["VERSION_TAG"] || `git describe --tags --abbrev=0`.to_s.strip
+    version_tag = "v0.0.0" if version_tag.empty?
+
+    UI.message("Generando changelog para #{version_tag} (Code: #{version_code_from(version_tag)})…")
+    commits = changelog_commits_for(version_tag)
+    commits = "- Minor improvements and bug fixes." if commits.empty?
+
+    path = changelog_path_for(version_tag)
+    FileUtils.mkdir_p(File.dirname(path))
+
+    # Si el .txt ya existe (curado manualmente), hacemos backup con timestamp
+    # para que el dev pueda recuperar el contenido curado si lo prefiere
+    # sobre la regeneración. El .bak es deliberadamente UNTRACKED — vive
+    # solo en la working tree hasta que el dev decida qué hacer.
+    if File.exist?(path)
+      bak = "#{path}.bak.#{Time.now.to_i}"
+      FileUtils.mv(path, bak)
+      UI.important(
+        "Backup de #{path} → #{bak} (por si querés recuperar curation manual)."
+      )
+    end
+
+    File.write(path, commits)
+
+    UI.success("Changelog escrito en #{path}")
+    UI.important(
+      "Editá el archivo si querés curar entradas para el usuario.\n" \
+      "Recordá COMMIT ANTES de taggear (ver :prep_release)."
+    )
+    commits
+  end
+
+  desc "Prepara el release: genera el .txt y muestra los pasos para commitear ANTES de taggear."
+  desc "Mantiene la build determinística - el CI no regenera nada."
+  lane :prep_release do |options|
+    version_tag = options[:version_tag] || ENV["VERSION_TAG"]
+    UI.user_error!("Pasá version_tag como argumento (ej: version_tag:v1.3.4) o seteá VERSION_TAG") if version_tag.nil?
+
+    # Update version.properties
+    version_name = version_tag.gsub(/^v/, "")
+    version_code = version_code_from(version_tag)
+    File.write("../version.properties", "VERSION_NAME=#{version_name}\nVERSION_CODE=#{version_code}\n")
+    UI.success("Actualizado version.properties (Name: #{version_name}, Code: #{version_code})")
+
+    generate_changelog(version_tag: version_tag)
+    txt_path = changelog_path_for(version_tag)
+    validate_changelog_length!(version_tag)
+
+    UI.important(
+      "Próximos pasos manuales (CRUCIAL: commit ANTES del tag):\n" \
+      "  1. Editá #{txt_path} si querés curar entradas para el usuario.\n" \
+      "  2. git add version.properties fastlane/metadata\n" \
+      "  3. git commit -m \"docs(changelog): preparar #{version_tag}\"\n" \
+      "  4. git tag -a #{version_tag} -m \"Release #{version_tag.gsub(/^v/, '')}\"\n" \
+      "  5. git push origin #{version_tag}   # dispara el workflow Release Minus\n" \
+      "\n" \
+      "El CI sólo construye APKs desde el .txt ya comiteado, sin regenerarlo.\n" \
+      "Así IzzyOnDroid (RB checker), F-Droid y un checkout limpio obtienen el mismo APK."
+    )
+  end
+
+  desc "Construye los APKs firmados y crea el Release en GitHub. Asume que el .txt ya está comiteado."
+  lane :publish_github do
+    version_tag = ENV.fetch("VERSION_TAG")
+
+    # Guard: el .txt debe estar comiteado ANTES del tag. Si falta, fallamos
+    # con un mensaje accionable — nunca regeneramos en CI, eso rompe RB.
+    expected_txt = changelog_path_for(version_tag)
+    unless File.exist?(expected_txt)
+      UI.user_error!(
+        "Missing #{expected_txt}. El CI no regenera changelogs a propósito " \
+        "(rompe reproducibilidad frente a un checkout limpio).\n" \
+        "Generálo y commiteálo ANTES de taggear:\n" \
+        "  bundle exec fastlane android generate_changelog version_tag:#{version_tag}\n" \
+        "  git add #{expected_txt} && git commit -m 'docs(changelog): preparar #{version_tag}'\n" \
+        "Y re-taggeá (o mové el tag) para que apunte al commit con el .txt."
+      )
+    end
+
+    # NOTE: assembleWearRelease / assembleFossRelease disparan preBuild,
+    # que a su vez corre :app:generateChangelogKotlin y emite
+    # app/build/generated/source/changelog/GeneratedChangelog.kt en forma
+    # determinística a partir del .txt ya comiteado. El source set está
+    # registrado en app/build.gradle.kts:
+    #
+    #   android.sourceSets["main"].kotlin.srcDir(
+    #     layout.buildDirectory.dir("generated/source/changelog")
+    #   )
+    #   tasks.named("preBuild").configure { dependsOn(generateChangelogKotlin) }
+    #
+    # No hay paso intermedio de JSON / assets/changelog.json - el objeto
+    # Kotlin es la capa de datos del runtime (ChangelogRepository.kt).
+    gradle(task: ":app:assembleWearRelease")
+    gradle(task: ":app:assembleFossRelease")
+
+    # Standalone Wear OS APK from the :wear module — the app that runs ON the
+    # watch (com.google.android.wearable.standalone=true). Signed with the same
+    # release key as :app (shared applicationId). Its Gradle output is
+    # Minus-Watch-v<x>.apk, distinct from :app's wear-flavor Minus-WearOS-v<x>.apk,
+    # so both attach to the same Release without a filename collision.
+    gradle(task: ":wear:assembleRelease")
+
+    apk_paths = Dir[
+      File.expand_path("../app/build/outputs/apk/{wear,foss}/release/*.apk", __dir__)
+    ].select { |path| File.exist?(path) }
+    apk_paths += Dir[
+      File.expand_path("../wear/build/outputs/apk/release/*.apk", __dir__)
+    ].select { |path| File.exist?(path) }
+    UI.user_error!("No se encontraron APKs generados por Gradle") if apk_paths.empty?
+
+    repo = ENV.fetch("GITHUB_REPOSITORY", "biZenX/Ana")
+
+    # Create the Release if missing; otherwise refresh its assets. Either path
+    # leaves the tagged release carrying all three signed APKs, and CI re-runs
+    # stay idempotent.
+    header_url = "https://raw.githubusercontent.com/#{repo}/#{version_tag}/assets/minus-header-update.png"
+    notes_file = File.join(Dir.tmpdir, "minus-release-notes-#{version_tag}.md")
+    File.write(notes_file, <<~MD)
+      <img src="#{header_url}" width="240">
+
+      ## What's new
+
+      #{File.read(expected_txt).strip}
+
+    MD
+
+    begin
+      sh(
+        "gh", "release", "create", version_tag, *apk_paths,
+        "--repo", repo,
+        "--title", "Minus #{version_tag}",
+        "--notes-file", notes_file,
+        "--generate-notes"
+      )
+    rescue => e
+      raise e unless e.to_s.include?("already exists")
+      UI.important("Release #{version_tag} already exists on GitHub — refreshing assets.")
+      sh("gh", "release", "upload", version_tag, *apk_paths, "--repo", repo, "--clobber")
+    end
+  end
+
+  desc "Builds and uploads the AAB to Google Play"
+  lane :deploy_play_store do |options|
+    track = options[:track] || "internal"
+
+    # Ensure changelogs exist
+    version_tag = ENV["VERSION_TAG"] || `git describe --tags --abbrev=0`.to_s.strip
+    expected_txt = changelog_path_for(version_tag)
+    unless File.exist?(expected_txt)
+      UI.user_error!("Missing #{expected_txt}. Run prep_release or generate_changelog first.")
+    end
+    validate_changelog_length!(version_tag)
+
+    # Build the App Bundle
+    gradle(task: ":app:bundleWearRelease")
+
+    # Upload to Play Store with idempotency check
+    begin
+      upload_to_play_store(
+        track: track,
+        aab: "app/build/outputs/bundle/wearRelease/app-wear-release.aab",
+        skip_upload_apk: true,
+        skip_upload_screenshots: true,
+        skip_upload_images: true,
+        metadata_path: "fastlane/metadata/android"
+      )
+    rescue => e
+      if e.to_s.include?("already been used")
+        UI.important("Version code already exists on Play Store. Skipping AAB upload and updating metadata only.")
+        upload_to_play_store(
+          track: track,
+          version_code: version_code_from(version_tag),
+          skip_upload_aab: true,
+          skip_upload_apk: true,
+          skip_upload_screenshots: true,
+          skip_upload_images: true,
+          metadata_path: "fastlane/metadata/android"
+        )
+      else
+        raise e
+      end
+    end
+  end
+end

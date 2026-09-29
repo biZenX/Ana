@@ -1,0 +1,1 @@
+Register expenses, calculate and make reminders for your recurring expenses

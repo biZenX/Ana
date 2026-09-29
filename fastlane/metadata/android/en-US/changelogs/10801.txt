@@ -1,0 +1,5 @@
+- feat: support deleting past periods and dynamic archived totals
+- chore: rename comment and note CSV headers to category and extra_note
+- feat: add upcoming reminders and quick actions for recurring expenses
+- chore: censor financial amounts across UI components
+- feat: add budget calculation formula breakdown dialog

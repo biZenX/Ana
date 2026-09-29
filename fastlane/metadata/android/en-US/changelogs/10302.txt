@@ -1,0 +1,6 @@
+- chore: fix changelog generation for missing tags and add APK naming
+- chore: add changelog for 1.3.3
+- chore: change app generation file
+- chore: updated README file
+- feat: add more currencies & enhanced currency dialog (#68)
+- fix: send the state for the budget split on main screen (#67)
