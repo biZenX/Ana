@@ -1,0 +1,298 @@
+package com.wafeer.app.presentation.ui.budget.controller
+
+import android.content.Context
+import com.google.common.truth.Truth.assertThat
+import com.wafeer.app.R
+import com.wafeer.app.domain.model.BudgetPeriod
+import com.wafeer.app.domain.model.BudgetSettings
+import com.wafeer.app.domain.model.RecurrentFrequency
+import com.wafeer.app.domain.model.Transaction
+import com.wafeer.app.presentation.ui.budget.ApplyTransactionResult
+import com.wafeer.app.presentation.ui.budget.controller.TransactionActionsController.TransactionAction
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+class TransactionActionsControllerTest {
+    private val context: Context = mockk {
+        every { getString(R.string.expense_queued_for_next_period) } returns "Expense queued for next period"
+        every { getString(R.string.history_snackbar_save_transaction_failed) } returns "Could not save transaction"
+    }
+
+    private class FakeHandler : TransactionHandler {
+        var applyResult: ApplyTransactionResult = ApplyTransactionResult.InvalidInput
+        var applyRecurrentResult: Boolean = false
+        var deleteResult: Result<Unit> = Result.success(Unit)
+        var restoreResult: Result<Unit> = Result.success(Unit)
+        var editCalls: MutableList<Transaction> = mutableListOf()
+
+        override suspend fun apply(
+            input: String,
+            isCalculation: Boolean,
+            isRecurrentEnabled: Boolean,
+            isCreditEnabled: Boolean,
+            isWalletIncomeEnabled: Boolean,
+            comment: String,
+            note: String,
+            budgetSettings: BudgetSettings?,
+            resolveActivePeriodId: suspend () -> Long,
+        ): ApplyTransactionResult = applyResult
+
+        override suspend fun applyRecurrent(
+            pendingAmount: BigDecimal?,
+            pendingComment: String,
+            frequency: RecurrentFrequency,
+            endDate: LocalDate,
+            subscriptionDay: Int?,
+            resolveActivePeriodId: suspend () -> Long,
+            isCredit: Boolean,
+            fallbackComment: String,
+        ): Boolean = applyRecurrentResult
+
+        override suspend fun delete(transaction: Transaction): Result<Unit> = deleteResult
+        override suspend fun restore(transaction: Transaction): Result<Unit> = restoreResult
+        override suspend fun edit(transaction: Transaction): Result<Unit> {
+            editCalls.add(transaction)
+            return Result.success(Unit)
+        }
+    }
+
+    private fun newController(handler: FakeHandler = FakeHandler()) =
+        TransactionActionsController(handler = handler, context = context)
+
+    private fun sampleTransaction() = Transaction(
+        id = 1L,
+        amount = BigDecimal("12.34"),
+        comment = "Coffee",
+        date = LocalDateTime.of(2026, 1, 1, 9, 0),
+    )
+
+    private fun sampleSettings() = BudgetSettings(
+        totalBudget = BigDecimal("1000.00"),
+        period = BudgetPeriod.MONTHLY,
+        startDate = LocalDate.of(2026, 1, 1),
+        endDate = LocalDate.of(2026, 1, 30),
+        currencyCode = "USD",
+        daysInPeriod = 30,
+    )
+
+    @Test
+    fun `when_handler_returns_invalid_input_then_no_actions_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { applyResult = ApplyTransactionResult.InvalidInput }
+        )
+
+        val actions = controller.apply(
+            input = "abc",
+            isCalculation = false,
+            isRecurrentEnabled = false,
+            isCreditEnabled = false,
+            comment = "",
+            budgetSettings = sampleSettings(),
+            resolveActivePeriodId = { 1L },
+        )
+
+        assertThat(actions).isEmpty()
+    }
+
+    @Test
+    fun `when_handler_returns_added_then_clear_input_clear_editor_flags_and_added_action_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { applyResult = ApplyTransactionResult.Added(normalizedInput = "12.34") }
+        )
+
+        val actions = controller.apply(
+            input = "12.34",
+            isCalculation = false,
+            isRecurrentEnabled = false,
+            isCreditEnabled = false,
+            comment = "Lunch",
+            budgetSettings = sampleSettings(),
+            resolveActivePeriodId = { 1L },
+        )
+
+        assertThat(actions).containsExactly(
+            TransactionAction.ClearInput,
+            TransactionAction.ClearEditorFlags,
+            TransactionAction.TransactionAdded,
+        )
+    }
+
+    @Test
+    fun `when_handler_returns_queued_for_next_period_then_clear_input_clear_flags_queued_and_show_message_actions_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { applyResult = ApplyTransactionResult.QueuedForNextPeriod(normalizedInput = "12.34") }
+        )
+
+        val actions = controller.apply(
+            input = "12.34",
+            isCalculation = false,
+            isRecurrentEnabled = false,
+            isCreditEnabled = false,
+            comment = "Lunch",
+            budgetSettings = sampleSettings(),
+            resolveActivePeriodId = { 1L },
+        )
+
+        assertThat(actions).containsExactly(
+            TransactionAction.ClearInput,
+            TransactionAction.ClearEditorFlags,
+            TransactionAction.TransactionQueuedForNextPeriod,
+            TransactionAction.ShowMessage("Expense queued for next period"),
+        )
+    }
+
+    @Test
+    fun `when_handler_returns_show_recurrent_dialog_then_open_dialog_action_is_emitted_with_amount_and_comment`() = runTest {
+        val amount = BigDecimal("12.34")
+        val normalized = "12.34"
+        val controller = newController(
+            FakeHandler().apply {
+                applyResult = ApplyTransactionResult.ShowRecurrentDialog(
+                    normalizedInput = normalized,
+                    amount = amount,
+                )
+            }
+        )
+
+        val actions = controller.apply(
+            input = "12.34",
+            isCalculation = false,
+            isRecurrentEnabled = true,
+            isCreditEnabled = false,
+            comment = "Subscription",
+            budgetSettings = sampleSettings(),
+            resolveActivePeriodId = { 1L },
+        )
+
+        assertThat(actions).containsExactly(
+            TransactionAction.OpenRecurrentDialog(
+                normalizedInput = normalized,
+                amount = amount,
+                comment = "Subscription",
+            ),
+        )
+    }
+
+    @Test
+    fun `when_handler_returns_failed_then_show_message_action_is_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply {
+                applyResult = ApplyTransactionResult.Failed(RuntimeException("Database error"))
+            }
+        )
+
+        val actions = controller.apply(
+            input = "12.34",
+            isCalculation = false,
+            isRecurrentEnabled = false,
+            isCreditEnabled = false,
+            comment = "Coffee",
+            budgetSettings = sampleSettings(),
+            resolveActivePeriodId = { 1L },
+        )
+
+        assertThat(actions).containsExactly(
+            TransactionAction.ShowMessage("Could not save transaction"),
+        )
+    }
+
+    @Test
+    fun `when_handler_reports_applied_recurrent_successfully_then_clear_input_action_is_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { applyRecurrentResult = true }
+        )
+
+        val actions = controller.applyRecurrent(
+            frequency = RecurrentFrequency.MONTHLY,
+            endDate = LocalDate.of(2027, 1, 1),
+            subscriptionDay = 15,
+            pendingAmount = BigDecimal("9.99"),
+            pendingComment = "Subscription",
+            resolveActivePeriodId = { 1L },
+            isCredit = false,
+            fallbackComment = "Monthly subscription without name",
+        )
+
+        assertThat(actions).containsExactly(TransactionAction.ClearInput)
+    }
+
+    @Test
+    fun `when_handler_reports_recurrent_failure_then_no_actions_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { applyRecurrentResult = false }
+        )
+
+        val actions = controller.applyRecurrent(
+            frequency = RecurrentFrequency.MONTHLY,
+            endDate = LocalDate.of(2027, 1, 1),
+            subscriptionDay = null,
+            pendingAmount = BigDecimal("9.99"),
+            pendingComment = "Subscription",
+            resolveActivePeriodId = { 1L },
+            isCredit = false,
+            fallbackComment = "Monthly subscription without name",
+        )
+
+        assertThat(actions).isEmpty()
+    }
+
+    @Test
+    fun `when_handler_reports_delete_success_then_no_actions_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { deleteResult = Result.success(Unit) }
+        )
+
+        val actions = controller.delete(sampleTransaction())
+
+        assertThat(actions).isEmpty()
+    }
+
+    @Test
+    fun `when_handler_reports_delete_failure_then_delete_failed_action_is_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { deleteResult = Result.failure(RuntimeException("boom")) }
+        )
+
+        val actions = controller.delete(sampleTransaction())
+
+        assertThat(actions).containsExactly(TransactionAction.DeleteFailed)
+    }
+
+    @Test
+    fun `when_handler_reports_restore_success_then_no_actions_are_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { restoreResult = Result.success(Unit) }
+        )
+
+        val actions = controller.restore(sampleTransaction())
+
+        assertThat(actions).isEmpty()
+    }
+
+    @Test
+    fun `when_handler_reports_restore_failure_then_restore_failed_action_is_emitted`() = runTest {
+        val controller = newController(
+            FakeHandler().apply { restoreResult = Result.failure(RuntimeException("boom")) }
+        )
+
+        val actions = controller.restore(sampleTransaction())
+
+        assertThat(actions).containsExactly(TransactionAction.RestoreFailed)
+    }
+
+    @Test
+    fun `when_edit_is_called_then_handler_receives_the_transaction`() = runTest {
+        val handler = FakeHandler()
+        val controller = newController(handler)
+        val transaction = sampleTransaction()
+
+        controller.edit(transaction)
+
+        assertThat(handler.editCalls).containsExactly(transaction)
+    }
+}

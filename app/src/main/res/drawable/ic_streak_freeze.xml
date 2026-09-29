@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Shield Base -->
+    <path
+        android:fillColor="#4EA8DE"
+        android:pathData="M12,2L4,5V11C4,16.5 7.4,21.7 12,23C16.6,21.7 20,16.5 20,11V5L12,2Z"/>
+    <!-- Ice / Crystal Core -->
+    <path
+        android:fillColor="#E0F7FA"
+        android:pathData="M12,5L6,7.5V11C6,15.2 8.6,19.2 12,20.5C15.4,19.2 18,15.2 18,11V7.5L12,5Z"/>
+    <!-- Snowflake / Freeze Motif -->
+    <path
+        android:strokeColor="#0288D1"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M12,8V18M8,10.5L16,15.5M8,15.5L16,10.5"/>
+</vector>

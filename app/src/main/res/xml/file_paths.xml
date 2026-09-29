@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path
+        name="csv_cache"
+        path="exports/" />
+    <cache-path
+        name="bug_report_cache"
+        path="bug_reports/" />
+    <cache-path
+        name="apk_updates"
+        path="updates/" />
+</paths>

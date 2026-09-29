@@ -1,0 +1,1 @@
+Registre gastos, calcula y crea recordatorios para tus gastos recurrentes.

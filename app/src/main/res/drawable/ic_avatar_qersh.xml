@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Gold Coin Body -->
+    <path
+        android:fillColor="#F5A623"
+        android:pathData="M24,4A20,20 0 1,0 24,44A20,20 0 1,0 24,4Z"/>
+    <!-- Coin Rim -->
+    <path
+        android:strokeColor="#FFD15C"
+        android:strokeWidth="2"
+        android:pathData="M24,7A17,17 0 1,0 24,41A17,17 0 1,0 24,7Z"/>
+    <!-- Minimalist Flame Crown on Top -->
+    <path
+        android:fillColor="#FF7A00"
+        android:pathData="M24,2C23,4 21,5 20,6.5C21.5,7 23,6 24,8C25,6 26.5,7 28,6.5C27,5 25,4 24,2Z"/>
+    <!-- Inner Flame Core -->
+    <path
+        android:fillColor="#FFD000"
+        android:pathData="M24,4C23.5,5 22.5,5.5 22,6C23,6.5 23.5,6 24,7C24.5,6 25,6.5 26,6C25.5,5.5 24.5,5 24,4Z"/>
+    <!-- Confident Eyes -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M18,20A2.5,2.5 0 1,0 18,25A2.5,2.5 0 1,0 18,20Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17.5,21A1,1 0 1,0 17.5,23A1,1 0 1,0 17.5,21Z"/>
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M30,20A2.5,2.5 0 1,0 30,25A2.5,2.5 0 1,0 30,20Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M29.5,21A1,1 0 1,0 29.5,23A1,1 0 1,0 29.5,21Z"/>
+    <!-- Gentle Smile -->
+    <path
+        android:strokeColor="#1A1A1A"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M21,29Q24,32 27,29"/>
+    <!-- Growth Arc / Star -->
+    <path
+        android:fillColor="#FFD15C"
+        android:pathData="M24,12L25,14L27,14.5L25.5,16L26,18L24,17L22,18L22.5,16L21,14.5L23,14Z"/>
+</vector>

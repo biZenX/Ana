@@ -1,0 +1,65 @@
+package com.wafeer.app.presentation.ui.screenshot
+
+import androidx.compose.runtime.Composable
+import app.cash.paparazzi.DeviceConfig
+import app.cash.paparazzi.Paparazzi
+import com.android.ide.common.rendering.api.SessionParams
+import com.wafeer.app.presentation.ui.settings.SettingsUiState
+import com.wafeer.app.presentation.ui.settings.features.FeatureLabScreen
+import com.wafeer.app.presentation.ui.theme.WafeerTheme
+import org.junit.Rule
+import org.junit.Test
+import java.util.Locale
+
+class FeatureLabScreenshotTest {
+    @get:Rule
+    val paparazzi = Paparazzi(
+        deviceConfig = DeviceConfig.PIXEL_5,
+        renderingMode = SessionParams.RenderingMode.SHRINK,
+        maxPercentDifference = 10.0,
+    )
+
+    @Test
+    fun featureLabScreen() {
+        Locale.setDefault(Locale.US)
+
+        paparazzi.snapshot {
+            WafeerTheme {
+                FeatureLabContent()
+            }
+        }
+    }
+
+    @Test
+    fun featureLabScreen_darkTheme() {
+        Locale.setDefault(Locale.US)
+
+        paparazzi.snapshot {
+            WafeerTheme(darkTheme = true) {
+                FeatureLabContent()
+            }
+        }
+    }
+
+    @Composable
+    private fun FeatureLabContent() {
+        FeatureLabScreen(
+            state = SettingsUiState(
+                isCreditQuickToggleEnabled = true,
+                showPastTransactions = true,
+                isCategoryPickerDirectPopupEnabled = false,
+                isCategoryGridModeEnabled = false,
+                isExtraNoteEnabled = true,
+                isNewCategoryTagEnabled = true,
+            ),
+            onCreditQuickToggle = {},
+            onShowPastTransactionsToggle = {},
+            onCategoryPickerDirectPopupToggle = {},
+            onCategoryGridModeToggle = {},
+            onExtraNoteToggle = {},
+            onReserveUpcomingChargesToggle = {},
+            onNewCategoryTagToggle = {},
+            onBack = {},
+        )
+    }
+}
