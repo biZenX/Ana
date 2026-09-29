@@ -171,9 +171,9 @@ android {
             if (output != null) {
                 val flavorName = name.replaceFirstChar { it.titlecase() }
                 output.outputFileName = if (flavorName.contains("wear", ignoreCase = true)) {
-                    "Minus-WearOS-v$appVersionName.apk"
+                    "Wafeer-WearOS-v$appVersionName.apk"
                 } else {
-                    "Minus-v$appVersionName.apk"
+                    "Wafeer-v$appVersionName.apk"
                 }
             }
         }

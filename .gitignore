@@ -18,6 +18,7 @@
 # Release signing artifacts
 *.jks
 *.keystore
+*.apk
 
 .externalNativeBuild
 .cxx
