@@ -190,6 +190,7 @@ fun Editor(
     onRecurrentToggle: (Boolean) -> Unit = {},
     onCreditToggle: (Boolean) -> Unit = {},
     onWalletIncomeToggle: (Boolean) -> Unit = {},
+    onDismissTip: (Int) -> Unit = {},
     showCreditQuickToggleFeature: Boolean = false,
     extraNoteEnabled: Boolean = false,
     newCategoryTagEnabled: Boolean = false,
@@ -676,6 +677,7 @@ fun Editor(
                     uiState = uiState,
                     onCreateCategory = onCreateCategory,
                     newCategoryTagEnabled = newCategoryTagEnabled,
+                    onDismissTip = onDismissTip,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -1166,6 +1168,7 @@ private fun IdleContent(
     uiState: BudgetUiState,
     onCreateCategory: suspend (String) -> Boolean = { true },
     newCategoryTagEnabled: Boolean = false,
+    onDismissTip: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val cursorVisible = remember { mutableStateOf(true) }
@@ -1193,6 +1196,9 @@ private fun IdleContent(
 
     var tipDismissedState by rememberSaveable { mutableStateOf(sessionTipDismissed) }
     var dismissedIdsState by rememberSaveable { mutableStateOf(sessionDismissedTipIds.toSet()) }
+    val effectiveDismissed = remember(dismissedIdsState, uiState.dismissedFinancialTipIds, sessionDismissedTipIds) {
+        dismissedIdsState + uiState.dismissedFinancialTipIds + sessionDismissedTipIds
+    }
 
     val activeTip: ContextualFinancialTip? = remember(
         uiState.financialTipsEnabled,
@@ -1201,7 +1207,7 @@ private fun IdleContent(
         uiState.creditOwed,
         uiState.transactions,
         uiState.hasUnresolvedRolloverSurplus,
-        dismissedIdsState,
+        effectiveDismissed,
         tipDismissedState,
     ) {
         if (!uiState.financialTipsEnabled || tipDismissedState || sessionTipDismissed ||
@@ -1214,12 +1220,14 @@ private fun IdleContent(
         val periodTotalDays = budgetState?.periodTotalDays ?: 30
         val creditOwed = uiState.creditOwed ?: BigDecimal.ZERO
         val transactions = uiState.transactions
+        val totalRemaining = totalBudget.subtract(totalSpent)
+        val budgetSpentRatio = if (totalBudget > BigDecimal.ZERO) totalSpent.divide(totalBudget, 4, java.math.RoundingMode.HALF_UP).toFloat() else 0f
+        val periodProgressRatio = if (periodTotalDays > 0) (periodTotalDays - daysRemaining).toFloat() / periodTotalDays else 0f
 
         // Trigger 1 (Violating Tip 1: "لا تنفق أكثر مما تكسب"):
-        // Fired ONLY when the user is ACTUALLY in deficit / overbudget:
-        val isActualDeficit = remainingToday < BigDecimal.ZERO ||
-            (budgetState?.isOverBudget == true && totalBudget > BigDecimal.ZERO && totalSpent > totalBudget)
-        if (isActualDeficit && 1 !in dismissedIdsState) {
+        // Fired ONLY when the entire period budget is actually exhausted/exceeded:
+        val isActualDeficit = totalBudget > BigDecimal.ZERO && (totalSpent > totalBudget || budgetState?.isOverBudget == true)
+        if (isActualDeficit && 1 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 1,
                 titleRes = R.string.financial_tip_1_title,
@@ -1233,7 +1241,7 @@ private fun IdleContent(
         // Fired when the user is accumulating consumer credit card debt (> 20% of budget or multiple credit charges)
         val creditTransactionsCount = transactions.count { it.isCredit }
         if (creditOwed > BigDecimal.ZERO && (creditTransactionsCount >= 2 || (totalBudget > BigDecimal.ZERO && creditOwed >= totalBudget.multiply(BigDecimal("0.20"))))) {
-            if (3 !in dismissedIdsState) {
+            if (3 !in effectiveDismissed) {
                 return@remember ContextualFinancialTip(
                     id = 3,
                     titleRes = R.string.financial_tip_3_title,
@@ -1245,10 +1253,10 @@ private fun IdleContent(
         }
 
         // Trigger 6 (Violating Tip 6: "ارفع دخلك قبل أن ترفع مستوى معيشتك"):
-        // Fired when there is a disproportionately large single purchase (> 40% of total budget)
+        // Fired when there is a disproportionately large single purchase (> 50% of total budget and >= 250)
         val largestExpense = transactions.filter { it.amount > BigDecimal.ZERO && !it.isRecurrent }.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
-        if (totalBudget > BigDecimal.ZERO && largestExpense >= totalBudget.multiply(BigDecimal("0.40")) && largestExpense > BigDecimal("50")) {
-            if (6 !in dismissedIdsState) {
+        if (totalBudget > BigDecimal.ZERO && largestExpense >= totalBudget.multiply(BigDecimal("0.50")) && largestExpense >= BigDecimal("250")) {
+            if (6 !in effectiveDismissed) {
                 return@remember ContextualFinancialTip(
                     id = 6,
                     titleRes = R.string.financial_tip_6_title,
@@ -1260,11 +1268,9 @@ private fun IdleContent(
         }
 
         // Trigger 2 (Violating Tip 2: "احتفظ باحتياطي للطوارئ"):
-        // Fired when more than half the period remains, but over 65% of the total budget has been consumed
-        val periodProgressRatio = if (periodTotalDays > 0) (periodTotalDays - daysRemaining).toFloat() / periodTotalDays else 0f
-        val budgetSpentRatio = if (totalBudget > BigDecimal.ZERO) totalSpent.divide(totalBudget, 4, java.math.RoundingMode.HALF_UP).toFloat() else 0f
-        if (daysRemaining > 5 && periodProgressRatio < 0.5f && budgetSpentRatio >= 0.65f) {
-            if (2 !in dismissedIdsState) {
+        // Fired when more than half the period remains, but over 70% of the total budget has been consumed
+        if (daysRemaining > 5 && periodProgressRatio < 0.5f && budgetSpentRatio >= 0.70f) {
+            if (2 !in effectiveDismissed) {
                 return@remember ContextualFinancialTip(
                     id = 2,
                     titleRes = R.string.financial_tip_2_title,
@@ -1276,25 +1282,22 @@ private fun IdleContent(
         }
 
         // Trigger 5 (Opportunity for Tip 5: "استثمر جزءاً من دخلك"):
-        // Fired when user has surplus rollover savings or significant daily surplus
-        if (uiState.hasUnresolvedRolloverSurplus || (dailyLimit > BigDecimal.ZERO && remainingToday >= dailyLimit.multiply(BigDecimal("2.0")))) {
-            if (5 !in dismissedIdsState) {
-                return@remember ContextualFinancialTip(
-                    id = 5,
-                    titleRes = R.string.financial_tip_5_title,
-                    bodyRes = R.string.financial_tip_5_body,
-                    icon = Icons.Rounded.Savings,
-                    isWarning = false,
-                )
-            }
+        // Fired when user has surplus rollover savings from past period
+        if (uiState.hasUnresolvedRolloverSurplus && 5 !in effectiveDismissed) {
+            return@remember ContextualFinancialTip(
+                id = 5,
+                titleRes = R.string.financial_tip_5_title,
+                bodyRes = R.string.financial_tip_5_body,
+                icon = Icons.Rounded.Savings,
+                isWarning = false,
+            )
         }
 
         // Trigger 4 (Opportunity for Tip 4: "لا تعتمد على مصدر دخل واحد إلى الأبد"):
-        // Fired ONLY when approaching end of period (1..5 days left) with tight balance and no secondary income recorded.
-        if (daysRemaining in 1..5 && remainingToday > BigDecimal.ZERO && dailyLimit > BigDecimal.ZERO &&
-            remainingToday < dailyLimit.multiply(BigDecimal("0.5")) &&
+        // Fired ONLY at the very end of period (1..2 days left) when remaining budget is exhausted and no secondary income recorded.
+        if (daysRemaining in 1..2 && totalRemaining <= BigDecimal.ZERO &&
             transactions.none { it.amount < BigDecimal.ZERO } &&
-            4 !in dismissedIdsState
+            4 !in effectiveDismissed
         ) {
             return@remember ContextualFinancialTip(
                 id = 4,
@@ -1312,7 +1315,7 @@ private fun IdleContent(
             val commentLower = tx.comment.lowercase()
             speculationKeywords.any { kw -> commentLower.contains(kw) }
         }
-        if (hasSpeculationExpense && 7 !in dismissedIdsState) {
+        if (hasSpeculationExpense && 7 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 7,
                 titleRes = R.string.financial_tip_7_title,
@@ -1329,7 +1332,7 @@ private fun IdleContent(
             val commentLower = tx.comment.lowercase()
             discountKeywords.any { kw -> commentLower.contains(kw) }
         }
-        if (hasDiscountExpense && 8 !in dismissedIdsState) {
+        if (hasDiscountExpense && 8 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 8,
                 titleRes = R.string.financial_tip_8_title,
@@ -1342,7 +1345,7 @@ private fun IdleContent(
         // Trigger 10 (Violating Tip 10: "تدقيق الاشتراكات الدورية" - Subscription Audit):
         // Fired when user has 4 or more recurring expenses registered
         val recurrentCount = transactions.count { it.isRecurrent }
-        if (recurrentCount >= 4 && 10 !in dismissedIdsState) {
+        if (recurrentCount >= 4 && 10 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 10,
                 titleRes = R.string.financial_tip_10_title,
@@ -1359,7 +1362,7 @@ private fun IdleContent(
             val commentLower = tx.comment.lowercase()
             impulseKeywords.any { kw -> commentLower.contains(kw) }
         }
-        if (hasImpulseExpense && 9 !in dismissedIdsState) {
+        if (hasImpulseExpense && 9 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 9,
                 titleRes = R.string.financial_tip_9_title,
@@ -1370,9 +1373,9 @@ private fun IdleContent(
         }
 
         // Trigger 11 (Violating Tip 11: "الحذر من تضخم نمط الحياة" - Lifestyle Inflation):
-        // Fired when user received extra income (wallet deposit) but today's non-recurrent spend consumed more than 80% of it
+        // Fired when user received extra income (wallet deposit) but total spend in period consumed more than 80% of it
         val extraIncomeSum = transactions.filter { it.amount < BigDecimal.ZERO }.sumOf { it.amount.abs() }
-        if (extraIncomeSum > BigDecimal.ZERO && spentToday >= extraIncomeSum.multiply(BigDecimal("0.80")) && 11 !in dismissedIdsState) {
+        if (extraIncomeSum > BigDecimal.ZERO && totalSpent >= extraIncomeSum.multiply(BigDecimal("0.80")) && 11 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 11,
                 titleRes = R.string.financial_tip_11_title,
@@ -1383,25 +1386,18 @@ private fun IdleContent(
         }
 
         // Trigger 12 (Tip 12: "تكلفة الفرصة البديلة" - Opportunity Cost):
-        // Fired when remaining budget is tight (< 20% of total budget) and today spent is non-zero
-        if (totalBudget > BigDecimal.ZERO && remainingToday > BigDecimal.ZERO && remainingToday < totalBudget.multiply(BigDecimal("0.20")) && spentToday > BigDecimal.ZERO && 12 !in dismissedIdsState) {
+        // Fired ONLY when total period remaining budget is genuinely tight (< 15% of total budget) and spent ratio >= 85%
+        if (totalBudget > BigDecimal.ZERO && totalRemaining > BigDecimal.ZERO &&
+            totalRemaining < totalBudget.multiply(BigDecimal("0.15")) &&
+            budgetSpentRatio >= 0.85f &&
+            spentToday > BigDecimal.ZERO &&
+            12 !in effectiveDismissed
+        ) {
             return@remember ContextualFinancialTip(
                 id = 12,
                 titleRes = R.string.financial_tip_12_title,
                 bodyRes = R.string.financial_tip_12_body,
                 icon = Icons.Rounded.Savings,
-                isWarning = false,
-            )
-        }
-
-        // Trigger 13 (Tip 13: "قاعدة الأوعية المالية الثلاثة" - Three-Bucket System):
-        // Fired when budget is healthy with good surplus (> 50% of budget remains and daysRemaining in 1..15)
-        if (totalBudget > BigDecimal.ZERO && daysRemaining in 1..15 && budgetSpentRatio < 0.4f && 13 !in dismissedIdsState) {
-            return@remember ContextualFinancialTip(
-                id = 13,
-                titleRes = R.string.financial_tip_13_title,
-                bodyRes = R.string.financial_tip_13_body,
-                icon = Icons.Rounded.AccountBalance,
                 isWarning = false,
             )
         }
@@ -1413,7 +1409,7 @@ private fun IdleContent(
             val commentLower = tx.comment.lowercase()
             luxuryKeywords.any { kw -> commentLower.contains(kw) }
         }
-        if (hasLuxuryExpense && 14 !in dismissedIdsState) {
+        if (hasLuxuryExpense && 14 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 14,
                 titleRes = R.string.financial_tip_14_title,
@@ -1424,8 +1420,9 @@ private fun IdleContent(
         }
 
         // Trigger 15 (Tip 15: "حساب التكلفة الكاملة قبل اتخاذ قرار كبير" - Total Cost of Ownership):
-        // Fired when spending >= 40% of total budget
-        if (totalBudget > BigDecimal.ZERO && spentToday >= totalBudget.multiply(BigDecimal("0.40")) && 15 !in dismissedIdsState) {
+        // Fired when a single purchase is a major financial decision (>= 50% of total budget and >= 500)
+        val largestSingleExpense = transactions.filter { it.amount > BigDecimal.ZERO && !it.isRecurrent }.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
+        if (totalBudget > BigDecimal.ZERO && largestSingleExpense >= totalBudget.multiply(BigDecimal("0.50")) && largestSingleExpense >= BigDecimal("500") && 15 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 15,
                 titleRes = R.string.financial_tip_15_title,
@@ -1437,7 +1434,7 @@ private fun IdleContent(
 
         // Trigger 16 (Tip 16: "وضع حد واضح لما يمكنك تحمّله" - Clear Spending Ceiling):
         // Fired when remaining budget is critically low (spent >= 85%) and days remain (> 5)
-        if (totalBudget > BigDecimal.ZERO && daysRemaining > 5 && budgetSpentRatio >= 0.85f && 16 !in dismissedIdsState) {
+        if (totalBudget > BigDecimal.ZERO && daysRemaining > 5 && budgetSpentRatio >= 0.85f && 16 !in effectiveDismissed) {
             return@remember ContextualFinancialTip(
                 id = 16,
                 titleRes = R.string.financial_tip_16_title,
@@ -1549,6 +1546,7 @@ private fun IdleContent(
                             }
                             IconButton(
                                 onClick = {
+                                    onDismissTip(activeTip.id)
                                     dismissedIdsState = dismissedIdsState + activeTip.id
                                     sessionDismissedTipIds.add(activeTip.id)
                                     tipDismissedState = true

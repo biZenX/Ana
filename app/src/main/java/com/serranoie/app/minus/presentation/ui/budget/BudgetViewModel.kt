@@ -213,6 +213,7 @@ class BudgetViewModel @Inject constructor(
             activeSpendingDays = userSettings.activeSpendingDays,
             budgetAlertThresholdPercent = userSettings.budgetAlertThresholdPercent,
             financialTipsEnabled = userSettings.financialTipsEnabled,
+            dismissedFinancialTipIds = userSettings.dismissedFinancialTipIds,
         )
     }.catch { error ->
         logcat(TAG) { "Error in uiState pipeline: ${error.asLog()}" }
@@ -523,6 +524,13 @@ class BudgetViewModel @Inject constructor(
                 EditorIntent.SetWalletIncomeEnabled(intent.enabled),
                 hasCreditCardCutoffDay = uiState.value.budgetSettings?.creditCardCutoffDay != null,
             )
+            is BudgetEditorIntent.DismissFinancialTip -> handleDismissFinancialTip(intent.tipId)
+        }
+    }
+
+    private fun handleDismissFinancialTip(tipId: Int) {
+        viewModelScope.launch {
+            settingsRepository.dismissFinancialTip(tipId)
         }
     }
 

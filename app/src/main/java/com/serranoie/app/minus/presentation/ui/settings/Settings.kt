@@ -64,6 +64,8 @@ import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material.icons.rounded.Science
+import androidx.compose.material.icons.rounded.Lightbulb
+import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
@@ -163,6 +165,9 @@ fun Settings(
     onExportCsv: () -> Unit = {},
     onImportCsv: () -> Unit = {},
     onResetTutorial: () -> Unit = {},
+    financialTipsEnabled: Boolean = true,
+    onFinancialTipsToggle: (Boolean) -> Unit = {},
+    onResetDismissedTips: () -> Unit = {},
     onBugReportClick: () -> Unit = {},
     onNavigateToChangelog: () -> Unit = {},
     onNavigateToAppearance: () -> Unit = {},
@@ -401,7 +406,7 @@ fun Settings(
                             view.toggleFeedback()
                             onResetTutorial()
                         },
-                        position = PaddedListItemPosition.Last,
+                        position = PaddedListItemPosition.Middle,
                         modifier = Modifier.testTag("SettingsResetTutorialItem")
                     ) {
                         SettingsLeadingIcon(icon = Icons.Rounded.TipsAndUpdates)
@@ -417,6 +422,51 @@ fun Settings(
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                        }
+                    }
+
+                    SettingsToggleItem(
+                        icon = Icons.Rounded.Lightbulb,
+                        title = stringResource(R.string.settings_financial_tips_title),
+                        description = stringResource(R.string.settings_financial_tips_subtitle),
+                        checked = financialTipsEnabled,
+                        onToggle = {
+                            view.toggleFeedback()
+                            onFinancialTipsToggle(!financialTipsEnabled)
+                        },
+                        expandDescription = false,
+                        position = if (financialTipsEnabled) PaddedListItemPosition.Middle else PaddedListItemPosition.Last,
+                        modifier = Modifier.testTag("SettingsFinancialTipsToggle")
+                    )
+
+                    if (financialTipsEnabled) {
+                        CustomPaddedListItem(
+                            onClick = {
+                                view.toggleFeedback()
+                                onResetDismissedTips()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    context.getString(R.string.settings_reset_tips_toast),
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            position = PaddedListItemPosition.Last,
+                            modifier = Modifier.testTag("SettingsResetDismissedTipsItem")
+                        ) {
+                            SettingsLeadingIcon(icon = Icons.Rounded.RestartAlt)
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(R.string.settings_reset_tips_title),
+                                    style = MaterialTheme.typography.bodyMediumEmphasized,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = stringResource(R.string.settings_reset_tips_subtitle),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
                 }

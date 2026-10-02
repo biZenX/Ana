@@ -137,4 +137,8 @@ interface SettingsRepository {
     suspend fun setBudgetAlertThreshold(percent: Int)
 
     suspend fun setFinancialTipsEnabled(enabled: Boolean)
+
+    suspend fun dismissFinancialTip(tipId: Int)
+
+    suspend fun resetDismissedFinancialTips()
 }

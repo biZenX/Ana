@@ -1508,6 +1508,13 @@ private fun MainScreenEditorSection(
                 ),
             )
         },
+        onDismissTip = { tipId ->
+            actions.onProcessIntent(
+                MainScreenUiIntent.ProcessBudgetEditorIntent(
+                    BudgetEditorIntent.DismissFinancialTip(tipId),
+                ),
+            )
+        },
         showCreditQuickToggleFeature = featureFlags.showCreditQuickToggleFeature,
         extraNoteEnabled = featureFlags.extraNoteEnabled,
         newCategoryTagEnabled = featureFlags.newCategoryTagEnabled,

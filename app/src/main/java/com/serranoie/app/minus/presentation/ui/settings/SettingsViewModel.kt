@@ -72,6 +72,7 @@ data class SettingsUiState(
     val periodMappingMode: PeriodMappingMode = PeriodMappingMode.ACTIVE_BUDGET,
     val savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
     val creditCardCutoffDay: Int? = null,
+    val financialTipsEnabled: Boolean = true,
 )
 
 sealed interface SettingsUiEffect {
@@ -206,7 +207,8 @@ class SettingsViewModel @Inject constructor(
             isCensored = isCensored,
             periodMappingMode = settings.periodMappingMode,
             savingsPreferences = settings.savingsPreferences,
-            creditCardCutoffDay = budgetSettings?.creditCardCutoffDay
+            creditCardCutoffDay = budgetSettings?.creditCardCutoffDay,
+            financialTipsEnabled = settings.financialTipsEnabled,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -495,6 +497,18 @@ class SettingsViewModel @Inject constructor(
     fun onResetTutorial() {
         viewModelScope.launch {
             settingsRepository.resetTutorials()
+        }
+    }
+
+    fun setFinancialTipsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setFinancialTipsEnabled(enabled)
+        }
+    }
+
+    fun resetDismissedFinancialTips() {
+        viewModelScope.launch {
+            settingsRepository.resetDismissedFinancialTips()
         }
     }
 

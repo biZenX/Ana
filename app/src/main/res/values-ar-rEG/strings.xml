@@ -793,4 +793,9 @@
     <string name="changelog_rating_desc">لو تطبيق وفير بيساعدك تظبط ميزانيتك وتحافظ على قرشك، تقييمك بكلمة حلوة على المتجر بيشجعنا نطور أكتر وأكتر!</string>
     <string name="changelog_rating_button">تقييم التطبيق على المتجر</string>
     <string name="notification_action_view_budget">عرض الميزانية</string>
+    <string name="settings_financial_tips_title">النصائح المالية التوجيهية</string>
+    <string name="settings_financial_tips_subtitle">عرض إرشادات وتوجيهات مالية ذكية في شاشة المصروف عند الحاجة</string>
+    <string name="settings_reset_tips_title">إعادة إظهار النصائح المستبعدة</string>
+    <string name="settings_reset_tips_subtitle">إعادة تفعيل كافة النصائح اللي لغيتها قبل كده</string>
+    <string name="settings_reset_tips_toast">تمت إعادة تفعيل كل النصائح بنجاح</string>
 </resources>

@@ -30,4 +30,5 @@ sealed interface BudgetEditorIntent : BudgetUiIntent {
     data object FinishBudgetEarly : BudgetEditorIntent
     data class UpdateAllowanceDays(val enabled: Boolean, val days: Set<Int>) : BudgetEditorIntent
     data class SetWalletIncomeEnabled(val enabled: Boolean) : BudgetEditorIntent
+    data class DismissFinancialTip(val tipId: Int) : BudgetEditorIntent
 }

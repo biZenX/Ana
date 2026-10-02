@@ -55,6 +55,7 @@ data class BudgetUiState(
     val activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
     val budgetAlertThresholdPercent: Int = 80,
     val financialTipsEnabled: Boolean = true,
+    val dismissedFinancialTipIds: Set<Int> = emptySet(),
     val isWalletIncomeEnabled: Boolean = false,
 ) {
     companion object {

@@ -43,6 +43,7 @@ data class UserSettings(
     val activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
     val budgetAlertThresholdPercent: Int = 80,
     val financialTipsEnabled: Boolean = true,
+    val dismissedFinancialTipIds: Set<Int> = emptySet(),
 ) {
     companion object {
         const val DEFAULT_NOTIFICATION_HOUR = 9
