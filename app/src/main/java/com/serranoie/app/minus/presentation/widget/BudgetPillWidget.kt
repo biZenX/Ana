@@ -256,13 +256,11 @@ private fun LabelAndAmount(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(verticalAlignment = Alignment.CenterVertically) {
-            Text(
+            WidgetThmanyahText(
                 text = label,
-                style = TextStyle(
-                    color = ColorProvider(color),
-                    fontSize = labelSize,
-                    fontWeight = FontWeight.Medium,
-                ),
+                color = color,
+                fontSize = labelSize,
+                fontWeight = FontWeight.Medium,
                 maxLines = 1,
             )
             if (secondary != null) {
@@ -270,14 +268,13 @@ private fun LabelAndAmount(
             }
         }
         Spacer(modifier = GlanceModifier.width(8.dp))
-        Text(
+        WidgetThmanyahText(
             text = amount,
-            style = TextStyle(
-                color = ColorProvider(color),
-                fontSize = amountSize,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End,
-            ),
+            color = color,
+            fontSize = amountSize,
+            fontWeight = FontWeight.Bold,
+            useDisplayFont = true,
+            textAlign = TextAlign.End,
             maxLines = 1,
             modifier = GlanceModifier.defaultWeight(),
         )
@@ -291,14 +288,12 @@ private fun CentredStatus(label: String, secondary: String?, labelSize: TextUnit
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
+        WidgetThmanyahText(
             text = label,
-            style = TextStyle(
-                color = ColorProvider(color),
-                fontSize = labelSize,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            ),
+            color = color,
+            fontSize = labelSize,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
             maxLines = 1,
             modifier = GlanceModifier.fillMaxWidth(),
         )
@@ -310,14 +305,12 @@ private fun CentredStatus(label: String, secondary: String?, labelSize: TextUnit
 
 @Composable
 private fun SecondaryLine(text: String, color: Color, textAlign: TextAlign) {
-    Text(
+    WidgetThmanyahText(
         text = text,
-        style = TextStyle(
-            color = ColorProvider(color),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Medium,
-            textAlign = textAlign,
-        ),
+        color = color,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Medium,
+        textAlign = textAlign,
         maxLines = 1,
     )
 }

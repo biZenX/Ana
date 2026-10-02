@@ -87,7 +87,7 @@ enum class TopSheetValue {
 fun TopSheetLayout(
     modifier: Modifier = Modifier,
     swipeableState: SwipeableState<TopSheetValue> = rememberSwipeableState(TopSheetValue.HalfExpanded),
-    customHalfHeight: Float? = null,
+    customHalfHeight: () -> Float? = { null },
     customCardHeight: () -> Float? = { null },
     isLockSwipeable: () -> Boolean = { false },
     isLockDraggable: () -> Boolean = { false },
@@ -118,7 +118,7 @@ fun TopSheetLayout(
         contentAlignment = Alignment.TopCenter,
     ) {
         val fullHeight = constraints.maxHeight.toFloat()
-        val halfHeight = customHalfHeight ?: (fullHeight / 2)
+        val halfHeight = customHalfHeight() ?: (fullHeight / 2)
         val expandHeight =
             with(localDensity) { fullHeight - navigationBarHeight.toPx() - 8.dp.toPx() }
         val maxOffset = (-(expandHeight - halfHeight)).coerceAtMost(0f)

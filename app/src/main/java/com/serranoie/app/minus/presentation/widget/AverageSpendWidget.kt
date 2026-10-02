@@ -104,6 +104,7 @@ class AverageSpendWidget : GlanceAppWidget() {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
+                .cornerRadius(24.dp)
                 .background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
                 .padding(8.dp),
@@ -124,37 +125,32 @@ class AverageSpendWidget : GlanceAppWidget() {
                         .padding(horizontal = 20.dp, vertical = 14.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(
+                    WidgetThmanyahText(
                         text = if (hasSpends) averageValue else "-",
-                        style = TextStyle(
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = GlanceTheme.colors.onSurface,
-                            textAlign = TextAlign.Center,
-                        ),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = GlanceTheme.colors.onSurface,
+                        textAlign = TextAlign.Center,
+                        useDisplayFont = true,
                         maxLines = 1,
                     )
 
-                    Text(
+                    WidgetThmanyahText(
                         text = label,
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        ),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = GlanceTheme.colors.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                         maxLines = 1,
                     )
 
                     Spacer(modifier = GlanceModifier.height(8.dp))
 
-                    Text(
+                    WidgetThmanyahText(
                         text = if (hasSpends) "$spendsCount · $daysLabel" else noExpensesLabel,
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        ),
+                        fontSize = 12.sp,
+                        color = GlanceTheme.colors.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                         maxLines = 1,
                     )
                 }

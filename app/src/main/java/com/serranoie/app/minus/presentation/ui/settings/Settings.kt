@@ -55,9 +55,13 @@ import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.NotificationsActive
 import androidx.compose.material.icons.rounded.Publish
 import androidx.compose.material.icons.rounded.QuestionMark
+import androidx.compose.material.icons.rounded.SystemUpdate
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material.icons.rounded.Science
 import androidx.compose.material.icons.rounded.TipsAndUpdates
@@ -151,6 +155,7 @@ fun Settings(
     onRecurrentNotificationTimeChange: (Int, Int) -> Unit,
     onOpenExactAlarmSettings: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
+    onSendTestNotification: () -> Unit = {},
     periodMappingMode: PeriodMappingMode,
     onPeriodMappingModeChange: (PeriodMappingMode) -> Unit,
     savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
@@ -161,6 +166,9 @@ fun Settings(
     onBugReportClick: () -> Unit = {},
     onNavigateToChangelog: () -> Unit = {},
     onNavigateToAppearance: () -> Unit = {},
+    isCheckingUpdate: Boolean = false,
+    onCheckForUpdates: () -> Unit = {},
+    onTestUpdateDialog: () -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     var showRecurrentPaymentsViewModeDialog by remember { mutableStateOf(false) }
@@ -474,6 +482,37 @@ fun Settings(
 
                     CustomPaddedListItem(
                         onClick = {
+                            onSendTestNotification()
+                            view.weakHapticFeedback()
+                        },
+                        position = PaddedListItemPosition.Middle,
+                    ) {
+                        SettingsLeadingIcon(
+                            icon = Icons.Rounded.NotificationsActive,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.settings_test_notification_title),
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            Text(
+                                text = stringResource(R.string.settings_test_notification_subtitle),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Rounded.Send,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
+                    CustomPaddedListItem(
+                        onClick = {
                             showNotificationTimePicker = true
                             view.weakHapticFeedback()
                         },
@@ -714,7 +753,7 @@ fun Settings(
                         onClick = {
                             view.weakHapticFeedback()
                         },
-                        position = PaddedListItemPosition.Last,
+                        position = PaddedListItemPosition.Middle,
                         onLongClick = {
                             context.copyAppEnvironmentMetadataToClipboard()
                             view.toggleFeedback()
@@ -738,6 +777,40 @@ fun Settings(
                                 text = appVersionName,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    CustomPaddedListItem(
+                        onClick = {
+                            view.weakHapticFeedback()
+                            onCheckForUpdates()
+                        },
+                        onLongClick = {
+                            view.weakHapticFeedback()
+                            onTestUpdateDialog()
+                        },
+                        position = PaddedListItemPosition.Last,
+                    ) {
+                        SettingsLeadingIcon(icon = Icons.Rounded.SystemUpdate)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "التحقق من وجود تحديثات",
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                            Text(
+                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "تنزيل وتثبيت أحدث إصدار تلقائياً (مطولاً للتجربة)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        if (isCheckingUpdate) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         }
                     }

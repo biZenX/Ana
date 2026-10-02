@@ -167,6 +167,9 @@ fun BudgetPeriodSheet(
     startInEditMode: Boolean = false,
     pendingExpensesCount: Int = 0,
     onShowFormula: ((BudgetFormulaRequest) -> Unit)? = null,
+    allowanceDaysEnabled: Boolean = false,
+    activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
+    onSaveAllowanceDays: ((Boolean, Set<Int>) -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val currencyFormat = remember(currencyCode) {
@@ -261,6 +264,9 @@ fun BudgetPeriodSheet(
                     isEditMode = false
                 },
                 pendingExpensesCount = pendingExpensesCount,
+                allowanceDaysEnabled = allowanceDaysEnabled,
+                activeSpendingDays = activeSpendingDays,
+                onSaveAllowanceDays = onSaveAllowanceDays,
             )
         } else {
             ViewBudgetContent(
@@ -663,6 +669,9 @@ fun EditBudgetContent(
     buttonLabel: String = stringResource(R.string.apply),
     showPreviousValuesChip: Boolean = true,
     pendingExpensesCount: Int = 0,
+    allowanceDaysEnabled: Boolean = false,
+    activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
+    onSaveAllowanceDays: ((Boolean, Set<Int>) -> Unit)? = null,
 ) {
     val haptic = LocalHapticFeedback.current
     val resources = LocalResources.current
@@ -719,6 +728,8 @@ fun EditBudgetContent(
     var currencyCache by remember(currentCurrency) { mutableStateOf(currentCurrency) }
     var strategyCache by remember(currentStrategy) { mutableStateOf(currentStrategy) }
     var splitModeCache by remember(currentSplitMode) { mutableStateOf(currentSplitMode) }
+    var allowanceDaysEnabledCache by remember(allowanceDaysEnabled) { mutableStateOf(allowanceDaysEnabled) }
+    var activeSpendingDaysCache by remember(activeSpendingDays) { mutableStateOf(activeSpendingDays) }
 
     var showDateSelector by remember { mutableStateOf(false) }
     var showCurrencyPicker by remember { mutableStateOf(false) }
@@ -778,6 +789,7 @@ fun EditBudgetContent(
         logcat("BudgetPeriodSheet") {
             "Apply tapped: budget=$parsedBudget, start=$startCache, end=$endCache, periodDays=$periodDays, resolvedPeriod=$period, strategy=$strategyCache, splitMode=$splitModeCache, currency=$currencyCache"
         }
+        onSaveAllowanceDays?.invoke(allowanceDaysEnabledCache, activeSpendingDaysCache)
         onApply(newSettings)
     }
 
@@ -804,8 +816,12 @@ fun EditBudgetContent(
             BudgetBehaviourContent(
                 strategy = strategyCache,
                 splitMode = splitModeCache,
+                allowanceDaysEnabled = allowanceDaysEnabledCache,
+                activeSpendingDays = activeSpendingDaysCache,
                 onStrategySelected = { strategyCache = it },
                 onSplitModeSelected = { splitModeCache = it },
+                onAllowanceDaysToggled = { allowanceDaysEnabledCache = it },
+                onActiveSpendingDaysChanged = { activeSpendingDaysCache = it },
                 applyLabel = buttonLabel,
                 onBack = { showBehaviour = false },
                 onApply = { applySettings() },

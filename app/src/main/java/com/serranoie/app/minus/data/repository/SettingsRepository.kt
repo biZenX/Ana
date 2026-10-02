@@ -129,4 +129,12 @@ interface SettingsRepository {
     suspend fun resetLastSeenVersionCode()
 
     suspend fun clearLastPeriodSnapshot()
+
+    suspend fun setAllowanceDaysEnabled(enabled: Boolean)
+
+    suspend fun setActiveSpendingDays(days: Set<Int>)
+
+    suspend fun setBudgetAlertThreshold(percent: Int)
+
+    suspend fun setFinancialTipsEnabled(enabled: Boolean)
 }

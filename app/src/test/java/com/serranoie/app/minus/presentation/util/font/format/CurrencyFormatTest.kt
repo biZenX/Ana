@@ -93,4 +93,12 @@ class CurrencyFormatTest {
         assertThat(symbolOnlyCurrencyFormat("VND").format(BigDecimal("1000")))
             .isEqualTo("1,000₫")
     }
+
+    @Test
+    fun `EGP formats with symbol at end and space`() {
+        assertThat(formatCurrencySymbolOnly(BigDecimal("100"), "EGP"))
+            .isEqualTo("100 ج.م")
+        assertThat(symbolOnlyCurrencyFormat("EGP").format(BigDecimal("100")))
+            .isEqualTo("100 ج.م")
+    }
 }

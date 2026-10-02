@@ -9,4 +9,8 @@ enum class ReleaseType {
     IMPROVEMENT,
     @Serializable
     BUG_FIX,
+    @Serializable
+    REMOVED,
+    @Serializable
+    SECURITY,
 }

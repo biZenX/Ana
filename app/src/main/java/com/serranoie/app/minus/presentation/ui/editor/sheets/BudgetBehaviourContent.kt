@@ -22,6 +22,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Switch
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
@@ -66,6 +73,7 @@ import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Velocity
@@ -93,6 +101,10 @@ internal fun BudgetBehaviourContent(
     applyLabel: String,
     onBack: () -> Unit,
     onApply: () -> Unit,
+    allowanceDaysEnabled: Boolean = false,
+    activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
+    onAllowanceDaysToggled: (Boolean) -> Unit = {},
+    onActiveSpendingDaysChanged: (Set<Int>) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     val overscroll = rememberOverscrollEffect()
@@ -118,6 +130,18 @@ internal fun BudgetBehaviourContent(
                     text = stringResource(R.string.budget_behaviour_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            PaddedListGroup(
+                title = stringResource(R.string.budget_allowance_days_title),
+                paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
+            ) {
+                AllowanceDaysCard(
+                    enabled = allowanceDaysEnabled,
+                    selectedDays = activeSpendingDays,
+                    onToggle = onAllowanceDaysToggled,
+                    onDaysChanged = onActiveSpendingDaysChanged,
                 )
             }
 
@@ -452,6 +476,133 @@ private class SheetScrollGuard(
         get() = overscroll?.isInProgress == true
 
     override val node: DelegatableNode = overscroll?.node ?: object : Modifier.Node() {}
+}
+
+@Composable
+private fun AllowanceDaysCard(
+    enabled: Boolean,
+    selectedDays: Set<Int>,
+    onToggle: (Boolean) -> Unit,
+    onDaysChanged: (Set<Int>) -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.budget_allowance_days_switch_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = stringResource(R.string.budget_allowance_days_switch_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Spacer(Modifier.width(8.dp))
+                Switch(
+                    checked = enabled,
+                    onCheckedChange = onToggle,
+                )
+            }
+
+            AnimatedVisibility(visible = enabled) {
+                Column(modifier = Modifier.padding(top = 16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        val isSunThu = selectedDays == setOf(7, 1, 2, 3, 4)
+                        val isMonFri = selectedDays == setOf(1, 2, 3, 4, 5)
+
+                        FilterChip(
+                            selected = isSunThu,
+                            onClick = { onDaysChanged(setOf(7, 1, 2, 3, 4)) },
+                            label = {
+                                Text(
+                                    stringResource(R.string.budget_allowance_preset_sun_thu),
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            },
+                        )
+                        FilterChip(
+                            selected = isMonFri,
+                            onClick = { onDaysChanged(setOf(1, 2, 3, 4, 5)) },
+                            label = {
+                                Text(
+                                    stringResource(R.string.budget_allowance_preset_mon_fri),
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            },
+                        )
+                    }
+
+                    Spacer(Modifier.height(14.dp))
+
+                    val daysList = listOf(
+                        7 to R.string.day_sunday_short,
+                        1 to R.string.day_monday_short,
+                        2 to R.string.day_tuesday_short,
+                        3 to R.string.day_wednesday_short,
+                        4 to R.string.day_thursday_short,
+                        5 to R.string.day_friday_short,
+                        6 to R.string.day_saturday_short,
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        daysList.forEach { (dayInt, labelRes) ->
+                            val isDaySelected = dayInt in selectedDays
+                            Surface(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        val newSet = if (isDaySelected) {
+                                            if (selectedDays.size > 1) selectedDays - dayInt else selectedDays
+                                        } else {
+                                            selectedDays + dayInt
+                                        }
+                                        onDaysChanged(newSet)
+                                    },
+                                shape = CircleShape,
+                                color = if (isDaySelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(
+                                        text = stringResource(labelRes),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isDaySelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(10.dp))
+
+                    Text(
+                        text = stringResource(R.string.budget_allowance_days_summary, selectedDays.size),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium,
+                    )
+                }
+            }
+        }
+    }
 }
 
 @PreviewLightDark

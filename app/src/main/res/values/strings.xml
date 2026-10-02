@@ -1,358 +1,768 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
     <string name="app_name">وفير</string>
-
-    <string name="tutorial_numpad_title">Numpad</string>
-    <string name="tutorial_numpad_description">Enter the amount you spent and tap the green checkmark to save. Swipe up on the numpad to calculate.</string>
-    <string name="tutorial_comment_title">Add a category</string>
-    <string name="tutorial_comment_description">Add a category or short note to remember what the spend was for.</string>
-    <string name="tutorial_budget_pill_title">Budget progress</string>
-    <string name="tutorial_budget_pill_description">Tap to switch between daily, weekly, and monthly budget views, or to edit the period setup. Hold it to see how the amount is calculated.</string>
-    <string name="tutorial_settings_title">Settings</string>
-    <string name="tutorial_settings_description">Open Settings to enable features, set up home-screen widgets, or reset this tutorial.</string>
-    <string name="tutorial_recurrent_title">Recurrent payments</string>
-    <string name="tutorial_recurrent_description">Tap here to mark this spend as a recurring payment (weekly, biweekly, or monthly). The app will remind you to log it on schedule.</string>
-    <string name="tutorial_analytics_title">View your analytics</string>
-    <string name="tutorial_analytics_description">Open Analytics to see how your spending breaks down over time, by category, and against your budget goals.</string>
-    <string name="tutorial_privacy_title">Privacy mode</string>
-    <string name="tutorial_privacy_description">Cover the top of the phone (where the front camera sits) with your hand for about a second to blur every amount on screen. Cover it again to turn it off.</string>
-    <string name="tutorial_calc_title">Ongoing budget</string>
-    <string name="tutorial_calc_description">Use + or - at the beginning to increase or decrease your remaining budget for this period.</string>
-    <string name="tutorial_credit_toggle_title">Credit Card payment</string>
-    <string name="tutorial_credit_toggle_description">Tap here to mark that this expense was made with a credit card. It will be tracked separately in your analytics.</string>
-
-    <string name="empty" translatable="false">—</string>
-
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="tomorrow">Tomorrow</string>
-    <string name="apply">Apply</string>
-    <string name="accept">Accept</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="save">Save</string>
-    <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
-    <string name="close">Close</string>
-    <string name="done">Done</string>
-    <string name="add">Add</string>
-    <string name="remove">Remove</string>
-    <string name="undo">UNDO</string>
-    <string name="back">Back</string>
-    <string name="next">Next</string>
-    <string name="navigate">Navigate</string>
-    <string name="period">Period</string>
-    <string name="previous_values">Previous values</string>
-    <string name="budget">Budget</string>
-    <string name="recurrent_expense">Recurrent Expense</string>
-    <string name="recurrent_expense_details">Let\'s define the recurrent expense</string>
-    <string name="recurrent_expense_frequency_subtitle">How often do you want to pay this expense?</string>
-    <string name="recurrent_frequency_weekly">Weekly</string>
-    <string name="recurrent_frequency_biweekly">Biweekly</string>
-    <string name="recurrent_frequency_monthly">Monthly</string>
-    <string name="previous_day">Previous day</string>
-    <string name="next_day">Next day</string>
-    <string name="monthly_on_day_format">Day %1$d of each month</string>
-    <string name="limit_date">Limit date</string>
-    <string name="date_placeholder">Date</string>
-    <string name="change_date">Change date</string>
-    <string name="summary_weekly_format">It will be charged every week until %1$s.</string>
-    <string name="summary_biweekly_format">It will be charged every two weeks until %1$s.</string>
-    <string name="summary_monthly_format">It will be charged every month on day %1$d until %2$s.</string>
-    <string name="credit_cutoff_dialog_title">Credit card cutoff date</string>
-    <string name="credit_cutoff_dialog_message">To track credit expenses, set the billing cutoff day (1-31).</string>
-    <string name="credit_cutoff_dialog_label">Cutoff day</string>
-    <string name="expand_numpad">Expand numpad</string>
-    <string name="numpad_action">Editor action</string>
-
-    <!-- Rollover Dialog -->
-    <string name="period_finished">Period finished</string>
-    <string name="remaining_budget">Remaining budget</string>
-    <string name="rollover_question">What do you want to do with the remaining money?</string>
-    <string name="split_equally">Split equally</string>
-    <string name="split_equally_desc">Add %1$s to the budget for the next few days</string>
-    <string name="carry_to_next_day">Carry to tomorrow</string>
-    <string name="carry_to_next_day_desc">Add %1$s to tomorrow\'s budget</string>
-    <string name="view_analytics">View analytics</string>
-    <string name="view_analytics_desc">Review the summary of the finished period</string>
-
-    <!-- Edit Transaction -->
-    <string name="edit_recurrent_expense_title">Edit recurrent expense</string>
-    <string name="edit_expense_title">Edit expense</string>
-    <string name="cancel_edit_content_desc">Cancel edit</string>
-    <string name="configure_recurrence">Configure recurrence</string>
-    <string name="make_recurrent">Make recurrent</string>
-    <string name="select_time">Select time</string>
-    <string name="billing_day">Billing day</string>
-    <string name="end_date">End date</string>
-    <string name="frequency_label">Frequency</string>
-    <string name="weekly_with_desc">Weekly (every 7 days)</string>
-    <string name="biweekly_with_desc">Biweekly (every 14 days)</string>
-
-    <string name="edit_budget">Edit Budget</string>
-    <string name="new_budget">New budget period</string>
+    <string name="tutorial_numpad_title">لوحة الأرقام</string>
+    <string name="tutorial_numpad_description">أدخل المبلغ الذي أنفقته واضغط على علامة الصح الخضراء للحفظ. اسحب للأعلى على لوحة الأرقام لبدء العمليات الحسابية.</string>
+    <string name="tutorial_comment_title">إضافة تصنيف</string>
+    <string name="tutorial_comment_description">حدد تصنيفاً أو اكتب ملاحظة سريعة لتتذكر وجه إنفاق هذا المبلغ.</string>
+    <string name="tutorial_budget_pill_title">مؤشر الميزانية</string>
+    <string name="tutorial_budget_pill_description">انقر للتبديل بين عرض الميزانية اليومية أو الأسبوعية أو الشهرية، أو لتعديل إعدادات الفترة. اضغط مطولاً لمعرفة تفاصيل احتساب الرصيد.</string>
+    <string name="tutorial_budget_pill_setup_title">إعداد الميزانية</string>
+    <string name="tutorial_budget_pill_setup_description">انقر هنا لتحديد ميزانيتك وفترة مصروفك لتبدأ استخدام التطبيق.</string>
+    <string name="tutorial_settings_title">الإعدادات</string>
+    <string name="tutorial_settings_description">افتح الإعدادات لتخصيص الخصائص، إعداد ودجات الشاشة الرئيسية، أو إعادة تشغيل هذا الدليل الترحيبي.</string>
+    <string name="tutorial_recurrent_title">المدفوعات الدورية</string>
+    <string name="tutorial_recurrent_description">اضغط هنا لتعيين هذا المبلغ كدفعة دورية (أسبوعياً، نصف شهرياً، أو شهرياً). وسيقوم التطبيق بتذكيرك بتسجيلها في موعدها.</string>
+    <string name="tutorial_analytics_title">الإحصائيات والتحليلات</string>
+    <string name="tutorial_analytics_description">استعرض تحليلاتك المالية لترى كيف يتوزع إنفاقك بمرور الوقت، حسب التصنيف ومقارنة بأهداف ميزانيتك.</string>
+    <string name="tutorial_privacy_title">وضع الخصوصية</string>
+    <string name="tutorial_privacy_description">غطِ الجزء العلوي من الهاتف (مكان الكاميرا الأمامية) بيدك لثانية واحدة لتشويش وحجب جميع الأرقام المالية على الشاشة. كرر الحركة لإلغاء القفل.</string>
+    <string name="tutorial_calc_title">تعديل الميزانية الجارية</string>
+    <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
+    <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>
+    <string name="tutorial_credit_toggle_description">اضغط هنا لتحديد أن هذه النفقة دُفعت بالبطاقة الائتمانية. وستُتابع بشكل مستقل في تقاريرك المالية.</string>
+    <string name="today">اليوم</string>
+    <string name="yesterday">أمس</string>
+    <string name="tomorrow">غداً</string>
+    <string name="apply">تطبيق</string>
+    <string name="accept">قبول</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">حسناً</string>
+    <string name="save">حفظ</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+    <string name="close">إغلاق</string>
+    <string name="done">تم</string>
+    <string name="add">إضافة</string>
+    <string name="remove">إزالة</string>
+    <string name="undo">تراجع</string>
+    <string name="back">رجوع</string>
+    <string name="next">التالي</string>
+    <string name="navigate">انتقال</string>
+    <string name="period">الفترة</string>
+    <string name="previous_values">القيم السابقة</string>
+    <string name="budget">الميزانية</string>
+    <string name="recurrent_expense">مصروف دوري</string>
+    <string name="recurrent_expense_details">تحديد تفاصيل المصروف الدوري</string>
+    <string name="recurrent_expense_frequency_subtitle">كم مرة يتكرر دفع هذا المصروف؟</string>
+    <string name="recurrent_frequency_weekly">أسبوعياً</string>
+    <string name="recurrent_frequency_biweekly">نصف شهرياً (كل أسبوعين)</string>
+    <string name="recurrent_frequency_monthly">شهرياً</string>
+    <string name="previous_day">اليوم السابق</string>
+    <string name="next_day">اليوم التالي</string>
+    <string name="monthly_on_day_format">يوم %1$d من كل شهر</string>
+    <string name="limit_date">تاريخ الانتهاء</string>
+    <string name="date_placeholder">التاريخ</string>
+    <string name="change_date">تغيير التاريخ</string>
+    <string name="summary_weekly_format">سيُخصم كل أسبوع حتى %1$s.</string>
+    <string name="summary_biweekly_format">سيُخصم كل أسبوعين حتى %1$s.</string>
+    <string name="summary_monthly_format">سيُخصم شهرياً في يوم %1$d حتى %2$s.</string>
+    <string name="credit_cutoff_dialog_title">تاريخ كشف حساب البطاقة الائتمانية</string>
+    <string name="credit_cutoff_dialog_message">لتتبع نفقات البطاقة الائتمانية بدقة، حدد يوم صدور كشف الحساب الشهري (1-31).</string>
+    <string name="credit_cutoff_dialog_label">يوم كشف الحساب</string>
+    <string name="expand_numpad">توسيع لوحة الأرقام</string>
+    <string name="numpad_action">إجراء التحرير</string>
+    <string name="period_finished">انتهت الفترة</string>
+    <string name="remaining_budget">الميزانية المتبقية</string>
+    <string name="rollover_question">كيف ترغب في التصرف بالمبلغ المتبقي؟</string>
+    <string name="split_equally">توزيع بالتساوي</string>
+    <string name="split_equally_desc">إضافة %1$s وتوزيعها على ميزانية الأيام القادمة</string>
+    <string name="carry_to_next_day">ترحيل إلى الغد</string>
+    <string name="carry_to_next_day_desc">إضافة %1$s بالكامل إلى ميزانية الغد</string>
+    <string name="view_analytics">عرض التحليلات</string>
+    <string name="view_analytics_desc">مراجعة ملخص الفترة المنتهية</string>
+    <string name="edit_recurrent_expense_title">تعديل المصروف الدوري</string>
+    <string name="edit_expense_title">تعديل المصروف</string>
+    <string name="cancel_edit_content_desc">إلغاء التعديل</string>
+    <string name="configure_recurrence">ضبط التكرار</string>
+    <string name="make_recurrent">جعله مصروفاً دورياً</string>
+    <string name="select_time">اختيار الوقت</string>
+    <string name="billing_day">يوم الاستحقاق</string>
+    <string name="end_date">تاريخ الانتهاء</string>
+    <string name="frequency_label">معدل التكرار</string>
+    <string name="weekly_with_desc">أسبوعياً (كل 7 أيام)</string>
+    <string name="biweekly_with_desc">نصف شهرياً (كل 14 يوماً)</string>
+    <string name="edit_budget">تعديل الميزانية</string>
+    <string name="new_budget">فترة ميزانية جديدة</string>
     <plurals name="pending_expense">
-        <item quantity="one">%d expense for the next period</item>
-        <item quantity="other">%d expenses for the next period</item>
+        <item quantity="zero">لا توجد مصاريف مؤجلة</item>
+        <item quantity="one">مصروف واحد مؤجل للفترة القادمة</item>
+        <item quantity="two">مصروفان مؤجلان للفترة القادمة</item>
+        <item quantity="few">%d مصاريف مؤجلة للفترة القادمة</item>
+        <item quantity="many">%d مصروفاً مؤجلاً للفترة القادمة</item>
+        <item quantity="other">%d مصروف مؤجل للفترة القادمة</item>
     </plurals>
-    <string name="new_period_title">New Budget Period</string>
-    <string name="widget_description">Quick view of your expenses and add new ones</string>
-    <string name="total_expenses">Total Expenses</string>
-    <string name="new_expense">New Expense</string>
-    <string name="income_added">Income Added</string>
-    <string name="deducted_budget">Deducted budget</string>
-    <string name="daily_average">Daily average</string>
-    <string name="expenses_history">Expenses history</string>
-    <string name="single_expense">Single expense</string>
-    <string name="loading">Loading…</string>
-    <string name="add_expense">+ Add Expense</string>
-    <string name="finalize_period_question">Finalize period?</string>
-    <string name="finalize_period">Finalize budget period early</string>
-    <string name="finalize_period_confirm">This will close the current period and start a new one. Are you sure?</string>
-    <string name="finalize_action">Finalize</string>
-    <string name="rollover_preview_split_equally">You have %1$s left unspent. When this period ends, it will be spread across every day of your next budget.</string>
-    <string name="rollover_preview_add_to_first_day">You have %1$s left unspent. When this period ends, it will be added to the first day of your next budget.</string>
-    <string name="rollover_preview_ask_always">You have %1$s left unspent. You\'ll be asked what to do with it when this period ends.</string>
-    <string name="no_ending_date">No ending date</string>
-    <string name="budget_split_logic">How do you want to split the budget?</string>
-    <string name="new_budget_period">New Budget Period</string>
-    <string name="budget_split_calculated_amount">Calculated amount</string>
-    <string name="budget_split_helper_format">You will have %1$s to spend every %2$s</string>
-    <string name="budget_split_helper_static">Total ÷ period days</string>
-    <string name="budget_split_helper_dynamic">(Total − Spent) ÷ days left</string>
-    <string name="budget_split_helper_static_brief">%1$s (total budget) / %2$d %3$s</string>
-    <string name="budget_split_helper_dynamic_brief">%1$s (remaining) / %2$d %3$s</string>
-    <string name="budget_split_period_daily">day</string>
-    <string name="budget_split_period_weekly">week</string>
-    <string name="budget_split_period_biweekly">biweekly</string>
-    <string name="budget_split_period_monthly">month</string>
-
-    <!-- History -->
-    <string name="expense_deleted_format">%1$s deleted</string>
-    <string name="expense_modified_format">%1$s has been modified</string>
-    <string name="generic_expense">Expense</string>
-    <string name="expense_item_unnamed_expense">Unnamed expense</string>
-    <string name="expense_item_unnamed_income" translatable="false">Unnamed income</string>
-    <string name="expense_item_recurrent_subtitle_format">Recurrent expense — %1$s</string>
-    <string name="hide_subscriptions_outside_period">Hide subscriptions outside of the period</string>
-    <string name="show_subscriptions_outside_period">Show subscriptions outside of the period</string>
-    <string name="hide_past_period_expenses">Hide past period expenses</string>
-    <string name="show_past_period_expenses">Show past period expenses</string>
-    <string name="history_snackbar_delete_transaction_failed">Could not delete transaction</string>
-    <string name="history_snackbar_save_transaction_failed">Could not save transaction</string>
-    <string name="history_snackbar_delete_recurrent_failed">Could not delete recurring payment</string>
-    <string name="history_snackbar_mark_paid_failed">Could not mark transaction as paid</string>
-    <string name="history_snackbar_restore_transaction_failed">Could not restore transaction</string>
-    <string name="expense_queued_for_next_period">Expense queued for next period</string>
-
-    <string name="add_new_category">Category</string>
-    <string name="add_new_category_action">Add New Category</string>
-    <string name="new_category">New category</string>
-    <string name="new_category_saved">New category %1$s saved</string>
-    <string name="delete_category">Delete Category</string>
-    <string name="sort_alphabetically">Sort alphabetically</string>
-    <string name="add_extra_note">Extra note</string>
-    <string name="extra_note_label">Note</string>
-
-    <string name="budget_validation_major_zero">Budget must be greater than 0</string>
-    <string name="budget_no_date_defined">No end date defined</string>
-    <string name="budget_no_days_defined">No days defined</string>
-    <string name="budget_less_than_one_day_validation">Budget must be for at least one day</string>
-    <!--  Analytics  -->
-    <string name="analytics_title">Analytics</string>
-
+    <string name="new_period_title">فترة ميزانية جديدة</string>
+    <string name="widget_description">نظرة سريعة على نفقاتك مع إمكانية إضافة مصروف جديد</string>
+    <string name="total_expenses">إجمالي المصروفات</string>
+    <string name="new_expense">مصروف جديد</string>
+    <string name="income_added">تمت إضافة دخل</string>
+    <string name="deducted_budget">تم خصم من الميزانية</string>
+    <string name="daily_average">المتوسط اليومي</string>
+    <string name="expenses_history">سجل المصروفات</string>
+    <string name="single_expense">مصروف منفرد</string>
+    <string name="loading">جارٍ التحميل…</string>
+    <string name="add_expense">+ إضافة مصروف</string>
+    <string name="finalize_period_question">إنهاء الفترة الحالية؟</string>
+    <string name="finalize_period">إنهاء فترة الميزانية مبكراً</string>
+    <string name="finalize_period_confirm">سيؤدي هذا إلى إغلاق الفترة الحالية وبدء فترة جديدة. هل أنت متأكد؟</string>
+    <string name="finalize_action">إنهاء</string>
+    <string name="rollover_preview_split_equally">لديك %1$s متبقية لم تُنفق. عند انتهاء هذه الفترة، سيتم توزيعها بالتساوي على كل أيام ميزانيتك القادمة.</string>
+    <string name="rollover_preview_add_to_first_day">لديك %1$s متبقية لم تُنفق. عند انتهاء هذه الفترة، ستُضاف بالكامل لليوم الأول من ميزانيتك القادمة.</string>
+    <string name="rollover_preview_ask_always">لديك %1$s متبقية لم تُنفق. سيسألك التطبيق عن كيفية التصرف بها عند انتهاء الفترة.</string>
+    <string name="no_ending_date">دون تاريخ انتهاء</string>
+    <string name="budget_split_logic">كيف ترغب في تقسيم الميزانية؟</string>
+    <string name="new_budget_period">فترة ميزانية جديدة</string>
+    <string name="budget_split_calculated_amount">المبلغ المحسوب</string>
+    <string name="budget_split_helper_format">سيكون لديك %1$s للإنفاق كل %2$s</string>
+    <string name="budget_split_helper_static">الإجمالي ÷ أيام الفترة</string>
+    <string name="budget_split_helper_dynamic">(الإجمالي − المصروف) ÷ الأيام المتبقية</string>
+    <string name="budget_split_helper_static_brief">%1$s (إجمالي الميزانية) / %2$d %3$s</string>
+    <string name="budget_split_helper_dynamic_brief">%1$s (المتبقي) / %2$d %3$s</string>
+    <string name="budget_split_period_daily">يوم</string>
+    <string name="budget_split_period_weekly">أسبوع</string>
+    <string name="budget_split_period_biweekly">أسبوعين</string>
+    <string name="budget_split_period_monthly">شهر</string>
+    <string name="expense_deleted_format">تم حذف %1$s</string>
+    <string name="expense_modified_format">تم تعديل %1$s</string>
+    <string name="generic_expense">مصروف</string>
+    <string name="expense_item_unnamed_expense">مصروف بدون اسم</string>
+    <string name="expense_item_recurrent_subtitle_format">مصروف دوري — %1$s</string>
+    <string name="hide_subscriptions_outside_period">إخفاء الاشتراكات خارج هذه الفترة</string>
+    <string name="show_subscriptions_outside_period">إظهار الاشتراكات خارج هذه الفترة</string>
+    <string name="hide_past_period_expenses">إخفاء مصاريف الفترات السابقة</string>
+    <string name="show_past_period_expenses">إظهار مصاريف الفترات السابقة</string>
+    <string name="history_snackbar_delete_transaction_failed">تعذر حذف العملية</string>
+    <string name="history_snackbar_save_transaction_failed">تعذر حفظ العملية</string>
+    <string name="history_snackbar_delete_recurrent_failed">تعذر حذف الدفعة الدورية</string>
+    <string name="history_snackbar_mark_paid_failed">تعذر تحديد العملية كمدفوعة</string>
+    <string name="history_snackbar_restore_transaction_failed">تعذر استعادة العملية</string>
+    <string name="expense_queued_for_next_period">تم تأجيل المصروف للفترة القادمة</string>
+    <string name="add_new_category">التصنيف</string>
+    <string name="add_new_category_action">إضافة تصنيف جديد</string>
+    <string name="new_category">تصنيف جديد</string>
+    <string name="new_category_saved">تم حفظ التصنيف الجديد %1$s</string>
+    <string name="delete_category">حذف التصنيف</string>
+    <string name="sort_alphabetically">ترتيب أبجدياً</string>
+    <string name="add_extra_note">ملاحظة إضافية</string>
+    <string name="extra_note_label">ملاحظة</string>
+    <string name="budget_validation_major_zero">يجب أن تكون الميزانية أكبر من 0</string>
+    <string name="budget_no_date_defined">لم يتم تحديد تاريخ انتهاء</string>
+    <string name="budget_no_days_defined">لم يتم تحديد عدد الأيام</string>
+    <string name="budget_less_than_one_day_validation">يجب أن تمتد الميزانية ليوم واحد على الأقل</string>
+    <string name="analytics_title">الإحصائيات</string>
     <plurals name="days">
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
+        <item quantity="zero">0 يوم</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%d أيام</item>
+        <item quantity="many">%d يوماً</item>
+        <item quantity="other">%d يوم</item>
     </plurals>
-
     <plurals name="analytics_days_left">
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
+        <item quantity="zero">لم يتبقَّ أي يوم</item>
+        <item quantity="one">متبقٍ يوم واحد</item>
+        <item quantity="two">متبقٍ يومان</item>
+        <item quantity="few">متبقٍ %d أيام</item>
+        <item quantity="many">متبقٍ %d يوماً</item>
+        <item quantity="other">متبقٍ %d يوم</item>
     </plurals>
-
-    <string name="total_budget">Total budget</string>
-    <string name="minimum_spent">Minimum spent</string>
-    <string name="maximum_spent">Maximum spent</string>
-    <string name="average_spent">Average per day spent</string>
-
-    <string name="days_remaining_label">Days\nremaining</string>
-
-    <!-- Widget Gallery -->
-    <string name="settings_widgets_pin_not_supported">Your device doesn\'t support adding widgets this way. Long-press your home screen and look for Minus instead.</string>
-    <string name="widget_complete_budget_title">Complete Budget</string>
-    <string name="widget_average_spend_title">Average Spend</string>
-    <string name="widget_days_countdown_title">Days Countdown</string>
-    <string name="widget_expense_title">Expense Summary</string>
-    <string name="widget_heatmap_title">Spending Heatmap</string>
-    <string name="widget_min_max_spent_title">Min/Max Spent</string>
-    <string name="widget_month_heatmap_title">Month Heatmap</string>
-
-    <!-- Widget Descriptions -->
-    <string name="widget_complete_budget_description">Track spending, total budget, and days left — with quick-add for a new expense</string>
-    <string name="widget_complete_budget_preview_spent_label" translatable="false">Total Spent</string>
-    <string name="widget_complete_budget_preview_spent_amount" translatable="false">$180</string>
-    <string name="widget_complete_budget_preview_amount" translatable="false">$500</string>
-    <string name="widget_complete_budget_preview_start" translatable="false">06 Mar</string>
-    <string name="widget_complete_budget_preview_days" translatable="false">16 days</string>
-    <string name="widget_complete_budget_preview_end" translatable="false">21 Mar</string>
-    <string name="widget_budget_overview_description">See spent and remaining budget at a glance</string>
-    <string name="widget_days_countdown_description">Countdown days remaining in budget period</string>
-    <string name="widget_budget_detail_description">Full budget overview with top category and days left</string>
-    <string name="widget_heatmap_description">Heatmap calendar to see spending distribution</string>
-    <string name="widget_month_heatmap_description">Current month heatmap calendar</string>
-    <string name="widget_min_max_spent_description" translatable="false">See your minimum and maximum expenses at a glance</string>
-    <string name="widget_average_spend_description" translatable="false">See average spending per day at a glance</string>
-    <string name="widget_average_spend_preview_amount" translatable="false">$72</string>
-    <string name="widget_average_spend_preview_meta" translatable="false">8 · 12 days</string>
-    <string name="widget_min_max_spent_preview_min_amount" translatable="false">$42</string>
-    <string name="widget_min_max_spent_preview_max_amount" translatable="false">$186</string>
-    <string name="widget_min_max_spent_preview_min_date" translatable="false">14 Jun 2026 10:20</string>
-    <string name="widget_min_max_spent_preview_max_date" translatable="false">15 Jun 2026 18:45</string>
-    <string name="widget_budget_overview_preview_amount" translatable="false">$500</string>
-    <string name="widget_budget_overview_preview_start" translatable="false">06 Mar</string>
-    <string name="widget_budget_overview_preview_days" translatable="false">16 days</string>
-    <string name="widget_budget_overview_preview_end" translatable="false">21 Mar</string>
-    <string name="widget_heatmap_preview_mar" translatable="false">MAR</string>
-    <string name="widget_heatmap_preview_apr" translatable="false">APR</string>
-    <string name="widget_heatmap_preview_months" translatable="false">4 months</string>
-    <string name="widget_month_heatmap_preview_month" translatable="false">JUNE</string>
-    <string name="widget_add_expense_description">Quick shortcut to add a new expense</string>
-    <string name="widget_add_expense_label">Add new expense</string>
-    <string name="widget_add_expense_compact_label">Add expense</string>
-    <string name="widget_add_expense_plus" translatable="false">+</string>
-
-    <!-- Quick Settings Tile -->
-    <string name="tile_new_transaction_label">New Transaction</string>
-
-    <!-- Widget Labels -->
-    <string name="spent">Spent</string>
-    <string name="left">Left</string>
-    <string name="remaining">Remaining</string>
-    <string name="total_spent">Total Spent</string>
-    <string name="days_left">days\nleft</string>
-    <string name="budget_overview">Budget Overview</string>
-
-    <string name="spent_per_day">Spent per day</string>
-
-    <string name="budget_period_daily">Daily</string>
-    <string name="budget_period_weekly">Weekly</string>
-    <string name="budget_period_biweekly">Biweekly</string>
-    <string name="budget_period_monthly">Monthly</string>
-
-    <string name="budget_period_label_today">Today</string>
-    <string name="budget_period_label_this_week">This week</string>
-    <string name="budget_period_label_this_biweek">This biweekly</string>
-    <string name="budget_period_label_this_month">This month</string>
-
-
-    <string name="budget_pill_next_daily">For tomorrow %1$s</string>
-    <string name="budget_pill_next_weekly">For next week %1$s</string>
-    <string name="budget_pill_next_biweekly">For next biweek %1$s</string>
-    <string name="budget_pill_next_monthly">For next month %1$s</string>
-
-    <string name="budget_pill_label_daily_exceeded">Daily Amount exceeded</string>
-    <string name="budget_pill_label_weekly_exceeded">Weekly Amount exceeded</string>
-    <string name="budget_pill_label_biweekly_exceeded">Biweekly Amount exceeded</string>
-    <string name="budget_pill_label_monthly_exceeded">Monthly Amount exceeded</string>
-    <string name="budget_pill_sub_exceeded_single">%1$s amount exceeded</string>
-    <string name="budget_pill_sub_exceeded_double">%1$s and %2$s amount exceeded</string>
-    <string name="budget_pill_sub_exceeded_triple">%1$s, %2$s and %3$s amount exceeded</string>
-
-    <string name="budget_formula_title">How it\'s calculated</string>
-    <string name="budget_formula_hold_hint">Show how the amount is calculated</string>
-    <string name="budget_formula_subtitle" translatable="false">%1$s · %2$s</string>
-    <string name="budget_formula_mode_static">Static split</string>
-    <string name="budget_formula_mode_dynamic">Dynamic split</string>
-    <string name="budget_formula_mode_carry_over">Carry over split</string>
-    <string name="budget_formula_mode_ask_me">Ask me split</string>
-    <string name="budget_formula_caption_surplus_split">Last period\'s surplus joins the budget</string>
-    <string name="budget_formula_caption_surplus_first_day">Last period\'s surplus stays on the first day</string>
-    <string name="budget_formula_caption_adjustments">Income and deductions this period</string>
-    <string name="budget_formula_caption_per_day">Split across every day of the period</string>
-    <string name="budget_formula_caption_per_period">%1$s budget</string>
-    <string name="budget_formula_caption_remaining_budget">Left of the total budget</string>
-    <string name="budget_formula_caption_spread_over_left">Spread over what\'s left of the period</string>
-    <string name="budget_formula_caption_left">Minus what you\'ve spent</string>
-    <string name="budget_formula_caption_reserved">Set aside for charges due later in the period</string>
-    <string name="budget_formula_caption_carried">Carried over from earlier days</string>
-    <string name="budget_formula_caption_spread_leftover">Leftovers you chose to spread</string>
-    <string name="budget_formula_card_tap_hint">Tap for the full breakdown</string>
-    <string name="budget_formula_tip_hold_pill">Tip: hold the budget pill on the home screen to see this anytime</string>
-    <string name="budget_formula_tip_tap_card">Tip: you can also tap the calculated amount in the period sheet</string>
+    <string name="total_budget">إجمالي الميزانية</string>
+    <string name="minimum_spent">أقل مصروف</string>
+    <string name="maximum_spent">أعلى مصروف</string>
+    <string name="average_spent">متوسط الإنفاق اليومي</string>
+    <string name="days_remaining_label">الأيام\nالمتبقية</string>
+    <string name="settings_widgets_pin_not_supported">جهازك لا يدعم إضافة الودجات بهذه الطريقة. اضغط مطولاً على الشاشة الرئيسية وابحث عن تطبيق وفير لإضافته.</string>
+    <string name="widget_complete_budget_title">الميزانية الشاملة</string>
+    <string name="widget_average_spend_title">متوسط الإنفاق</string>
+    <string name="widget_days_countdown_title">العد التنازلي للأيام</string>
+    <string name="widget_expense_title">ملخص المصروفات</string>
+    <string name="widget_heatmap_title">خريطة كثافة الإنفاق</string>
+    <string name="widget_min_max_spent_title">أعلى / أدنى إنفاق</string>
+    <string name="widget_month_heatmap_title">خريطة إنفاق الشهر</string>
+    <string name="widget_complete_budget_description">تتبع الإنفاق، إجمالي الميزانية، والأيام المتبقية — مع زر إضافة سريعة لمصروف جديد</string>
+    <string name="widget_budget_overview_description">نظرة خاطفة على المبلغ المنفق والمتبقي من الميزانية</string>
+    <string name="widget_days_countdown_description">عد تنازلي للأيام المتبقية في فترة الميزانية</string>
+    <string name="widget_budget_detail_description">نظرة شاملة للميزانية مع أبرز التصنيفات والأيام المتبقية</string>
+    <string name="widget_heatmap_description">تقويم حراري يوضح توزيع نفقاتك على مدار الأيام</string>
+    <string name="widget_month_heatmap_description">تقويم إنفاق الشهر الحالي</string>
+    <string name="widget_add_expense_description">اختصار سريع لإضافة مصروف جديد</string>
+    <string name="widget_add_expense_label">إضافة مصروف جديد</string>
+    <string name="widget_add_expense_compact_label">إضافة مصروف</string>
+    <string name="tile_new_transaction_label">عملية جديدة</string>
+    <string name="spent">المصروف</string>
+    <string name="left">المتبقي</string>
+    <string name="remaining">المتبقي</string>
+    <string name="total_spent">إجمالي ما أُنفِق</string>
+    <string name="days_left">أيام\nمتبقية</string>
+    <string name="budget_overview">نظرة عامة على الميزانية</string>
+    <string name="spent_per_day">الإنفاق اليومي</string>
+    <string name="budget_period_daily">يومياً</string>
+    <string name="budget_period_weekly">أسبوعياً</string>
+    <string name="budget_period_biweekly">نصف شهرياً</string>
+    <string name="budget_period_monthly">شهرياً</string>
+    <string name="budget_period_label_today">اليوم</string>
+    <string name="budget_period_label_this_week">هذا الأسبوع</string>
+    <string name="budget_period_label_this_biweek">الأسبوعان الحاليان</string>
+    <string name="budget_period_label_this_month">هذا الشهر</string>
+    <string name="budget_pill_next_daily">للغد: %1$s</string>
+    <string name="budget_pill_next_weekly">للأسبوع القادم: %1$s</string>
+    <string name="budget_pill_next_biweekly">للأسبوعين القادمين: %1$s</string>
+    <string name="budget_pill_next_monthly">للشهر القادم: %1$s</string>
+    <string name="budget_pill_label_daily_exceeded">تجاوزت الحد اليومي</string>
+    <string name="budget_pill_label_weekly_exceeded">تجاوزت الحد الأسبوعي</string>
+    <string name="budget_pill_label_biweekly_exceeded">تجاوزت حد الأسبوعين</string>
+    <string name="budget_pill_label_monthly_exceeded">تجاوزت الحد الشهري</string>
+    <string name="budget_pill_sub_exceeded_single">تجاوزت حد %1$s</string>
+    <string name="budget_pill_sub_exceeded_double">تجاوزت حدي %1$s و%2$s</string>
+    <string name="budget_pill_sub_exceeded_triple">تجاوزت حدود %1$s و%2$s و%3$s</string>
+    <string name="budget_formula_title">طريقة احتساب الميزانية</string>
+    <string name="budget_formula_hold_hint">عرض تفاصيل احتساب المبلغ</string>
+    <string name="budget_formula_mode_static">توزيع ثابت</string>
+    <string name="budget_formula_mode_dynamic">توزيع مرن (ديناميكي)</string>
+    <string name="budget_formula_mode_carry_over">ترحيل الفائض</string>
+    <string name="budget_formula_mode_ask_me">سؤالي يومياً</string>
+    <string name="budget_formula_caption_surplus_split">فائض الفترة السابقة أُضيف إلى الميزانية</string>
+    <string name="budget_formula_caption_surplus_first_day">فائض الفترة السابقة استقر في اليوم الأول</string>
+    <string name="budget_formula_caption_adjustments">الدخل والاستقطاعات لهذه الفترة</string>
+    <string name="budget_formula_caption_per_day">موزع على جميع أيام الفترة</string>
+    <string name="budget_formula_caption_per_period">ميزانية %1$s</string>
+    <string name="budget_formula_caption_remaining_budget">المتبقي من إجمالي الميزانية</string>
+    <string name="budget_formula_caption_spread_over_left">موزع على الأيام المتبقية من الفترة</string>
+    <string name="budget_formula_caption_left">مطروحاً منه ما أنفقته</string>
+    <string name="budget_formula_caption_reserved">محجوز للمدفوعات المستحقة لاحقاً في الفترة</string>
+    <string name="budget_formula_caption_carried">مُرحّل من الأيام السابقة</string>
+    <string name="budget_formula_caption_spread_leftover">الفائض الذي اخترت توزيعه</string>
+    <string name="budget_formula_card_tap_hint">انقر لعرض التفاصيل الكاملة</string>
+    <string name="budget_formula_tip_hold_pill">فائدة: اضغط مطولاً على شريط الميزانية في الشاشة الرئيسية للاطلاع على هذه الحسبة في أي وقت</string>
+    <string name="budget_formula_tip_tap_card">فائدة: يمكنك أيضاً النقر على المبلغ المحسوب في بطاقة الفترة</string>
     <plurals name="budget_formula_weeks">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="zero">0 أسبوع</item>
+        <item quantity="one">أسبوع واحد</item>
+        <item quantity="two">أسبوعان</item>
+        <item quantity="few">%d أسابيع</item>
+        <item quantity="many">%d أسبوعاً</item>
+        <item quantity="other">%d أسبوع</item>
     </plurals>
     <plurals name="budget_formula_biweeks">
-        <item quantity="one">%d biweek</item>
-        <item quantity="other">%d biweeks</item>
+        <item quantity="zero">0 فترة</item>
+        <item quantity="one">فترة نصف شهرية واحدة</item>
+        <item quantity="two">فترتان نصف شهريتان</item>
+        <item quantity="few">%d فترات نصف شهرية</item>
+        <item quantity="many">%d فترة نصف شهرية</item>
+        <item quantity="other">%d فترة نصف شهرية</item>
     </plurals>
     <plurals name="budget_formula_months">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="zero">0 شهر</item>
+        <item quantity="one">شهر واحد</item>
+        <item quantity="two">شهران</item>
+        <item quantity="few">%d أشهر</item>
+        <item quantity="many">%d شهراً</item>
+        <item quantity="other">%d شهر</item>
     </plurals>
-
-    <string name="day_total_format">Total: %1$s</string>
-
-    <string name="onboarding_welcome_title">Welcome to Minus</string>
-    <string name="onboarding_welcome_subtitle">Hi and welcome, lets start saving together.</string>
-    <string name="onboarding_welcome_intro">A simple budget tracker that helps you decide how much you can spend each day, week, biweekly, or month.</string>
-    <string name="onboarding_step_1_title">Set a budget</string>
-    <string name="onboarding_step_1_subtitle">Define your spending limit for any period.</string>
-    <string name="onboarding_step_2_title">Track expenses</string>
-    <string name="onboarding_step_2_subtitle">Log what you spend and see what is left each day.</string>
-    <string name="onboarding_step_3_title">Recurring expenses</string>
-    <string name="onboarding_step_3_subtitle">Add subscriptions and Minus will track them for you automatically.</string>
-    <string name="onboarding_step_4_title">Calculate on the fly</string>
-    <string name="onboarding_step_4_subtitle">Your remaining budget updates in real time as you spend.</string>
-    <string name="onboarding_step_5_title">See your analytics</string>
-    <string name="onboarding_step_5_subtitle">Charts, heatmaps, and category breakdowns for any period.</string>
-    <string name="onboarding_step_6_title">Spend wisely</string>
-    <string name="onboarding_step_6_subtitle">Over time, learn how much you can save and how much you can spend.</string>
-    <string name="onboarding_set_budget_button">Continue</string>
-    <string name="recurrent_toggle_label">Recurrent</string>
-    <string name="censor_mode_alert_title">Censor mode is active</string>
-    <string name="censor_mode_alert_message">All your financial values are currently blurred.</string>
-    <string name="censor_mode_alert_dismiss">Got it</string>
-    <string name="censor_mode_card_label">Privacy mode activated</string>
-    <string name="censor_mode_card_body">Cover the top of the phone (where the camera sits) with your hand for about a second to turn it off.</string>
-    <string name="censor_mode_toast_enabled">Privacy mode enabled</string>
-    <string name="censor_mode_toast_disabled">Privacy mode disabled</string>
-    <string name="changelog_settings_item_title">What\'s New</string>
-    <string name="changelog_settings_item_subtitle">See the latest features and fixes in v%1$s</string>
-    <string name="changelog_badge_feature">Feature</string>
-    <string name="changelog_badge_improvement">Improvement</string>
-    <string name="changelog_badge_bug_fix">Bug fix</string>
-    <string name="changelog_release_header">Version %1$s — %2$s</string>
-    <string name="changelog_release_version">Version %1$s</string>
-    <string name="changelog_release_date">Released %1$s</string>
-    <string name="changelog_close">Close</string>
-    <string name="changelog_see_changes">Wafeer is now updated.</string>
-    <string name="changelog_previous_versions">Previous version</string>
-    <string name="changelog_updated_to">Updated to: %1$s</string>
-
-    <!-- Finish Date Selector -->
-    <string name="onboarding_finish_date_selector_title">Select the period</string>
-    <string name="onboarding_finish_date_selector_days_range">%1$d days · %2$s - %3$s</string>
-    <string name="onboarding_finish_date_selector_budget_view_question">How do you want to view your budget?</string>
-
-    <!-- Settings -->
-    <string name="settings_title">Settings</string>
-    <string name="settings_section_appearance">Appearance</string>
-    <string name="settings_section_language">Language</string>
-    <string name="settings_language_header">App Language</string>
-    <string name="settings_language_currently_format">Currently: %1$s</string>
-    <string name="settings_language_disclaimer">Language translations might be incorrect.</string>
-    <string name="settings_theme_system">System</string>
-    <string name="settings_theme_light">Light</string>
-    <string name="settings_theme_dark">Dark</string>
-    <string name="settings_contrast_title">Contrast</string>
-    <string name="settings_contrast_normal">Normal</string>
-    <string name="settings_contrast_medium">Medium</string>
-    <string name="settings_contrast_high">High</string>
-    <string name="settings_typography_condensed">Condensed</string>
-    <string name="settings_typography_expressive">Expressive</string>
-    <string name="settings_language_ar" translatable="false">العربية</string>
+    <string name="day_total_format">المجموع: %1$s</string>
+    <string name="onboarding_welcome_title">مرحباً بك في وفير</string>
+    <string name="onboarding_welcome_subtitle">أهلاً بك، لنبدأ معاً رحلة الادخار والتحكم المالي الذكي.</string>
+    <string name="onboarding_welcome_intro">متتبع ميزانية بسيط وذكي يساعدك على تحديد المقدار المتاح لإنفاقه يومياً أو أسبوعياً أو نصف شهرياً أو شهرياً.</string>
+    <string name="onboarding_step_1_title">حدد ميزانيتك</string>
+    <string name="onboarding_step_1_subtitle">عيّن سقف الإنفاق لأي فترة تناسب نمط حياتك.</string>
+    <string name="onboarding_step_2_title">تتبع مصاريفك</string>
+    <string name="onboarding_step_2_subtitle">سجل ما تنفقه واعرف المتبقي لك في كل يوم بدقة.</string>
+    <string name="onboarding_step_3_title">المصاريف المتكررة</string>
+    <string name="onboarding_step_3_subtitle">أضف اشتراكاتك وسيتولى وفير متابعتها تلقائياً وإخطارك بمواعيدها.</string>
+    <string name="onboarding_step_4_title">حسابات فورية وذكية</string>
+    <string name="onboarding_step_4_subtitle">تتحدث ميزانيتك المتبقية لحظياً مع كل عملية صرف تسجلها.</string>
+    <string name="onboarding_step_5_title">اطلع على إحصائياتك</string>
+    <string name="onboarding_step_5_subtitle">رسوم بيانية، خرائط إنفاق، وتوزيع دقيق للتصنيفات لأي فترة زمنية.</string>
+    <string name="onboarding_step_6_title">انفق بحكمة وحقق أهدافك</string>
+    <string name="onboarding_step_6_subtitle">مع الوقت، ستكتشف كم تستطيع توفيره لتصل لأهدافك المالية بثقة.</string>
+    <string name="onboarding_set_budget_button">متابعة</string>
+    <string name="recurrent_toggle_label">دوري</string>
+    <string name="censor_mode_alert_title">وضع الخصوصية مفعّل</string>
+    <string name="censor_mode_alert_message">جميع قيمك المالية محجوبة ومشوشة حالياً لحماية خصوصيتك.</string>
+    <string name="censor_mode_alert_dismiss">فهمت</string>
+    <string name="censor_mode_card_label">تم تفعيل وضع الخصوصية</string>
+    <string name="censor_mode_card_body">غطِ الجزء العلوي من الهاتف بيدك لثانية واحدة لإلغاء التعتيم.</string>
+    <string name="censor_mode_toast_enabled">تم تفعيل وضع الخصوصية</string>
+    <string name="censor_mode_toast_disabled">تم تعطيل وضع الخصوصية</string>
+    <string name="changelog_settings_item_title">ما الجديد</string>
+    <string name="changelog_settings_item_subtitle">تعرف على أحدث الميزات والتحسينات في الإصدار %1$s</string>
+    <string name="changelog_badge_feature">ميزة جديدة</string>
+    <string name="changelog_badge_improvement">تحسين</string>
+    <string name="changelog_badge_bug_fix">إصلاح</string>
+    <string name="changelog_release_header">الإصدار %1$s — %2$s</string>
+    <string name="changelog_release_version">الإصدار %1$s</string>
+    <string name="changelog_release_date">أُطلق في %1$s</string>
+    <string name="changelog_close">إغلاق</string>
+    <string name="changelog_previous_versions">الإصدارات السابقة</string>
+    <string name="changelog_updated_to">تم التحديث إلى: %1$s</string>
+    <string name="changelog_see_changes">تم تحديث تطبيق وفير بنجاح.</string>
+    <string name="onboarding_finish_date_selector_title">تحديد الفترة</string>
+    <string name="onboarding_finish_date_selector_days_range">%1$d يوماً · %2$s - %3$s</string>
+    <string name="onboarding_finish_date_selector_budget_view_question">كيف ترغب في عرض ميزانيتك؟</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_section_appearance">المظهر والتصميم</string>
+    <string name="settings_section_language">اللغة</string>
+    <string name="settings_language_header">لغة التطبيق</string>
+    <string name="settings_language_currently_format">الحالية: %1$s</string>
+    <string name="settings_language_disclaimer">الترجمة العربية معتمدة ورسمية ومطابقة لأفضل المعايير المالية.</string>
+    <string name="settings_theme_system">النظام</string>
+    <string name="settings_theme_light">فاتح</string>
+    <string name="settings_theme_dark">داكن</string>
+    <string name="settings_contrast_title">التباين</string>
+    <string name="settings_contrast_normal">عادي</string>
+    <string name="settings_contrast_medium">متوسط</string>
+    <string name="settings_contrast_high">مرتفع</string>
+    <string name="settings_typography_condensed">خط بلكس العصري</string>
+    <string name="settings_typography_expressive">خط ثمانية (تعبيري)</string>
+    <string name="settings_language_ar" translatable="false">العربية (الفصحى)</string>
+    <string name="settings_language_ar_eg" translatable="false">عربي (مصري)</string>
+    <string name="settings_color_scheme_title">سمة الألوان</string>
+    <string name="settings_section_notifications">التنبيهات</string>
+    <string name="settings_section_features">الميزات المتقدمة</string>
+    <string name="settings_section_app_info">معلومات التطبيق</string>
+    <string name="settings_section_data_backup">النسخ الاحتياطي للبيانات</string>
+    <string name="settings_section_tutorial">الدليل الترحيبي</string>
+    <string name="settings_section_savings">الادخار</string>
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_theme_subtitle">تغيير نمط وألوان التطبيق</string>
+    <string name="settings_appearance_title">السمات والألوان</string>
+    <string name="settings_appearance_subtitle">تخصيص مظهر وألوان واجهة التطبيق</string>
+    <string name="settings_widgets_title">الودجات</string>
+    <string name="settings_widgets_subtitle">استكشف الودجات المتاحة لإضافتها لشاشتك الرئيسية</string>
+    <string name="settings_typography_title">الخطوط</string>
+    <string name="settings_typography_subtitle">تغيير نمط خطوط التطبيق (ثمانية، بلكس، الافتراضي)</string>
+    <string name="settings_rounded_font_title">نمط الخط المستدير الانسيابي</string>
+    <string name="settings_material_you_title">ألوان النظام المتناسقة</string>
+    <string name="settings_material_you_subtitle">استخراج ألوان السمة ديناميكياً من خلفية جهازك</string>
+    <string name="settings_amoled_title">السمة الداكنة الموفرة للطاقة</string>
+    <string name="settings_amoled_subtitle">استخدام خلفيات شديدة السواد لتوفير البطارية وراحة العين</string>
+    <string name="settings_censor_mode_title">وضع الخصوصية</string>
+    <string name="settings_censor_mode_subtitle">حجب وتعتيم كافة الأرقام المالية في التطبيق</string>
+    <string name="settings_feature_credit_toggle_title">استخدام البطاقة الائتمانية</string>
+    <string name="settings_feature_credit_toggle_subtitle">انقر لعرض مزيد من التفاصيل</string>
+    <string name="settings_feature_credit_toggle_details">عند التفعيل، يمكنك تمييز المدفوعات التي تمت ببطاقة ائتمانية.\nوبتعيين تاريخ صدور كشف الحساب، ستعرف المبلغ المستحق دفعه للبنك لتجنب أي فوائد عبر إشعار منفصل.</string>
+    <string name="settings_feature_credit_toggle_switch_label">تفعيل البطاقة الائتمانية</string>
+    <string name="settings_category_behavior_title">سلوك اختيار التصنيفات</string>
+    <string name="settings_category_behavior_subtitle">تحديد طريقة ظهور واقتراح التصنيفات أثناء تسجيل المصروف.</string>
+    <string name="settings_category_picker_direct_popup_switch_label">عرض التصنيفات فور النقر</string>
+    <string name="settings_category_picker_direct_popup_description">فتح نافذة الاقتراحات المحفوظة مباشرة بمجرد الضغط على حقل التصنيف دون انتظار الكتابة.</string>
+    <string name="settings_category_grid_mode_switch_label">عرض كقائمة (تجريبي)</string>
+    <string name="settings_category_grid_mode_description">الضغط على شارة التصنيف يفتح شبكة بالتصنيفات المحفوظة بدلاً من الكتابة المباشرة.</string>
+    <string name="settings_feature_extra_note_title">ملاحظة إضافية لكل عملية</string>
+    <string name="settings_feature_extra_note_subtitle">انقر لعرض التفاصيل</string>
+    <string name="settings_feature_extra_note_description">يضيف حقلاً اختيارياً للملاحظات بجانب التصنيف لتسجيل تفاصيل إضافية لا يوضحها التصنيف وحده.</string>
+    <string name="settings_feature_extra_note_switch_label">تفعيل الملاحظات الإضافية</string>
+    <string name="settings_feature_reserve_upcoming_charges_title">حجز المدفوعات القادمة</string>
+    <string name="settings_feature_reserve_upcoming_charges_description">حجز مبالغ الفواتير والاشتراكات الدورية المستحقة لاحقاً في الفترة منذ اليوم الأول، لترى المبلغ الفعلي المتاح للإنفاق الحر فقط.</string>
+    <string name="settings_feature_reserve_upcoming_charges_switch_label">حجز المدفوعات مسبقاً</string>
+    <string name="settings_feature_lab_title">مختبر الميزات الإضافية</string>
+    <string name="settings_feature_lab_subtitle">ميزات اختيارية وتجريبية يمكنك تجربتها</string>
+    <string name="settings_feature_lab_header">كافة الميزات هنا اختيارية ومغلقة افتراضياً؛ اضغط على أي ميزة لتفعيلها ومعرفة تفاصيلها.</string>
+    <string name="settings_feature_new_category_tag_title">إنشاء تصنيفات مستقلة</string>
+    <string name="settings_feature_new_category_tag_description">إضافة زر \"تصنيف جديد\" للشاشة الرئيسية لإنشاء وحفظ تصنيف دون الحاجة لتسجيل عملية مالية.</string>
+    <string name="settings_feature_category_direct_popup_title">اقتراحات التصنيف بنقرة واحدة</string>
+    <string name="settings_feature_category_grid_title">نمط قائمة التصنيفات</string>
+    <string name="settings_feature_show_past_transactions_switch_label">تحميل الفترات السابقة</string>
+    <string name="settings_feature_show_past_transactions_title">إظهار عمليات الفترات السابقة</string>
+    <string name="settings_feature_show_past_transactions_subtitle">تحميل وعرض المصروفات من الفترات السابقة</string>
+    <string name="settings_feature_group_categories">التصنيفات</string>
+    <string name="settings_feature_group_transactions">العمليات المالية</string>
+    <string name="settings_feature_group_budget">الميزانية والمدفوعات</string>
+    <string name="settings_feature_experimental">تجريبي</string>
+    <string name="settings_feature_state_on">مفعّل</string>
+    <string name="settings_feature_state_off">معطّل</string>
+    <string name="settings_recurrent_payments_view_mode_title">نمط عرض المدفوعات الدورية</string>
+    <string name="settings_recurrent_payments_view_mode_subtitle">تغيير أسلوب عرض وتنسيق بطاقات المدفوعات الدورية</string>
+    <string name="settings_recurrent_payments_view_mode_dialog_title">نمط عرض المدفوعات الدورية</string>
+    <string name="settings_recurrent_payments_view_mode_horizontal_title">أفقي</string>
+    <string name="settings_recurrent_payments_view_mode_horizontal_subtitle">عرض المدفوعات الدورية في بطاقات أفقية متجاورة</string>
+    <string name="settings_recurrent_payments_view_mode_vertical_title">رأسي</string>
+    <string name="settings_recurrent_payments_view_mode_vertical_subtitle">عرض المدفوعات الدورية كقائمة رأسية للمصروفات</string>
+    <string name="settings_period_end_time_title">وقت تنبيه نهاية الفترة</string>
+    <string name="settings_period_end_time_subtitle">سيظهر إشعار انتهاء فترة الميزانية في هذا التوقيت</string>
+    <string name="settings_recurrent_notification_time_title">وقت تنبيه المدفوعات الدورية</string>
+    <string name="settings_recurrent_notification_time_subtitle">فحص وتذكير المدفوعات الدورية يومياً في هذا التوقيت</string>
+    <string name="settings_notification_permission_title">إذن الإشعارات</string>
+    <string name="settings_notification_permission_granted_subtitle">ممنوح — ستصلك الإشعارات في مواعيدها</string>
+    <string name="settings_notification_permission_denied_subtitle">مرفوض — اضغط لفتح إعدادات النظام وتفعيل التنبيهات</string>
+    <string name="settings_notification_permission_action">فتح</string>
+    <string name="settings_exact_alarm_title">التنبيهات الفورية الدقيقة</string>
+    <string name="settings_exact_alarm_enabled_subtitle">مفعل لعرض التنبيهات في وقتها المحدد تماماً</string>
+    <string name="settings_exact_alarm_disabled_subtitle">معطل؛ قد يؤخر نظام أندرويد الإشعار لتوفير الطاقة</string>
+    <string name="settings_test_notification_title">إرسال إشعار تجريبي</string>
+    <string name="settings_test_notification_subtitle">اضغط للتحقق الفوري من ظهور التنبيهات وصلاحية الأذونات على هاتفك</string>
+    <string name="notification_test_title">تنبيه تجريبي من وفير 🔔</string>
+    <string name="notification_test_message">الإشعارات تعمل بنجاح وبأعلى كفاءة! ستصلك تنبيهات نهاية الفترة والمدفوعات والميزانية في مواعيدها.</string>
+    <string name="notification_test_sent_toast">تم إرسال الإشعار التجريبي بنجاح 🔔</string>
+    <string name="notification_permission_needed_toast">يرجى منح إذن الإشعارات أولاً لتتمكن من استقبال التنبيهات</string>
+    <string name="settings_time_picker_cancel">إلغاء</string>
+    <string name="settings_time_picker_confirm">تأكيد</string>
+    <string name="settings_about_title">حول التطبيق</string>
+    <string name="settings_about_subtitle">تطبيق وفير — المطور عبدالرحمن كريم</string>
+    <string name="settings_bug_report_title">إرسال ملاحظات أو إبلاغ عن مشكلة</string>
+    <string name="settings_bug_report_subtitle">شاركنا اقتراحك أو مشكلة واجهتك وسنعمل على حلها سريعاً</string>
+    <string name="settings_what_is_this_for">ما فائدة هذا الإجراء؟</string>
+    <string name="settings_version_title">الإصدار</string>
+    <string name="settings_version_metadata_copied">تم نسخ معلومات التطبيق والجهاز إلى الحافظة</string>
+    <string name="bug_report_title">الملاحظات والدعم الفني</string>
+    <string name="bug_report_type_label">نوع الرسالة</string>
+    <string name="bug_report_type_bug_report">إبلاغ عن خطأ</string>
+    <string name="bug_report_type_feature_request">اقتراح ميزة جديدة</string>
+    <string name="bug_report_title_label">العنوان</string>
+    <string name="bug_report_title_placeholder">لخص المشكلة أو الاقتراح…</string>
+    <string name="bug_report_title_required">العنوان مطلوب للمتابعة.</string>
+    <string name="bug_report_description_label">الوصف</string>
+    <string name="bug_report_description_placeholder">ما الذي حدث؟ وما الذي كنت تتوقع حدوثه؟</string>
+    <string name="bug_report_description_required">الوصف مطلوب للمتابعة.</string>
+    <string name="bug_report_problem_label">المشكلة</string>
+    <string name="bug_report_problem_placeholder">ما التحدي أو المشكلة التي يحلها هذا الاقتراح؟</string>
+    <string name="bug_report_problem_required">وصف المشكلة مطلوب.</string>
+    <string name="bug_report_proposed_solution_label">الحل المقترح</string>
+    <string name="bug_report_proposed_solution_placeholder">صف التحسين أو التغيير الذي ترغب برؤيته…</string>
+    <string name="bug_report_proposed_solution_required">الحل المقترح مطلوب لاقتراح الميزات.</string>
+    <string name="bug_report_alternatives_considered_label">بدائل أخرى تم التفكير فيها</string>
+    <string name="bug_report_alternatives_considered_placeholder">اختياري: أي أفكار أخرى لتحقيق ذلك…</string>
+    <string name="bug_report_additional_context_label">معلومات وسياق إضافي</string>
+    <string name="bug_report_additional_context_placeholder_bug">أي تفاصيل حول إعدادات الميزانية أو تكرار العمليات تساعدنا في الحل.</string>
+    <string name="bug_report_additional_context_placeholder_feature">أي تفاصيل إضافية مفيدة</string>
+    <string name="bug_report_attachments_label">المرفقات</string>
+    <string name="bug_report_attachments_label_bug">لقطات شاشة أو فيديو توضيحي</string>
+    <string name="bug_report_submit">إرسال التقرير</string>
+    <string name="bug_report_share_title">إرسال التقرير للمطور</string>
+    <string name="bug_report_help_title">ساعدنا في تطوير وفير</string>
+    <string name="bug_report_help_message_prefix">ملاحظاتك واقتراحاتك تساعدنا دائماً في تحسين تطبيق وفير وتقديم أفضل تجربة إدارة مالية.\n\nيقوم هذا النموذج بتجهيز كافة التفاصيل المفيدة لتسريع المراجعة وحل المشكلة.</string>
+    <string name="bug_report_help_github_issues">الدعم المباشر</string>
+    <string name="bug_report_help_message_suffix">مع المطور.</string>
+    <string name="bug_report_steps_to_reproduce_label">خطوات تكرار المشكلة</string>
+    <string name="bug_report_include_steps_label">تضمين خطوات حدوث المشكلة</string>
+    <string name="bug_report_add_step">إضافة خطوة</string>
+    <string name="bug_report_step_placeholder_wallet">فتح شاشة المحفظة</string>
+    <string name="bug_report_step_placeholder_transfer">الضغط على التحويل</string>
+    <string name="bug_report_step_placeholder_crash">ملاحظة الإغلاق المفاجئ…</string>
+    <string name="bug_report_step_placeholder_format">وصف الخطوة %1$d…</string>
+    <string name="bug_report_step_number_format">%1$d.</string>
+    <string name="bug_report_upload_assets">رفع ملفات</string>
+    <string name="bug_report_upload_assets_subtitle">صور أو مقاطع فيديو (حتى 10 ميجابايت)</string>
+    <string name="bug_report_upload_assets_selected_count">تم اختيار %1$d مرفق</string>
+    <string name="bug_report_remove_attachment">حذف المرفق</string>
+    <string name="settings_backup_title">نسخ احتياطي للبيانات</string>
+    <string name="settings_backup_subtitle">تصدير بياناتك إلى ملف wafeer_export.csv</string>
+    <string name="settings_import_csv_title">استيراد ملف CSV</string>
+    <string name="settings_import_csv_subtitle">استيراد بياناتك السابقة من ملف CSV</string>
+    <string name="settings_reset_tutorial_title">إعادة تشغيل الدليل الترحيبي</string>
+    <string name="settings_reset_tutorial_subtitle">ستظهر لك تلميحات الإيماءات والإرشادات التفاعلية مجدداً.</string>
+    <string name="settings_theme_dialog_title">مظهر التطبيق</string>
+    <string name="settings_theme_light_title">فاتح</string>
+    <string name="settings_theme_light_subtitle">استخدام المظهر الفاتح دائماً</string>
+    <string name="settings_theme_dark_title">داكن</string>
+    <string name="settings_theme_dark_subtitle">استخدام المظهر الداكن دائماً</string>
+    <string name="settings_theme_system_title">حسب النظام</string>
+    <string name="settings_theme_system_subtitle">مطابقة إعداد مظهر نظام التشغيل</string>
+    <string name="settings_typography_dialog_title">خطوط التطبيق</string>
+    <string name="settings_typography_default_title">خط ثمانية (ثمانية الأصيل)</string>
+    <string name="settings_typography_default_subtitle">خط عربي فخم مع أحرف منسدلة للعناوين</string>
+    <string name="settings_typography_condensed_title">خط بلكس العصري</string>
+    <string name="settings_typography_condensed_subtitle">خط تقني عصري فائق الوضوح والأناقة</string>
+    <string name="settings_typography_expressive_title">خط ثمانية التعبيري</string>
+    <string name="settings_typography_expressive_subtitle">الخط التعبيري المتفاعل مع الواجهة</string>
+    <string name="expand">توسيع</string>
+    <string name="collapse">طي</string>
+    <string name="budget_pill_over_budget">تجاوزت الحد المسموح</string>
+    <string name="budget_pill_no_budget">لا توجد ميزانية</string>
+    <string name="budget_pill_no_budget_action">إعداد الميزانية</string>
+    <string name="budget_pill_calc_added">سيُضاف %1$s</string>
+    <string name="budget_pill_calc_subtracted">سيُخصم %1$s</string>
+    <string name="budget_pill_exhausted_daily_label">اليومي</string>
+    <string name="budget_pill_exhausted_weekly_label">الأسبوعي</string>
+    <string name="budget_pill_exhausted_biweekly_label">نصف الشهري</string>
+    <string name="budget_pill_exhausted_single">تم استنفاد ميزانية %1$s</string>
+    <string name="budget_pill_exhausted_double">تم استنفاد ميزانيتي %1$s و%2$s</string>
+    <string name="budget_pill_exhausted_triple">تم استنفاد ميزانيات %1$s و%2$s و%3$s</string>
+    <string name="spend_budget_card_spent_label">المصروف</string>
+    <string name="spend_budget_card_available_percent_format">المتاح: %1$s%%</string>
+    <string name="categories_chart_uncategorized">دون تصنيف</string>
+    <string name="categories_chart_rest">المتبقي</string>
+    <string name="categories_chart_empty_title">لا يمكن تقسيم المصروفات حالياً</string>
+    <string name="categories_chart_empty_subtitle">سجل نفقاتك مع تحديد تصنيف لها لتقسيمها</string>
+    <string name="category_no_expenses">لا توجد مصروفات في هذا التصنيف</string>
+    <string name="day_no_expenses">لا توجد نفقات في هذا اليوم حتى الآن…</string>
+    <string name="calendar_heatmap_info_text">يوضح هذا الرسم حجم الإنفاق المالي لكل يوم خلال الفترة</string>
+    <string name="heatmap_legend_less">أقل</string>
+    <string name="heatmap_legend_more">أكثر</string>
+    <string name="no_transactions_title">لا توجد مصروفات مسجلة</string>
+    <string name="no_transactions_subtitle">أضف مصروفاً جديداً للبدء</string>
+    <string name="recurrent_payments_divider_title_upcoming">المدفوعات الدورية القادمة</string>
+    <string name="recurrent_payments_divider_title_current_period">المدفوعات الدورية في هذه الفترة</string>
+    <string name="upcoming_recurrent_today">اليوم</string>
+    <string name="upcoming_recurrent_tomorrow">غداً</string>
+    <string name="upcoming_recurrent_in_days">خلال %1$d أيام</string>
+    <string name="upcoming_recurrent_in_weeks">خلال %1$d أسابيع</string>
+    <string name="upcoming_recurrent_unnamed_expense">مصروف دوري بدون اسم</string>
+    <string name="delete_recurrent_expense_title">حذف المصروف الدوري</string>
+    <string name="delete_recurrent_expense_fallback_name">هذا المصروف الدوري</string>
+    <string name="delete_recurrent_expense_message">هل أنت متأكد من رغبتك بحذف \"%1$s\"؟</string>
+    <string name="delete_recurrent_expense_warning">سيؤدي هذا الإجراء إلى حذف إعدادات المصروف الدوري بالكامل ولن تتلقى تنبيهات عنه مجدداً.</string>
+    <string name="recurrent_ticket_unnamed_subscription">اشتراك بدون اسم</string>
+    <string name="recurrent_ticket_weekly_unnamed">اشتراك أسبوعي بدون اسم</string>
+    <string name="recurrent_ticket_biweekly_unnamed">اشتراك نصف شهري بدون اسم</string>
+    <string name="recurrent_ticket_monthly_unnamed">اشتراك شهري بدون اسم</string>
+    <string name="recurrent_ticket_frequency_weekly">أسبوعياً</string>
+    <string name="recurrent_ticket_frequency_biweekly">نصف شهرياً</string>
+    <string name="recurrent_ticket_frequency_monthly">شهرياً</string>
+    <string name="subscriptions_title">الاشتراكات والالتزامات</string>
+    <string name="subscriptions_analytics_card_label">دوري</string>
+    <string name="subscriptions_monthly_commitment_label">الالتزام الشهري</string>
+    <string name="subscriptions_per_month_suffix">/شهرياً</string>
+    <string name="subscriptions_hero_subtitle_with_next">%1$d نشط · القادم %2$s</string>
+    <string name="subscriptions_hero_subtitle_no_upcoming">%1$d نشط</string>
+    <string name="subscriptions_due_soon_header">يستحق قريباً</string>
+    <string name="subscriptions_upcoming_header">القادمة</string>
+    <string name="subscriptions_due_today_label">مستحق اليوم</string>
+    <string name="subscriptions_mark_as_paid">تحديد كمدفوع</string>
+    <string name="subscriptions_skip_this_cycle">تخطي هذه الفترة</string>
+    <string name="subscriptions_empty_title">لا توجد اشتراكات حتى الآن</string>
+    <string name="subscriptions_empty_body">عيّن أي مصروف كـ \"دوري\" ليظهر هنا مع موعد استحقاقه والوقت المتبقي.</string>
+    <string name="subscriptions_snackbar_confirm_failed">تعذر تأكيد هذه الدفعة</string>
+    <string name="subscriptions_snackbar_skip_failed">تعذر تخطي هذه الدفعة</string>
+    <string name="subscriptions_status_paid">تم الدفع</string>
+    <string name="subscriptions_status_skipped">تم التخطي</string>
+    <string name="subscriptions_budget_committed">%1$s محجوزة من ميزانيتك لهذه الفترة</string>
+    <string name="subscriptions_snackbar_edit_failed">تعذر حفظ هذا التغيير</string>
+    <string name="subscriptions_snackbar_delete_failed">تعذر حذف هذا الاشتراك</string>
+    <string name="subscriptions_frequency_breakdown_title">حسب تكرار الفاتورة</string>
+    <string name="subscriptions_view_mode_whole_period">كامل الفترة</string>
+    <string name="subscriptions_view_mode_weekly">أسبوعياً</string>
+    <string name="subscriptions_view_mode_category">التصنيف</string>
+    <string name="subscriptions_weekly_week_badge">الأسبوع %d</string>
+    <string name="subscriptions_weekly_category_distribution_title">توزيع التصنيفات</string>
+    <string name="subscriptions_weekly_total_suffix">المجموع: %s</string>
+    <plurals name="subscriptions_weekly_bills_scheduled">
+        <item quantity="zero">لا توجد فواتير مجدولة هذا الأسبوع</item>
+        <item quantity="one">فاتورة واحدة مجدولة هذا الأسبوع</item>
+        <item quantity="two">فاتورتان مجدولتان هذا الأسبوع</item>
+        <item quantity="few">%d فواتير مجدولة هذا الأسبوع</item>
+        <item quantity="many">%d فاتورة مجدولة هذا الأسبوع</item>
+        <item quantity="other">%d فاتورة مجدولة هذا الأسبوع</item>
+    </plurals>
+    <string name="subscriptions_item_mark_paid_short">دُفع</string>
+    <string name="subscriptions_item_skip_short">تخطي</string>
+    <string name="subscriptions_item_due_in_days">خلال %1$d أيام (%2$s)</string>
+    <string name="subscriptions_item_due_in_weeks">خلال %1$d أسابيع (%2$s)</string>
+    <string name="rollover_dialog_period_finished_title">انتهت الفترة</string>
+    <string name="rollover_dialog_question">ماذا ترغب أن تفعل بالمبلغ المتبقي؟</string>
+    <string name="rollover_dialog_split_equally_title">توزيع بالتساوي</string>
+    <string name="rollover_dialog_split_equally_desc">توزيع %1$s بالتساوي على جميع أيام ميزانيتك القادمة</string>
+    <string name="rollover_dialog_carry_to_tomorrow_title">إضافة إلى اليوم</string>
+    <string name="rollover_dialog_carry_to_tomorrow_desc">إضافة كامل المبلغ %1$s إلى ميزانية اليوم فقط</string>
+    <string name="rollover_dialog_view_analytics_title">تجاوز المبلغ المتبقي</string>
+    <string name="rollover_dialog_view_analytics_desc">إغلاق الفائض والانتقال مباشرة إلى الإحصائيات</string>
+    <string name="unresolved_surplus_title">فائض مالي معلق</string>
+    <string name="rollover_dialog_pending_label">من فترة سابقة</string>
+    <string name="unresolved_surplus_tap_to_manage">انقر لإدارته</string>
+    <string name="finished_period_header_title">انتهت الفترة</string>
+    <string name="finished_period_header_no_spends">رائع! لم تنفق أي شيء خلال هذه الفترة</string>
+    <string name="finished_period_header_over_budget">انتبه! تجاوزت حدود الميزانية المحددة لهذه الفترة</string>
+    <string name="finished_period_header_summary">إليك تفاصيل وإحصائيات إنفاقك خلال هذه الفترة</string>
+    <string name="savings_recommendation_title">توصيات الادخار</string>
+    <string name="savings_recommendation_method_brief" formatted="false">تعتمد قاعدة %1$d/%2$d/%3$d على تقسيم ميزانيتك إلى: %1$d%% للضروريات، و%2$d%% للرغبات، و%3$d%% للادخار، مما يمنحك استقراراً مالياً وتوفيراً مستمراً.</string>
+    <string name="savings_recommendation_current_savings_label">المدخرات الحالية</string>
+    <string name="savings_recommendation_available_format">المتاح: %1$s</string>
+    <string name="savings_recommendation_ideal_savings_format">الادخار المثالي: %1$s</string>
+    <string name="savings_recommendation_current_savings_format">الادخار الحالي: %1$s</string>
+    <string name="savings_recommendation_recurrent_expenses_label">المصاريف الدورية</string>
+    <string name="savings_recommendation_one_time_expenses_label">المصاريف المنفردة</string>
+    <string name="savings_recommendation_six_month_example_intro" formatted="false">إذا وفرت %1$d%% في كل فترة لمدة 6 أشهر تقريباً، يمكنك جمع:</string>
+    <string name="savings_recommendation_goal_format" formatted="false">للوصول إلى %1$s خلال %2$d أشهر، وفّر %3$s في كل فترة.</string>
+    <string name="savings_recommendation_goal_disabled" formatted="false">يظهر مثال النسبة الافتراضية %1$d%%. يمكنك تعيين هدف ادخار بمبلغ محدد في الإعدادات.</string>
+    <string name="settings_savings_preferences_title">تفضيلات الادخار</string>
+    <string name="settings_savings_preferences_subtitle">تخصيص نسب 50/30/20 وتحديد هدف ادخاري مخصص</string>
+    <string name="settings_savings_dialog_split_label">تقسيم الميزانية</string>
+    <string name="settings_savings_dialog_split_hint">يجب أن يكون مجموع النسب الثلاث 100%%.</string>
+    <string name="settings_savings_dialog_split_invalid">يجب أن يكون مجموع النسب الثلاث 100%% (المجموع الحالي: %1$d%%).</string>
+    <string name="settings_savings_preset_balanced_title">متوازن</string>
+    <string name="settings_savings_preset_balanced_subtitle">50/30/20 — التقسيم الكلاسيكي الأكثر انتشاراً</string>
+    <string name="settings_savings_preset_aggressive_title">ادخار مكثف</string>
+    <string name="settings_savings_preset_aggressive_subtitle">40/20/40 — زيادة نسبة التوفير في كل فترة</string>
+    <string name="settings_savings_preset_conservative_title">مرن</string>
+    <string name="settings_savings_preset_conservative_subtitle">70/20/10 — تغطية أكبر للضروريات وادخار ميسر</string>
+    <string name="settings_savings_preset_custom_title">مخصص</string>
+    <string name="settings_savings_preset_custom_subtitle">%1$d/%2$d/%3$d — حدد نسبك الخاصة كما تشاء</string>
+    <string name="settings_savings_dialog_custom_section">تقسيم مخصص</string>
+    <string name="settings_savings_dialog_needs_label">الضروريات — %1$d%%</string>
+    <string name="settings_savings_dialog_wants_label">الرغبات — %1$d%%</string>
+    <string name="settings_savings_dialog_savings_label">الادخار — %1$d%%</string>
+    <string name="settings_savings_dialog_goal_section">هدف الادخار (اختياري)</string>
+    <string name="settings_savings_dialog_goal_amount_label">المبلغ المستهدف</string>
+    <string name="settings_savings_dialog_goal_months_label">الفترة المستهدفة (بالأشهر)</string>
+    <string name="settings_savings_dialog_goal_hint">اتركه فارغاً للاحتفاظ بمثال النسبة الافتراضية × 6.</string>
+    <string name="settings_savings_dialog_reset">إعادة ضبط للافتراضي</string>
+    <string name="wavy_divider_show_all_past_period_expenses">عرض كافة نفقات الفترة السابقة…</string>
+    <string name="use_previous_period_days">استخدام %d يوماً</string>
+    <string name="currency_label">العملة</string>
+    <string name="budget_duration_label">المدة</string>
+    <string name="budget_base_currency_label">العملة الأساسية</string>
+    <string name="budget_behaviour_title">سلوك احتساب الميزانية</string>
+    <string name="budget_behaviour_subtitle">حدد ما يحدث للمال الفائض وكيف يتم احتساب مخصصك اليومي.</string>
+    <string name="budget_behaviour_surplus_title">فائض نهاية الفترة</string>
+    <string name="budget_behaviour_surplus_ask">سؤالي دائماً</string>
+    <string name="budget_behaviour_surplus_spread">توزيع الفائض</string>
+    <string name="budget_behaviour_surplus_first_day">إضافة لليوم الأول</string>
+    <string name="budget_behaviour_surplus_preview_ask">عند انتهاء الفترة، تختار أنت ما تفعله بالمبلغ المتبقي.</string>
+    <string name="budget_behaviour_surplus_preview_spread">يُوزع الفائض بالتساوي على جميع أيام الفترة الجديدة.</string>
+    <string name="budget_behaviour_surplus_preview_first_day">يُضاف كامل الفائض إلى رصيد اليوم الأول من الفترة الجديدة.</string>
+    <string name="select_currency">اختيار العملة</string>
+    <string name="search_currency">بحث عن عملة…</string>
+    <string name="clear">مسح</string>
+    <string name="currency_no_results">لم يتم العثور على عملات مطابقة</string>
+    <string name="currency_selected">تم التحديد</string>
+    <string name="split_mode_label">نمط التقسيم</string>
+    <string name="split_mode_static">ثابت</string>
+    <string name="split_mode_static_desc">تُقسم الميزانية بالتساوي على جميع الأيام، بصرف النظر عما تنفقه أو توفره.</string>
+    <string name="split_mode_dynamic">توزيع ديناميكي على الأيام</string>
+    <string name="split_mode_dynamic_desc">يُعاد الحساب يومياً بناءً على ما أنفقته؛ يُوزع الرصيد المتبقي على الأيام الباقية من الفترة.</string>
+    <string name="split_mode_carry_over">ترحيل يومي تراكمي</string>
+    <string name="split_mode_carry_over_desc">ما لا تنفقه في يومك يُضاف لميزانية اليوم التالي ويتراكم تلقائياً.</string>
+    <string name="split_mode_ask_me">سؤالي يومياً</string>
+    <string name="split_mode_ask_me_desc">تقرر كل يوم ما تفعله بفائض الأمس: توزيعه على باقي الأيام أو إضافته لليوم.</string>
+    <string name="leftover_choice_spread_desc">توزيع كامل الفائض غير المستخدم على باقي الأيام.</string>
+    <string name="leftover_choice_carry_desc">إضافة كامل الفائض إلى رصيد اليوم فقط.</string>
+    <string name="leftover_choice_spread_outcome">%1$s للأيام القادمة</string>
+    <string name="leftover_choice_carry_outcome">%1$s للغد</string>
+    <string name="leftover_choice_outcome">متبقٍ لليوم · ثم %1$s/يوم</string>
+    <string name="leftover_choice_outcome_last_day">متبقٍ لليوم</string>
+    <string name="without_date">دون تاريخ</string>
+    <string name="no_name">بدون اسم</string>
+    <string name="no_name_income">دخل بدون اسم</string>
+    <string name="description">سبب الشراء</string>
+    <string name="adjustment_reason">السبب</string>
+    <string name="date">التاريخ</string>
+    <string name="frequency">التكرار</string>
+    <string name="charge_day">يوم الخصم</string>
+    <string name="day_number">اليوم %1$d</string>
+    <string name="recurrence_end">نهاية التكرار</string>
+    <string name="ticket_total_amount">إجمالي المبلغ</string>
+    <string name="mark_all_as_paid">تحديد الكل كمدفوع</string>
+    <string name="mark_all_as_paid_success">تم تحديد الكل كمدفوع</string>
+    <string name="mark_as_paid">تحديد كمدفوع</string>
+    <string name="mark_as_paid_success">تم التحديد كمدفوع</string>
+    <string name="notification_channel_period_end_name">نهاية فترة الميزانية</string>
+    <string name="notification_channel_period_end_description">إشعارات عند انتهاء فترة الميزانية مع رصيد متبقٍ</string>
+    <string name="notification_channel_recurrent_name">المصاريف والاشتراكات الدورية</string>
+    <string name="notification_channel_recurrent_description">إشعارات عند حلول موعد المصاريف الدورية</string>
+    <string name="notification_channel_credit_name">تذكيرات البطاقة الائتمانية</string>
+    <string name="notification_channel_credit_description">تذكيرات قبل موعد صدور كشف حساب البطاقة الائتمانية</string>
+    <string name="notification_period_end_title">انتهت فترة الميزانية</string>
+    <string name="notification_period_end_message_positive">انتهت الفترة ومتبقٍ لديك %1$s وفراً. انقر لعرض التفاصيل.</string>
+    <string name="notification_period_end_message_negative">انتهت الفترة بتجاوز للميزانية قدره %1$s. انقر لعرض التفاصيل.</string>
+    <string name="notification_period_end_message_neutral">انتهت الفترة دون تسجيل أي مصاريف. انقر لعرض التفاصيل.</string>
+    <string name="notification_recurrent_due_today_title">موعد سداد \"%1$s\" يحل اليوم</string>
+    <string name="notification_recurrent_charged_weekly">مصروفك الأسبوعي بقيمة %1$s حان وقت سداده.</string>
+    <string name="notification_recurrent_charged_biweekly">مصروفك نصف الشهري بقيمة %1$s حان وقت سداده.</string>
+    <string name="notification_recurrent_charged_monthly">مصروفك الشهري بقيمة %1$s حان وقت سداده.</string>
+    <string name="notification_tomorrow">غداً</string>
+    <string name="notification_in_days">خلال %1$d أيام</string>
+    <string name="notification_upcoming_subscription_title">مصروف قادم</string>
+    <string name="notification_upcoming_subscription_message_with_comment">اشتراك \"%1$s\" لـ \"%2$s\" سيُخصم %3$s. استعد لسداده.</string>
+    <string name="notification_upcoming_subscription_message_without_comment">لديك اشتراك بقيمة \"%1$s\" سيُخصم %2$s.</string>
+    <string name="notification_credit_cutoff_title">موعد استحقاق البطاقة الائتمانية</string>
+    <string name="notification_credit_cutoff_message">تاريخ الاستحقاق هو %1$s. يُنصح بدفع %2$s لتجنب أي فوائد.</string>
+    <string name="credit_owed_label">إجمالي المستحق</string>
+    <string name="debt_adjusted_balance_label">صافي الرصيد بعد الالتزامات</string>
+    <string name="debt_adjusted_label_format">%1$s - %2$s دين ائتماني</string>
+    <string name="credit_badge">ائتمان</string>
+    <string name="credit_cutoff_subtitle">%1$s — الاستحقاق خلال %2$d أيام</string>
+    <string name="credit_cutoff_subtitle_today">%1$s — الاستحقاق اليوم</string>
+    <string name="ticket_expense">مصروف</string>
+    <string name="ticket_recurrent_expense">مصروف دوري</string>
+    <string name="past_periods_title">الفترات السابقة</string>
+    <string name="past_periods_subtitle">انقر على أي فترة لعرض تفاصيلها، أو اضغط مطولاً لحذفها.</string>
+    <string name="past_periods_empty">لا توجد فترات سابقة مؤرشفة</string>
+    <string name="past_periods_spent_label">المصروف</string>
+    <string name="past_periods_limit_label">الحد الأقصى</string>
+    <string name="past_periods_status_on_track">ضمن الميزانية</string>
+    <string name="past_periods_status_over_budget">تجاوز الميزانية</string>
+    <string name="past_periods_status_estimated">تقديري</string>
+    <string name="past_periods_estimated_divider">فترات تقديرية أدناه</string>
+    <string name="past_periods_status_saved">تم توفير %1$s</string>
+    <string name="past_periods_saved_label">المبلغ الموفّر</string>
+    <string name="unlock_past_period">إلغاء القفل للتعديل</string>
+    <string name="biometric_prompt_title">إلغاء قفل الفترة السابقة</string>
+    <string name="biometric_prompt_subtitle">قم بتأكيد هويتك بالبصمة لتعديل مصاريف الفترات السابقة</string>
+    <string name="past_period_unlocked_message">تم إلغاء قفل تعديل الفترة السابقة بنجاح</string>
+    <string name="past_period_edit_confirm_title">تعديل مصروف من فترة سابقة؟</string>
+    <string name="past_period_edit_confirm_message">هل أنت متأكد من رغبتك بتعديل أو حذف هذا المصروف من فترة سابقة؟ سيتطلب ذلك التحقق بالبصمة.</string>
+    <string name="past_period_delete_confirm_title">حذف الفترة السابقة؟</string>
+    <string name="past_period_delete_confirm_message">سيؤدي هذا إلى حذف الفترة %1$s – %2$s وجميع مصاريفها نهائياً مع الإبقاء على الاشتراكات. سيتطلب ذلك التحقق بالبصمة.</string>
+    <string name="dialog_yes">نعم</string>
+    <string name="analytics_tutorial_minmax_title">أنماط واتجاهات الإنفاق</string>
+    <string name="analytics_tutorial_minmax_desc">توضح هذه البطاقات أدنى وأعلى نفقاتك المسجلة.\nوتتحدث تلقائياً مع إضافة العمليات لمساعدتك على رصد النفقات غير المعتادة.</string>
+    <string name="analytics_tutorial_header_title">أرشيف الفترات السابقة</string>
+    <string name="analytics_tutorial_header_desc">اضغط على الأيقونة للاطلاع على فترات ميزانيتك السابقة وتقييم أدائك المالي فيها.</string>
+    <string name="analytics_tutorial_budget_title">حالة الميزانية</string>
+    <string name="analytics_tutorial_budget_desc">تحقق من إجمالي ميزانيتك وعدد أيام الفترة الإجمالي.</string>
+    <string name="analytics_tutorial_heatmap_title">كثافة الإنفاق اليومي</string>
+    <string name="analytics_tutorial_heatmap_desc">يوضح هذا التقويم الأيام التي تنفق فيها أكثر. الأيام الأكثر قتامة تعني إنفاقاً أعلى. اضغط على أي يوم لرؤية جميع مصاريفه.</string>
+    <string name="analytics_tutorial_charts_title">توزيع التصنيفات</string>
+    <string name="analytics_tutorial_charts_desc">شاهد أي التصنيفات تستهلك ميزانيتك أكثر. انقر على أي جزء أو تصنيف لعرض تفاصيله.</string>
+    <string name="analytics_tutorial_savings_title">توصيات الادخار</string>
+    <string name="analytics_tutorial_savings_desc">بناءً على قاعدة 50/30/20، نقترح المبلغ المثالي الذي ينبغي ادخاره. يمكنك تخصيص ذلك في الإعدادات.</string>
+    <string name="analytics_no_period_title">لا توجد فترة ميزانية بعد</string>
+    <string name="analytics_no_period_body">أنشئ فترة ميزانية وستظهر نفقاتك وتصنيفاتك ومعدل توفيرك هنا مباشرة.</string>
+    <string name="analytics_tutorial_credit_title">إدارة البطاقات الائتمانية</string>
+    <string name="analytics_tutorial_credit_desc">انقر على بطاقة الائتمان لعرض كافة مدفوعاتها، أو تحديدها كمدفوعة، أو ضبط تاريخ كشف الحساب لتفادي الفوائد.</string>
+    <string name="analytics_tutorial_history_title">سجل العمليات</string>
+    <string name="analytics_tutorial_history_desc">اضغط هنا لعرض قائمة بجميع مصاريفك لهذه الفترة.</string>
+    <string name="skip_tutorial">تخطي</string>
+    <string name="budget_graph_header_spending">الإنفاق</string>
+    <string name="budget_graph_legend_current">الحالي</string>
+    <string name="budget_graph_legend_previous">السابق</string>
+    <string name="budget_graph_view_mode_cumulative">الاتجاه</string>
+    <string name="budget_graph_view_mode_categories">التصنيفات</string>
+    <string name="budget_graph_nav_prev">السابق</string>
+    <string name="budget_graph_nav_next">التالي</string>
+    <string name="graph_granularity_days">أيام</string>
+    <string name="graph_granularity_week">أسبوع</string>
+    <string name="graph_granularity_biweek">أسبوعين</string>
+    <string name="graph_granularity_month">شهر</string>
+    <string name="graph_granularity_total">المجموع</string>
+    <string name="unit_thousands">ألف</string>
+    <string name="unit_millions">مليون</string>
+    <string name="widget_budget_pill_title">شريط الميزانية</string>
+    <string name="widget_budget_pill_description">المتبقي وفق نمط العرض الذي تختاره — يومي، أسبوعي، نصف شهري أو شهري — في شريط رشيق وأنيق</string>
+    <string name="empty" translatable="false">—</string>
+    <string name="expense_item_unnamed_income">دخل غير مسمى</string>
+    <string name="widget_average_spend_description">عرض متوسط الإنفاق اليومي بلمحة سريعة</string>
+    <string name="widget_min_max_spent_description">عرض أقل وأعلى مصروفاتك بلمحة سريعة</string>
+    <string name="widget_complete_budget_preview_spent_label">إجمالي المصروفات</string>
+    <string name="widget_complete_budget_preview_spent_amount">١٨٠ ر.س</string>
+    <string name="widget_complete_budget_preview_amount">٥٠٠ ر.س</string>
+    <string name="widget_complete_budget_preview_start">٠٦ مارس</string>
+    <string name="widget_complete_budget_preview_days">١٦ يوم</string>
+    <string name="widget_complete_budget_preview_end">٢١ مارس</string>
+    <string name="widget_average_spend_preview_amount">٧٢ ر.س</string>
+    <string name="widget_average_spend_preview_meta">٨ · ١٢ يوم</string>
+    <string name="widget_min_max_spent_preview_min_amount">٤٢ ر.س</string>
+    <string name="widget_min_max_spent_preview_max_amount">١٨٦ ر.س</string>
+    <string name="widget_min_max_spent_preview_min_date">١٤ يونيو ٢٠٢٦ ١٠:٢٠</string>
+    <string name="widget_min_max_spent_preview_max_date">١٥ يونيو ٢٠٢٦ ١٨:٤٥</string>
+    <string name="widget_budget_overview_preview_amount">٥٠٠ ر.س</string>
+    <string name="widget_budget_overview_preview_start">٠٦ مارس</string>
+    <string name="widget_budget_overview_preview_days">١٦ يوم</string>
+    <string name="widget_budget_overview_preview_end">٢١ مارس</string>
+    <string name="widget_heatmap_preview_mar">مارس</string>
+    <string name="widget_heatmap_preview_apr">أبريل</string>
+    <string name="widget_heatmap_preview_months">٤ أشهر</string>
+    <string name="widget_month_heatmap_preview_month">يونيو</string>
+    <string name="widget_add_expense_plus" translatable="false">+</string>
+    <string name="widget_budget_pill_preview_amount">١١٠٫٠٠ ر.س</string>
+    <string name="budget_formula_subtitle" translatable="false">%1$s · %2$s</string>
+    <string name="budget_graph_page_indicator" translatable="false">%1$d / %2$d</string>
+    <string name="bug_report_email_subject" translatable="false">%1$s</string>
+    <string name="bug_report_github_issues_url" translatable="false" />
+    <string name="bug_report_recipient_email" translatable="false">abdelrhmanBit@proton.me</string>
+    <string name="savings_recommendation_six_month_example_equation" translatable="false">%1$s × 6 = %2$s</string>
+    <string name="settings_savings_dialog_split_format" translatable="false">%1$d / %2$d / %3$d</string>
     <string name="settings_language_en" translatable="false">English</string>
     <string name="settings_language_de" translatable="false">Deutsch</string>
     <string name="settings_language_el" translatable="false">Ελληνικά</string>
@@ -366,477 +776,78 @@
     <string name="settings_language_ru" translatable="false">Русский</string>
     <string name="settings_language_zh" translatable="false">中文</string>
     <string name="settings_language_br" translatable="false">Bulgarian</string>
-    <string name="settings_color_scheme_title">Colorscheme</string>
-    <string name="settings_section_notifications">Notifications</string>
-    <string name="settings_section_features">Features</string>
-    <string name="settings_section_app_info">App information</string>
-    <string name="settings_section_data_backup">Data backup</string>
-    <string name="settings_section_tutorial">Tutorial</string>
-    <string name="settings_section_savings">Savings</string>
-
-    <string name="settings_theme_title">Theme</string>
-    <string name="settings_theme_subtitle">Change the app theme style</string>
-    <string name="settings_appearance_title">Theming and color</string>
-    <string name="settings_appearance_subtitle">Change the color and appearance of the app</string>
-    <string name="settings_widgets_title">Widgets</string>
-    <string name="settings_widgets_subtitle">Explore and see widgets to use on your home screen</string>
-    <string name="settings_typography_title">Typography</string>
-    <string name="settings_typography_subtitle">Change the app typography style</string>
-    <string name="settings_rounded_font_title">Rounded font style</string>
-    <string name="settings_material_you_title">Material You</string>
-    <string name="settings_material_you_subtitle">Use wallpaper colors to apply a dynamic app theme</string>
-    <string name="settings_amoled_title">AMOLED theme</string>
-    <string name="settings_amoled_subtitle">Use pure black backgrounds and surfaces in dark mode</string>
-    <string name="settings_censor_mode_title">Privacy mode</string>
-    <string name="settings_censor_mode_subtitle">Hide and blur all financial values across the app</string>
-    <string name="settings_feature_credit_toggle_title">Use Credit Card as payment</string>
-    <string name="settings_feature_credit_toggle_subtitle">Tap to see more details</string>
-    <string name="settings_feature_credit_toggle_details">When activated, you can now mark payments made with a credit card. \nBy declaring a billing date, you\'ll know how much to pay your bank before you have to pay interest, through a notification separate from the billing period.</string>
-    <string name="settings_feature_credit_toggle_switch_label">Enable CC usage</string>
-    <string name="settings_category_behavior_title">Category behavior</string>
-    <string name="settings_category_behavior_subtitle">Configure how the category picker behaves when tagging a transaction.</string>
-    <string name="settings_category_picker_direct_popup_switch_label">Show categories on tap</string>
-    <string name="settings_category_picker_direct_popup_description">Open the suggestions popup with all your saved categories as soon as you tap the category field. When off, suggestions only appear after you start typing.</string>
-    <string name="settings_category_grid_mode_switch_label">Show as a list (Experimental)</string>
-    <string name="settings_category_grid_mode_description">Tap the category tag to open a grid of your saved categories, instead of entering inline edit mode. Also turns off the numpad\'s calculation mode while this is on.</string>
-    <string name="settings_feature_extra_note_title">Extra note per transaction</string>
-    <string name="settings_feature_extra_note_subtitle">Tap to see more details</string>
-    <string name="settings_feature_extra_note_description">Adds an optional \"Extra note\" field next to the category when adding or editing a transaction. Use it to remember a detail the category alone doesn\'t capture — like what exactly the money in \"Commute\" was spent on.</string>
-    <string name="settings_feature_extra_note_switch_label">Enable extra note</string>
-    <string name="settings_feature_reserve_upcoming_charges_title">Reserve upcoming charges</string>
-    <string name="settings_feature_reserve_upcoming_charges_description">Sets aside every recurring charge due later in the current period from day one, instead of deducting each one on its due date. Your remaining budget and daily amount will only show what is truly free to spend.</string>
-    <string name="settings_feature_reserve_upcoming_charges_switch_label">Reserve charges up front</string>
-    <string name="settings_feature_lab_title">Extra features</string>
-    <string name="settings_feature_lab_subtitle">Optional and experimental features you can turn on</string>
-    <string name="settings_feature_lab_header">Each feature here is optional and off by default; some are experimental and may change in a later update. Tap one to turn it on and see exactly what it changes.</string>
-    <string name="settings_feature_new_category_tag_title">Save categories on their own</string>
-    <string name="settings_feature_new_category_tag_description">Adds a \"New category\" tag to the idle screen so you can create and save a category on its own, with no amount or transaction attached.</string>
-    <string name="settings_feature_category_direct_popup_title">Category suggestions on tap</string>
-    <string name="settings_feature_category_grid_title">Category list mode</string>
-    <string name="settings_feature_show_past_transactions_switch_label">Load past periods</string>
-    <string name="settings_feature_show_past_transactions_title">Show past transactions</string>
-    <string name="settings_feature_show_past_transactions_subtitle">Load transactions from past periods</string>
-    <string name="settings_feature_group_categories">Categories</string>
-    <string name="settings_feature_group_transactions">Transactions</string>
-    <string name="settings_feature_group_budget">Budget &amp; payments</string>
-    <string name="settings_feature_experimental">Experimental</string>
-    <string name="settings_feature_state_on">On</string>
-    <string name="settings_feature_state_off">Off</string>
-    <string name="settings_recurrent_payments_view_mode_title">Recurrent payments view mode</string>
-    <string name="settings_recurrent_payments_view_mode_subtitle">Change the type of display to show your recurrent payments</string>
-    <string name="settings_recurrent_payments_view_mode_dialog_title">Recurrent payments view mode</string>
-    <string name="settings_recurrent_payments_view_mode_horizontal_title">Horizontal</string>
-    <string name="settings_recurrent_payments_view_mode_horizontal_subtitle">Show recurring payments as horizontal cards</string>
-    <string name="settings_recurrent_payments_view_mode_vertical_title">Vertical</string>
-    <string name="settings_recurrent_payments_view_mode_vertical_subtitle">Show recurring payments as a regular expenses list</string>
-
-    <string name="settings_period_end_time_title">Period end time</string>
-    <string name="settings_period_end_time_subtitle">The notification will be shown on the period end date at this time</string>
-    <string name="settings_recurrent_notification_time_title">Recurring payments time</string>
-    <string name="settings_recurrent_notification_time_subtitle">Daily recurring payment checks run at this time</string>
-    <string name="settings_notification_permission_title">Notifications permission</string>
-    <string name="settings_notification_permission_granted_subtitle">Granted — you will receive notifications</string>
-    <string name="settings_notification_permission_denied_subtitle">Denied — tap to open system settings and allow notifications</string>
-    <string name="settings_notification_permission_action">Open</string>
-    <string name="settings_exact_alarm_title">Exact alarms</string>
-    <string name="settings_exact_alarm_enabled_subtitle">Enabled to try showing notifications at the selected time</string>
-    <string name="settings_exact_alarm_disabled_subtitle">Disabled; Android may delay the notification</string>
-    <string name="settings_time_picker_cancel">Cancel</string>
-    <string name="settings_time_picker_confirm">OK</string>
-
-    <string name="settings_about_title">About</string>
-    <string name="settings_about_subtitle">Wafeer — Developer: Abdelrahman Karim</string>
-    <string name="settings_bug_report_title">Found a bug?</string>
-    <string name="settings_bug_report_subtitle">Create a bug report and we will fix it soon</string>
-    <string name="settings_what_is_this_for">What is this for?</string>
-    <string name="settings_version_title">Version</string>
-    <string name="settings_version_metadata_copied">App and device metadata copied to clipboard</string>
-
-    <!-- Bug Report -->
-    <string name="bug_report_title">Feedback &amp; Support</string>
-    <string name="bug_report_type_label">Report type</string>
-    <string name="bug_report_type_bug_report">Bug Report</string>
-    <string name="bug_report_type_feature_request">Feature Request</string>
-    <string name="bug_report_title_label">Title</string>
-    <string name="bug_report_title_placeholder">Summarize the issue or request…</string>
-    <string name="bug_report_title_required">A title is required to submit.</string>
-    <string name="bug_report_description_label">Description</string>
-    <string name="bug_report_description_placeholder">What happened? What did you expect to happen?</string>
-    <string name="bug_report_description_required">A description is required to submit.</string>
-    <string name="bug_report_problem_label">Problem</string>
-    <string name="bug_report_problem_placeholder">What problem or workflow would this improve?</string>
-    <string name="bug_report_problem_required">A problem description is required.</string>
-    <string name="bug_report_proposed_solution_label">Proposed solution</string>
-    <string name="bug_report_proposed_solution_placeholder">Describe the change you would like to see…</string>
-    <string name="bug_report_proposed_solution_required">A proposed solution is required for feature requests.</string>
-    <string name="bug_report_alternatives_considered_label">Alternatives considered</string>
-    <string name="bug_report_alternatives_considered_placeholder">Optional: other ways this could work…</string>
-    <string name="bug_report_additional_context_label">Additional context</string>
-    <string name="bug_report_additional_context_placeholder_bug">Logs, exported data details, recurrence/budget period setup, or anything else useful.</string>
-    <string name="bug_report_additional_context_placeholder_feature">Any extra info if necessary</string>
-    <string name="bug_report_attachments_label">Attachments</string>
-    <string name="bug_report_attachments_label_bug">Screenshots or recordings</string>
-    <string name="bug_report_submit">Submit Report</string>
-    <string name="bug_report_share_title">Send report</string>
-    <string name="bug_report_recipient_email" translatable="false">abdelrhmanBit@proton.me</string>
-    <string name="bug_report_email_subject" translatable="false">%1$s</string>
-    <string name="bug_report_help_title">Help us make Wafeer better</string>
-    <string name="bug_report_help_message_prefix">"Reporting issues or suggesting improvements helps us make Wafeer better for everyone.\n\nThis guided form helps you package all the necessary details into a report, automatically attaching device metadata and app diagnostics to speed up our investigation.\n\nYou can send the report directly via email to the developer."</string>
-    <string name="bug_report_help_github_issues" translatable="false"></string>
-    <string name="bug_report_help_message_suffix" translatable="false"></string>
-    <string name="bug_report_github_issues_url" translatable="false"></string>
-    <string name="bug_report_steps_to_reproduce_label">Steps to reproduce</string>
-    <string name="bug_report_include_steps_label">Include reproduction steps</string>
-    <string name="bug_report_add_step">Add Step</string>
-    <string name="bug_report_step_placeholder_wallet">Open the wallet screen</string>
-    <string name="bug_report_step_placeholder_transfer">Click on \'Transfer\'</string>
-    <string name="bug_report_step_placeholder_crash">Observe the crash…</string>
-    <string name="bug_report_step_placeholder_format">Describe step %1$d…</string>
-    <string name="bug_report_step_number_format">%1$d.</string>
-    <string name="bug_report_upload_assets">Upload Assets</string>
-    <string name="bug_report_upload_assets_subtitle">Screenshots or videos (up to 10MB)</string>
-    <string name="bug_report_upload_assets_selected_count">%1$d attachment(s) selected</string>
-    <string name="bug_report_remove_attachment">Remove attachment</string>
-
-    <string name="settings_backup_title">Back up data</string>
-    <string name="settings_backup_subtitle">Back up data to minus_export.csv</string>
-    <string name="settings_import_csv_title">Import CSV</string>
-    <string name="settings_import_csv_subtitle">Import data from a CSV file</string>
-
-    <string name="settings_reset_tutorial_title">Reset tutorial</string>
-    <string name="settings_reset_tutorial_subtitle">You will see gesture hints, info, and actions across the app again.</string>
-
-    <string name="settings_theme_dialog_title">App theme</string>
-    <string name="settings_theme_light_title">Light</string>
-    <string name="settings_theme_light_subtitle">Always use light theme</string>
-    <string name="settings_theme_dark_title">Dark</string>
-    <string name="settings_theme_dark_subtitle">Always use dark theme</string>
-    <string name="settings_theme_system_title">Follow system</string>
-    <string name="settings_theme_system_subtitle">Use the system theme setting</string>
-
-    <string name="settings_typography_dialog_title">App typography</string>
-    <string name="settings_typography_default_title">Default</string>
-    <string name="settings_typography_default_subtitle">Use the base typography</string>
-    <string name="settings_typography_condensed_title">Condensed</string>
-    <string name="settings_typography_condensed_subtitle">Use compact typography</string>
-    <string name="settings_typography_expressive_title">Expressive</string>
-    <string name="settings_typography_expressive_subtitle">Use expressive typography</string>
-
-    <string name="expand">Expand</string>
-    <string name="collapse">Collapse</string>
-
-    <!-- Budget Pill -->
-    <string name="budget_pill_over_budget">Budget amount exceeded</string>
-    <string name="budget_pill_no_budget">No budget</string>
-    <string name="budget_pill_no_budget_action">Set up your budget</string>
-    <string name="budget_pill_calc_added">%1$s will be added</string>
-    <string name="budget_pill_calc_subtracted">%1$s will be subtracted</string>
-    <string name="budget_pill_exhausted_daily_label">Daily</string>
-    <string name="budget_pill_exhausted_weekly_label">Weekly</string>
-    <string name="budget_pill_exhausted_biweekly_label">Biweekly</string>
-    <string name="budget_pill_exhausted_single">%1$s budget spent</string>
-    <string name="budget_pill_exhausted_double">%1$s and %2$s budget spent</string>
-    <string name="budget_pill_exhausted_triple">%1$s, %2$s and %3$s budget spent</string>
-
-    <!-- Spend Budget Card -->
-    <string name="spend_budget_card_spent_label">Spent</string>
-    <string name="spend_budget_card_available_percent_format">Available: %1$s%%</string>
-
-    <!-- Categories Chart -->
-    <string name="categories_chart_uncategorized">Uncategorized</string>
-    <string name="categories_chart_rest">Remaining</string>
-    <string name="categories_chart_empty_title">We can\'t split your expenses</string>
-    <string name="categories_chart_empty_subtitle">Save expenses with a category to split them</string>
-    <string name="category_no_expenses">No expenses in this category</string>
-    <string name="day_no_expenses">No expenses on this day, yet…</string>
-
-    <!-- Calendar Heatmap -->
-    <string name="calendar_heatmap_info_text">This chart shows money spent for each day in the period</string>
-    <string name="heatmap_legend_less">Less</string>
-    <string name="heatmap_legend_more">More</string>
-
-    <!-- No Transactions -->
-    <string name="no_transactions_title">No recorded expenses</string>
-    <string name="no_transactions_subtitle">Add an expense to get started</string>
-
-    <!-- Recurrent Payments Divider -->
-    <string name="recurrent_payments_divider_title_upcoming">Upcoming recurrent payments</string>
-    <string name="recurrent_payments_divider_title_current_period">Recurrent Payments on this period</string>
-
-    <!-- Upcoming Recurrent Item -->
-    <string name="upcoming_recurrent_today">Today</string>
-    <string name="upcoming_recurrent_tomorrow">Tomorrow</string>
-    <string name="upcoming_recurrent_in_days">In %1$d days</string>
-    <string name="upcoming_recurrent_in_weeks">In %1$d weeks</string>
-    <string name="upcoming_recurrent_unnamed_expense">Unnamed recurrent expense</string>
-    <string name="delete_recurrent_expense_title">Delete recurrent expense</string>
-    <string name="delete_recurrent_expense_fallback_name">this recurrent expense</string>
-    <string name="delete_recurrent_expense_message">Are you sure you want to delete "%1$s"?</string>
-    <string name="delete_recurrent_expense_warning">This action will remove the whole recurrent expense configuration and you will not receive more notifications.</string>
-
-    <!-- Recurrent Ticket -->
-    <string name="recurrent_ticket_unnamed_subscription">Unnamed subscription</string>
-    <string name="recurrent_ticket_weekly_unnamed">Weekly subscription without name</string>
-    <string name="recurrent_ticket_biweekly_unnamed">Biweekly subscription without name</string>
-    <string name="recurrent_ticket_monthly_unnamed">Monthly subscription without name</string>
-    <string name="recurrent_ticket_frequency_weekly">Weekly</string>
-    <string name="recurrent_ticket_frequency_biweekly">Biweekly</string>
-    <string name="recurrent_ticket_frequency_monthly">Monthly</string>
-
-    <!-- Subscriptions screen -->
-    <string name="subscriptions_title">Subscriptions</string>
-    <string name="subscriptions_analytics_card_label">Recurring</string>
-    <string name="subscriptions_monthly_commitment_label">Monthly commitment</string>
-    <string name="subscriptions_per_month_suffix">/mo</string>
-    <string name="subscriptions_hero_subtitle_with_next">%1$d active · next up %2$s</string>
-    <string name="subscriptions_hero_subtitle_no_upcoming">%1$d active</string>
-    <string name="subscriptions_due_soon_header">Due soon</string>
-    <string name="subscriptions_upcoming_header">Upcoming</string>
-    <string name="subscriptions_due_today_label">Due today</string>
-    <string name="subscriptions_mark_as_paid">Mark as paid</string>
-    <string name="subscriptions_skip_this_cycle">Skip on this period</string>
-    <string name="subscriptions_empty_title">No subscriptions yet</string>
-    <string name="subscriptions_empty_body">Mark an expense as recurring and it shows up here with its due date and time left.</string>
-    <string name="subscriptions_snackbar_confirm_failed">Could not confirm this payment</string>
-    <string name="subscriptions_snackbar_skip_failed">Could not skip this payment</string>
-    <string name="subscriptions_status_paid">Paid</string>
-    <string name="subscriptions_status_skipped">Skipped</string>
-    <string name="subscriptions_budget_committed">%1$s of your budget this period</string>
-    <string name="subscriptions_snackbar_edit_failed">Could not save this change</string>
-    <string name="subscriptions_snackbar_delete_failed">Could not delete this subscription</string>
-    <string name="subscriptions_frequency_breakdown_title">By billing frequency</string>
-    <string name="subscriptions_view_mode_whole_period">Whole period</string>
-    <string name="subscriptions_view_mode_weekly">Weekly</string>
-    <string name="subscriptions_view_mode_category">Category</string>
-    <string name="subscriptions_weekly_week_badge">Week %d</string>
-    <string name="subscriptions_weekly_category_distribution_title">Category Distribution</string>
-    <string name="subscriptions_weekly_total_suffix">%s total</string>
-
-    <plurals name="subscriptions_weekly_bills_scheduled">
-        <item quantity="one">%d bill scheduled this week</item>
-        <item quantity="other">%d bills scheduled this week</item>
-    </plurals>
-
-    <string name="subscriptions_item_mark_paid_short">Mark Paid</string>
-    <string name="subscriptions_item_skip_short">Skip</string>
-    <string name="subscriptions_item_due_in_days">In %1$d days (%2$s)</string>
-    <string name="subscriptions_item_due_in_weeks">In %1$d weeks (%2$s)</string>
-
-    <!-- Rollover Dialog (component local) -->
-    <string name="rollover_dialog_period_finished_title">Period finished</string>
-    <string name="rollover_dialog_question">What do you want to do with the remaining money?</string>
-    <string name="rollover_dialog_split_equally_title">Split equally</string>
-    <string name="rollover_dialog_split_equally_desc">Spread %1$s evenly across every day of your next budget</string>
-    <string name="rollover_dialog_carry_to_tomorrow_title">Add to today</string>
-    <string name="rollover_dialog_carry_to_tomorrow_desc">Add the full %1$s to today\'s budget only</string>
-    <string name="rollover_dialog_view_analytics_title">Discard remaining budget</string>
-    <string name="rollover_dialog_view_analytics_desc">Discard the remaining balance and go straight to your analytics</string>
-    <string name="unresolved_surplus_title">Pending extra money</string>
-    <string name="rollover_dialog_pending_label">From a previous period</string>
-    <string name="unresolved_surplus_tap_to_manage">Tap to manage</string>
-
-    <!-- Finished Period Header -->
-    <string name="finished_period_header_title">Period finished</string>
-    <string name="finished_period_header_no_spends">Huh? You didn\'t spend anything this period</string>
-    <string name="finished_period_header_over_budget">Watch out! You went over budget in this period</string>
-    <string name="finished_period_header_summary">Here are the stats for all your spending</string>
-
-    <!-- Savings Recommendation Card -->
-    <string name="savings_recommendation_title">Savings recommendation</string>
-    <string name="savings_recommendation_method_brief" formatted="false">This %1$d/%2$d/%3$d method divides your budget into %1$d%% needs, %2$d%% wants, and %3$d%% savings, helping you control spending and save consistently.</string>
-    <string name="savings_recommendation_current_savings_label">Current savings</string>
-    <string name="savings_recommendation_available_format">Available: %1$s</string>
-    <string name="savings_recommendation_ideal_savings_format">Ideal savings: %1$s</string>
-    <string name="savings_recommendation_current_savings_format">Current savings: %1$s</string>
-    <string name="savings_recommendation_recurrent_expenses_label">Recurring expenses</string>
-    <string name="savings_recommendation_one_time_expenses_label">One-time expenses</string>
-    <string name="savings_recommendation_six_month_example_intro" formatted="false">If you save the %1$d%% each period for about 6 months, you could build:</string>
-    <string name="savings_recommendation_six_month_example_equation" translatable="false">%1$s × 6 = %2$s</string>
-    <string name="savings_recommendation_goal_format" formatted="false">To reach %1$s in %2$d months, save %3$s per period.</string>
-    <string name="savings_recommendation_goal_disabled" formatted="false">Showing the default %1$d%% example. Set a savings goal in Settings to target a specific amount.</string>
-
-    <!-- Settings: Savings Preferences -->
-    <string name="settings_savings_preferences_title">Savings preferences</string>
-    <string name="settings_savings_preferences_subtitle">Customize the 50/30/20 split and set an optional savings goal</string>
-    <string name="settings_savings_dialog_split_label">Budget split</string>
-    <string name="settings_savings_dialog_split_format" translatable="false">%1$d / %2$d / %3$d</string>
-    <string name="settings_savings_dialog_split_hint">The three values must add up to 100%%.</string>
-    <string name="settings_savings_dialog_split_invalid">The three values must add up to 100%% (currently %1$d%%).</string>
-    <string name="settings_savings_preset_balanced_title">Balanced</string>
-    <string name="settings_savings_preset_balanced_subtitle">50/30/20 — the classic split</string>
-    <string name="settings_savings_preset_aggressive_title">Aggressive saver</string>
-    <string name="settings_savings_preset_aggressive_subtitle">40/20/40 — save more each period</string>
-    <string name="settings_savings_preset_conservative_title">Conservative</string>
-    <string name="settings_savings_preset_conservative_subtitle">70/20/10 — high needs, lower savings</string>
-    <string name="settings_savings_preset_custom_title">Custom</string>
-    <string name="settings_savings_preset_custom_subtitle">%1$d/%2$d/%3$d — choose your own split</string>
-    <string name="settings_savings_dialog_custom_section">Custom split</string>
-    <string name="settings_savings_dialog_needs_label">Needs — %1$d%%</string>
-    <string name="settings_savings_dialog_wants_label">Wants — %1$d%%</string>
-    <string name="settings_savings_dialog_savings_label">Savings — %1$d%%</string>
-    <string name="settings_savings_dialog_goal_section">Savings goal (optional)</string>
-    <string name="settings_savings_dialog_goal_amount_label">Target amount</string>
-    <string name="settings_savings_dialog_goal_months_label">Target period (months)</string>
-    <string name="settings_savings_dialog_goal_hint">Leave blank to keep the default %1$d%% × 6 example.</string>
-    <string name="settings_savings_dialog_reset">Reset to defaults</string>
-
-    <!-- Wavy Divider -->
-    <string name="wavy_divider_show_all_past_period_expenses">Show all expenses from the previous period…</string>
-
-    <!-- Edit Budget Settings -->
-    <string name="use_previous_period_days">Use %d days</string>
-    <string name="currency_label">Currency</string>
-    <string name="budget_duration_label">Duration</string>
-    <string name="budget_base_currency_label">Base currency</string>
-    <string name="budget_behaviour_title">Budget behavior</string>
-    <string name="budget_behaviour_subtitle">Choose what happens to leftover money and how your daily amount is calculated.</string>
-    <string name="budget_behaviour_surplus_title">End of period surplus</string>
-    <string name="budget_behaviour_surplus_ask">Ask me</string>
-    <string name="budget_behaviour_surplus_spread">Spread all</string>
-    <string name="budget_behaviour_surplus_first_day">Day 1 lump</string>
-    <string name="budget_behaviour_surplus_preview_ask">When the period ends, you choose what to do with the leftover.</string>
-    <string name="budget_behaviour_surplus_preview_spread">Leftover is split evenly across every day of the next period.</string>
-    <string name="budget_behaviour_surplus_preview_first_day">All leftover is added to the first day of the next period.</string>
-    <string name="select_currency">Select currency</string>
-    <string name="search_currency">Search currency…</string>
-    <string name="clear">Clear</string>
-    <string name="currency_no_results">No currencies found</string>
-    <string name="currency_selected">Selected</string>
-
-    <!-- Remaining Budget Strategy -->
-
-    <!-- Budget Split Mode -->
-    <string name="split_mode_label">Split mode</string>
-    <string name="split_mode_static">Static</string>
-    <string name="split_mode_static_desc">Total budget is split equally across all days, regardless of how much you spend or not.</string>
-    <string name="split_mode_dynamic">Spread over all days</string>
-    <string name="split_mode_dynamic_desc">Calculates daily based on how you spend. The remaining budget is spread across the remaining days of the period.</string>
-    <string name="split_mode_carry_over">Carry over</string>
-    <string name="split_mode_carry_over_desc">What you don\'t spend daily is added to the next day as budget and keeps adding up.</string>
-    <string name="split_mode_ask_me">Ask me</string>
-    <string name="split_mode_ask_me_desc">Every day, you decide what happens to yesterday\'s unused budget: spread it over the remaining days or carry it over to today.</string>
-    <string name="leftover_choice_spread_desc">Allocate all unused remaining budget to all remaining days.</string>
-    <string name="leftover_choice_carry_desc">Add all unused budget to today only.</string>
-    <string name="leftover_choice_spread_outcome">%1$s for upcoming days</string>
-    <string name="leftover_choice_carry_outcome">%1$s for tomorrow</string>
-    <string name="leftover_choice_outcome">left today · then %1$s/day</string>
-    <string name="leftover_choice_outcome_last_day">left today</string>
-
-    <!-- Transaction Detail -->
-    <string name="without_date">Without date</string>
-    <string name="no_name">No name</string>
-    <string name="no_name_income">Unnamed income</string>
-    <string name="description">Purchase Reason</string>
-    <string name="adjustment_reason">Reason</string>
-    <string name="date">Date</string>
-    <string name="frequency">Frequency</string>
-    <string name="charge_day">Charge day</string>
-    <string name="day_number">Day %1$d</string>
-    <string name="recurrence_end">Recurrence end</string>
-
-    <!-- Transaction Detail Ticket Card -->
-    <string name="ticket_total_amount">TOTAL AMOUNT</string>
-    <string name="mark_all_as_paid">Mark all as paid</string>
-    <string name="mark_all_as_paid_success">Marked all as paid</string>
-    <string name="mark_as_paid">Mark as paid</string>
-    <string name="mark_as_paid_success">Marked as paid</string>
-
-    <!-- Notifications -->
-    <string name="notification_channel_period_end_name">Budget Period End</string>
-    <string name="notification_channel_period_end_description">Notifications when your budget period ends with remaining balance</string>
-    <string name="notification_channel_recurrent_name">Recurring Expenses</string>
-    <string name="notification_channel_recurrent_description">Notifications when recurring expenses are due</string>
-    <string name="notification_channel_credit_name">Credit Card Reminders</string>
-    <string name="notification_channel_credit_description">Reminders before credit card cutoff date</string>
-
-    <string name="notification_period_end_title">Budget period finished</string>
-    <string name="notification_period_end_message_positive">The period ended with %1$s remaining. Tap to see details.</string>
-    <string name="notification_period_end_message_negative">The period ended. You spent %1$s extra. See more details.</string>
-    <string name="notification_period_end_message_neutral">The period ended. You didn\'t spend anything. See more details.</string>
-
-
-    <string name="notification_recurrent_due_today_title">Your payment for \"%1$s\" is due today</string>
-    <string name="notification_recurrent_charged_weekly">Your weekly expense of %1$s is going to be charged.</string>
-    <string name="notification_recurrent_charged_biweekly">Your biweekly expense of %1$s is going to be charged.</string>
-    <string name="notification_recurrent_charged_monthly">Your monthly expense of %1$s is going to be charged.</string>
-    <string name="notification_tomorrow">tomorrow</string>
-    <string name="notification_in_days">in %1$d days</string>
-    <string name="notification_upcoming_subscription_title">Upcoming expense</string>
-    <string name="notification_upcoming_subscription_message_with_comment">Your subscription \"%1$s\" of \"%2$s\" will be charged %3$s. Prepare for the charge.</string>
-    <string name="notification_upcoming_subscription_message_without_comment">You have a subscription of \"%1$s\" that will be charged %2$s.</string>
-
-    <string name="notification_credit_cutoff_title">Upcoming credit card payment</string>
-    <string name="notification_credit_cutoff_message">Your payment due date is %1$s. It is recommended to pay %2$s to avoid any interest.</string>
-
-    <string name="credit_owed_label">Total owed</string>
-    <string name="debt_adjusted_balance_label">Debt-Adjusted Balance</string>
-    <string name="debt_adjusted_label_format">%1$s - %2$s credit debt</string>
-
-    <string name="credit_badge">CREDIT</string>
-    <string name="credit_cutoff_subtitle">%1$s — Cutoff in %2$d days</string>
-    <string name="credit_cutoff_subtitle_today">%1$s — Cutoff today</string>
-    <string name="ticket_expense">EXPENSE</string>
-    <string name="ticket_recurrent_expense">RECURRING EXPENSE</string>
-
-    <!-- Past Periods -->
-    <string name="past_periods_title">Past periods</string>
-    <string name="past_periods_subtitle">Tap a period to see its full breakdown. Long-press to delete it.</string>
-    <string name="past_periods_empty">No archived periods found</string>
-    <string name="past_periods_spent_label">Spent</string>
-    <string name="past_periods_limit_label">Limit</string>
-    <string name="past_periods_status_on_track">On Track</string>
-    <string name="past_periods_status_over_budget">Over Budget</string>
-    <string name="past_periods_status_estimated">Estimated</string>
-    <string name="past_periods_estimated_divider">Estimated periods below</string>
-    <string name="past_periods_status_saved">Saved %1$s</string>
-    <string name="past_periods_saved_label">Money Saved</string>
-    <string name="unlock_past_period">Unlock to Edit</string>
-    <string name="biometric_prompt_title">Unlock Past Period</string>
-    <string name="biometric_prompt_subtitle">Authenticate with your fingerprint to modify previous expenses</string>
-    <string name="past_period_unlocked_message">Past period editing unlocked successfully</string>
-    <string name="past_period_edit_confirm_title">Modify Past Period Expense?</string>
-    <string name="past_period_edit_confirm_message">Are you sure you want to edit or delete this expense from a past period? Biometric authentication will be required.</string>
-    <string name="past_period_delete_confirm_title">Delete Past Period?</string>
-    <string name="past_period_delete_confirm_message">This permanently deletes the period %1$s – %2$s and its expenses. Subscriptions are kept. Biometric authentication will be required.</string>
-    <string name="dialog_yes">Yes</string>
-
-    <!-- Analytics Tutorial -->
-    <string name="analytics_tutorial_minmax_title">Spending Trends</string>
-    <string name="analytics_tutorial_minmax_desc">These cards show your lowest and highest expenses.\nAs you add more transactions, these will update to help you spot outliers.</string>
-    <string name="analytics_tutorial_header_title">Historical Periods</string>
-    <string name="analytics_tutorial_header_desc">Tap the icon to see your past budget periods and review their performance.</string>
-    <string name="analytics_tutorial_budget_title">Budget Status</string>
-    <string name="analytics_tutorial_budget_desc">Check your total budget and see it\'s total days.</string>
-    <string name="analytics_tutorial_heatmap_title">Spending Intensity</string>
-    <string name="analytics_tutorial_heatmap_desc">This calendar shows when you spend the most. Darker days mean higher spending. Tap on any day to see all expenses registered for that specific date.</string>
-    <string name="analytics_tutorial_charts_title">Category Breakdown</string>
-    <string name="analytics_tutorial_charts_desc">See which categories are eating up your budget. Tap any slice or category name for details.</string>
-    <string name="analytics_tutorial_savings_title">Savings Recommendation</string>
-    <string name="analytics_tutorial_savings_desc">Based on the 50/30/20 rule, we suggest how much you should ideally be saving. This can be changed on settings.</string>
-    <string name="analytics_no_period_title">No budget period yet</string>
-    <string name="analytics_no_period_body">Create a budget period and your spending, categories and savings will show up here.</string>
-    <string name="analytics_tutorial_credit_title">Credit Card Management</string>
-    <string name="analytics_tutorial_credit_desc">Tap the credit card to view all CC transactions, mark them as paid, or adjust your billing cutoff date to avoid interest.</string>
-    <string name="analytics_tutorial_history_title">Transaction History</string>
-    <string name="analytics_tutorial_history_desc">Tap here to see a list of all your expenses for this period.</string>
-    <string name="skip_tutorial">Skip</string>
-
-    <string name="budget_graph_header_spending">Spending</string>
-    <string name="budget_graph_legend_current">Current</string>
-    <string name="budget_graph_legend_previous">Previous</string>
-    <string name="budget_graph_view_mode_cumulative">Trend</string>
-    <string name="budget_graph_view_mode_categories">Categories</string>
-    <string name="budget_graph_nav_prev">Previous</string>
-    <string name="budget_graph_nav_next">Next</string>
-    <string name="graph_granularity_days">Days</string>
-    <string name="graph_granularity_week">Week</string>
-    <string name="graph_granularity_biweek">Biweek</string>
-    <string name="graph_granularity_month">Month</string>
-    <string name="graph_granularity_total">Total</string>
-    <string name="budget_graph_page_indicator" translatable="false">%1$d / %2$d</string>
-    <string name="unit_thousands">K</string>
-    <string name="unit_millions">M</string>
-    <string name="widget_budget_pill_title">Budget Pill</string>
-    <string name="widget_budget_pill_description">Remaining for the view mode you picked — daily, weekly, biweekly or monthly — in a slim bar</string>
-    <string name="widget_budget_pill_preview_amount" translatable="false">$110.00</string>
+    <string name="budget_allowance_days_title">أيام المصروف والإنفاق</string>
+    <string name="budget_allowance_days_switch_title">حساب المصروف على أيام محددة فقط</string>
+    <string name="budget_allowance_days_switch_desc">تقسيم المبلغ على أيام الدراسة أو العمل الفعلية وتخطي أيام الإجازة.</string>
+    <string name="budget_allowance_preset_sun_thu">٥ أيام (الأحد - الخميس)</string>
+    <string name="budget_allowance_preset_mon_fri">٥ أيام (الإثنين - الجمعة)</string>
+    <string name="budget_allowance_preset_all_days">طوال الأسبوع (٧ أيام)</string>
+    <string name="budget_allowance_days_summary">يُحسب المصروف على %1$d أيام في الأسبوع فقط.</string>
+    <string name="day_sunday_short">أحد</string>
+    <string name="day_monday_short">إثنين</string>
+    <string name="day_tuesday_short">ثلاثاء</string>
+    <string name="day_wednesday_short">أربعاء</string>
+    <string name="day_thursday_short">خميس</string>
+    <string name="day_friday_short">جمعة</string>
+    <string name="day_saturday_short">سبت</string>
+    <string name="budget_alert_title">تنبيه المصروف اليومي</string>
+    <string name="budget_alert_warning">أنت تقترب من حد المصروف المخصص لليوم (%1$d%%)</string>
+    <string name="budget_alert_exceeded">تجاوزت الحد اليومي المحدد لمصروفك</string>
+    <string name="financial_tip_title">نصيحة وفير المالية</string>
+    <string name="financial_tip_1_title">لا تنفق أكثر مما تكسب</string>
+    <string name="financial_tip_1_body">مهما كان دخلك، اجعل نفقاتك أقل منه. الفرق بين ما تكسبه وما تنفقه هو المساحة التي تمنحك القدرة على الادخار ومواجهة الطوارئ.</string>
+    <string name="financial_tip_2_title">احتفظ باحتياطي للطوارئ</string>
+    <string name="financial_tip_2_body">لا تجعل كل أموالك مرتبطة بنفقاتك اليومية. بناء احتياطي يغطي عدة أشهر من احتياجاتك الأساسية يحميك من الاقتراض المفاجئ.</string>
+    <string name="financial_tip_3_title">تجنّب الديون الاستهلاكية</string>
+    <string name="financial_tip_3_body">شراء أشياء لا تحتاجها بأموال لم تكسبها بعد يحول دخلك المستقبلي إلى التزامات. كلما قلّت ديونك، زادت حريتك في التحكم بأموالك.</string>
+    <string name="financial_tip_4_title">لا تعتمد على مصدر دخل واحد إلى الأبد</string>
+    <string name="financial_tip_4_body">الاعتماد الكامل على راتب واحد يجعلك أكثر عرضة للخطر إذا انقطع. طوّر مهاراتك وابحث عن فرص لبناء دخل إضافي عندما تسمح ظروفك.</string>
+    <string name="financial_tip_5_title">استثمر جزءاً من دخلك</string>
+    <string name="financial_tip_5_body">الادخار يحمي جزءاً من أموالك، لكن الاستثمار يمكن أن يساعدها على النمو مع الوقت. تعلّم قبل أن تستثمر، وتجنب وضع أموالك في شيء لا تفهم مخاطره.</string>
+    <string name="financial_tip_6_title">ارفع دخلك قبل أن ترفع مستوى معيشتك</string>
+    <string name="financial_tip_6_body">عندما يزيد دخلك، لا تجعل الزيادة كلها تتحول إلى مصاريف جديدة. استغل جزءاً منها لبناء المدخرات والأصول وتحسين قدرتك على الكسب.</string>
+    <string name="financial_tip_7_title">لا تطارد الثراء السريع</string>
+    <string name="financial_tip_7_body">الوعود بالأرباح السهلة والسريعة قد تدفعك إلى مخاطر لا تستطيع تحملها. بناء وضع مالي قوي يحتاج إلى وقت، وانضباط، وقرارات محسوبة.</string>
+    <string name="wallet_mode_title">إيداع في المحفظة</string>
+    <string name="wallet_mode_tooltip">دخل إضافي (هدية، رد دين، مكافأة)</string>
+    <string name="wallet_mode_tag_gift">هدية</string>
+    <string name="wallet_mode_tag_debt_repaid">رد دين</string>
+    <string name="wallet_mode_tag_bonus">مكافأة</string>
+    <string name="wallet_mode_tag_freelance">عمل إضافي</string>
+    <string name="wallet_total_income_label">إجمالي الدخل الإضافي</string>
+    <string name="onboarding_language_title">اختر لغة التطبيق</string>
+    <string name="onboarding_language_subtitle">حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات.</string>
+    <string name="tutorial_end_tour">إنهاء</string>
+    <string name="tutorial_understood">فهمت</string>
+    <string name="financial_tip_8_title">فخ العروض والتخفيضات</string>
+    <string name="financial_tip_8_body" formatted="false">خصم 50% على سلعة لا تحتاجها فعلياً هو خسارة كاملة لمالك وليس توفيراً. لا تشترِ لمجرد وجود تخفيض.</string>
+    <string name="financial_tip_9_title">قاعدة الـ 24 ساعة</string>
+    <string name="financial_tip_9_body" formatted="false">عند الرغبة في شراء شيء غير أساسي، انتظر 24 ساعة كاملة. ستكتشف أن أكثر من 80% من الرغبات الاندفاعية تختفي.</string>
+    <string name="financial_tip_10_title">تدقيق الاشتراكات الدورية</string>
+    <string name="financial_tip_10_body">المبالغ الصغيرة المتكررة شهرياً للاشتراكات والخدمات غير المستعملة تستنزف ميزانيتك في صمت. راجعها وألغِ ما لا تحتاجه.</string>
+    <string name="financial_tip_11_title">الحذر من تضخم نمط الحياة</string>
+    <string name="financial_tip_11_body">عندما يرتفع دخلك، لا ترفع مصاريفك فوراً. وجّه الفارق نحو الادخار وصناعة الأصول بدلاً من الالتزامات.</string>
+    <string name="financial_tip_12_title">تكلفة الفرصة البديلة</string>
+    <string name="financial_tip_12_body">تذكر دائماً: كل مبلغ تنفقه اليوم بلا فائدة يحرمك من أرباح وأمان كان يمكن أن يبنيه لك مستقبلاً.</string>
+    <string name="financial_tip_13_title">قاعدة الأوعية المالية الثلاثة</string>
+    <string name="financial_tip_13_body">قسّم فائضك: وعاء للأمان والطوارئ، وعاء للأهداف والمناسبات القريبة، ووعاء للاستثمار طويل المدى.</string>
+    <string name="widget_wallet_title">وفير: المحفظة السريعة</string>
+    <string name="widget_wallet_desc">تسجيل دخل إضافي وإيداع بالمحفظة بلمسة واحدة</string>
+    <string name="widget_coach_title">وفير: الحكمة المالية</string>
+    <string name="widget_coach_desc">عرض القواعد والنصائح المالية اليومية على الشاشة الرئيسية</string>
+    <string name="financial_tip_14_title">التوقف عن محاولة مواكبة الآخرين</string>
+    <string name="financial_tip_14_body">لن تعرف الوضع المالي الحقيقي لمن حولك. إنفاقك لإثبات أنك تستطيع تحمّل ما يتحمله الآخرون قد يكلفك أكثر مما تتوقع.</string>
+    <string name="financial_tip_15_title">حساب التكلفة الكاملة قبل اتخاذ قرار كبير</string>
+    <string name="financial_tip_15_body">السيارة، المنزل، المشروع أو السفر لا يكلف ثمنه المعلن فقط. انظر إلى الصيانة، الوقت، الالتزامات، والفرص التي ستتخلى عنها مقابله.</string>
+    <string name="financial_tip_16_title">وضع حد واضح لما يمكنك تحمّله</string>
+    <string name="financial_tip_16_body">تحديد سقف مالي واضح لنفسك يساعدك على تجنّب القرارات الكبيرة المندفعة.</string>
+    <string name="changelog_section_features">المميزات الجديدة</string>
+    <string name="changelog_section_improvements">التعديلات والتغييرات</string>
+    <string name="changelog_section_bug_fixes">الإصلاحات</string>
+    <string name="changelog_section_removed">الميزات المحذوفة</string>
+    <string name="changelog_section_security">التحسينات وسد الثغرات الأمنية</string>
+    <string name="changelog_rating_title">رأيك يفرق معانا في رحلة التطوير</string>
+    <string name="changelog_rating_desc">إذا كان تطبيق وفير يساعدك في التحكم بميزانيتك ووعيك المالي، تقييمك بكلمة طيبة على المتجر يدعمنا لمواصلة التطوير المستمر.</string>
+    <string name="changelog_rating_button">تقييم التطبيق على المتجر</string>
+    <string name="notification_action_view_budget">عرض الميزانية</string>
 </resources>

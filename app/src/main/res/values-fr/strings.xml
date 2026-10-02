@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Minus</string>
+    <string name="app_name">وفير</string>
     <string name="tile_new_transaction_label">Nouvelle transaction</string>
     <string name="tutorial_numpad_title">Numbat</string>
     <string name="tutorial_numpad_description">Entrez le montant que vous avez dépensé et appuyez sur la coche verte pour enregistrer. Glissez vers le haut sur le pavé numérique pour calculer.</string>
@@ -230,7 +230,7 @@
         <item quantity="other">%d mois</item>
     </plurals>
     <string name="day_total_format">Total : %1$s</string>
-    <string name="onboarding_welcome_title">Bienvenue sur Minus</string>
+    <string name="onboarding_welcome_title">Bienvenue sur Wafeer</string>
     <string name="onboarding_welcome_subtitle">Bonjour et bienvenue, commençons à épargner ensemble.</string>
     <string name="onboarding_welcome_intro">Un suivi de budget simple qui vous aide à décider combien vous pouvez dépenser chaque jour, semaine, quinzaine ou mois.</string>
     <string name="onboarding_step_1_title">Définir un budget</string>
@@ -238,7 +238,7 @@
     <string name="onboarding_step_2_title">Suivre les dépenses</string>
     <string name="onboarding_step_2_subtitle">Notez ce que vous dépensez et voyez ce qu\'il reste chaque jour.</string>
     <string name="onboarding_step_3_title">Dépenses récurrentes</string>
-    <string name="onboarding_step_3_subtitle">Ajoutez vos abonnements et Minus les suivra automatiquement pour vous.</string>
+    <string name="onboarding_step_3_subtitle">Ajoutez vos abonnements et Wafeer les suivra automatiquement pour vous.</string>
     <string name="onboarding_step_4_title">Calcul en temps réel</string>
     <string name="onboarding_step_4_subtitle">Votre budget restant se met à jour en direct à chaque dépense.</string>
     <string name="onboarding_step_5_title">Consultez vos analyses</string>
@@ -265,7 +265,7 @@
     <string name="changelog_close">Fermer</string>
     <string name="changelog_previous_versions">Versions précédentes</string>
     <string name="changelog_updated_to">Mis à jour vers : %1$s</string>
-    <string name="changelog_see_changes">Minus est maintenant mis à jour.</string>
+    <string name="changelog_see_changes">Wafeer est maintenant mis à jour.</string>
     <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">Sélectionnez la période</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d jours · %2$s - %3$s</string>
@@ -411,7 +411,7 @@
     <string name="bug_report_upload_assets_selected_count">%1$d pièce(s) jointe(s) sélectionnée(s)</string>
     <string name="bug_report_remove_attachment">Supprimer la pièce jointe</string>
     <string name="settings_backup_title">Sauvegarder les données</string>
-    <string name="settings_backup_subtitle">Sauvegarder les données dans minus_export.csv</string>
+    <string name="settings_backup_subtitle">Sauvegarder les données dans wafeer_export.csv</string>
     <string name="settings_import_csv_title">Importer un CSV</string>
     <string name="settings_import_csv_subtitle">Importer des données à partir d\'un fichier CSV</string>
     <string name="settings_reset_tutorial_title">Réinitialiser le tutoriel</string>

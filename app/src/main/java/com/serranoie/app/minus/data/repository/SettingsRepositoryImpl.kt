@@ -69,6 +69,15 @@ const val SAVINGS_GOAL_MONTHS_KEY_NAME = "savings_goal_months"
 const val TUTORIAL_BOX_COMPLETED_KEY_NAME = "tutorial_box_completed"
 const val ANALYTICS_TUTORIAL_COMPLETED_KEY_NAME = "analytics_tutorial_completed"
 const val ANALYTICS_SPENDS_TUTORIAL_COMPLETED_KEY_NAME = "analytics_spends_tutorial_completed"
+const val ALLOWANCE_DAYS_ENABLED_KEY_NAME = "allowance_days_enabled"
+const val ACTIVE_SPENDING_DAYS_KEY_NAME = "active_spending_days"
+const val BUDGET_ALERT_THRESHOLD_KEY_NAME = "budget_alert_threshold"
+const val FINANCIAL_TIPS_ENABLED_KEY_NAME = "financial_tips_enabled"
+
+private val ALLOWANCE_DAYS_ENABLED = booleanPreferencesKey(ALLOWANCE_DAYS_ENABLED_KEY_NAME)
+private val ACTIVE_SPENDING_DAYS = stringSetPreferencesKey(ACTIVE_SPENDING_DAYS_KEY_NAME)
+private val BUDGET_ALERT_THRESHOLD = intPreferencesKey(BUDGET_ALERT_THRESHOLD_KEY_NAME)
+private val FINANCIAL_TIPS_ENABLED = booleanPreferencesKey(FINANCIAL_TIPS_ENABLED_KEY_NAME)
 
 private val ONBOARDING_COMPLETED = booleanPreferencesKey(ONBOARDING_COMPLETED_KEY_NAME)
 private val EARLY_FINISH_ACTIVE = booleanPreferencesKey(EARLY_FINISH_ACTIVE_KEY_NAME)
@@ -223,6 +232,11 @@ class SettingsRepositoryImpl @Inject constructor(
                     )
                 },
                 leftoverChoices = preferences[LEFTOVER_CHOICES].orEmpty().toLeftoverChoices(),
+                allowanceDaysEnabled = preferences[ALLOWANCE_DAYS_ENABLED] ?: false,
+                activeSpendingDays = preferences[ACTIVE_SPENDING_DAYS]?.mapNotNull { it.toIntOrNull() }?.toSet()
+                    ?.ifEmpty { setOf(7, 1, 2, 3, 4) } ?: setOf(7, 1, 2, 3, 4),
+                budgetAlertThresholdPercent = preferences[BUDGET_ALERT_THRESHOLD] ?: 80,
+                financialTipsEnabled = preferences[FINANCIAL_TIPS_ENABLED] ?: true,
             )
         }
     }
@@ -626,6 +640,30 @@ class SettingsRepositoryImpl @Inject constructor(
             com.serranoie.app.minus.domain.model.AppColorScheme.valueOf(this)
         } catch (_: Exception) {
             com.serranoie.app.minus.domain.model.AppColorScheme.BRAND
+        }
+    }
+
+    override suspend fun setAllowanceDaysEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[ALLOWANCE_DAYS_ENABLED] = enabled
+        }
+    }
+
+    override suspend fun setActiveSpendingDays(days: Set<Int>) {
+        dataStore.edit { preferences ->
+            preferences[ACTIVE_SPENDING_DAYS] = days.map { it.toString() }.toSet()
+        }
+    }
+
+    override suspend fun setBudgetAlertThreshold(percent: Int) {
+        dataStore.edit { preferences ->
+            preferences[BUDGET_ALERT_THRESHOLD] = percent
+        }
+    }
+
+    override suspend fun setFinancialTipsEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[FINANCIAL_TIPS_ENABLED] = enabled
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,8 +88,16 @@ fun MainScreen(
         }
     }
 
-    val showNumpadTutorial = !tutorialBoxCompleted
-    val tutorialBoxState = rememberTutorialBoxState()
+    val hasNoBudget = budgetUiState.budgetSettings == null || budgetUiState.budgetSettings?.endDate == null
+    val tutorialWalkOrder = remember(hasNoBudget) {
+        if (hasNoBudget) {
+            listOf(1, 0, 2, 3, 4, 8, 5, 6, 7)
+        } else {
+            listOf(0, 1, 2, 3, 4, 8, 5, 6, 7)
+        }
+    }
+    val showNumpadTutorial = !tutorialBoxCompleted && !mainScreenState.showBudgetPeriodSheet
+    val tutorialBoxState = rememberTutorialBoxState(order = tutorialWalkOrder)
 
     LaunchedEffect(tutorialBoxCompleted) {
         if (!tutorialBoxCompleted && tutorialBoxState.isCompleted) {
@@ -125,6 +134,15 @@ fun MainScreen(
                     tutorialStage,
                 )
             },
+            onCutoutClick = { index ->
+                if (index == 1) {
+                    mainScreenViewModel.processIntent(
+                        MainScreenUiIntent.ShowBudgetPeriodSheet(forceSetup = hasNoBudget),
+                        tutorialStage,
+                    )
+                    tutorialBoxState.advance()
+                }
+            },
             state = tutorialBoxState,
             tutorialTarget = { index ->
                 when (index) {
@@ -137,8 +155,16 @@ fun MainScreen(
                         description = stringResource(R.string.tutorial_settings_description),
                     )
                     1 -> TutorialTooltip(
-                        title = stringResource(R.string.tutorial_budget_pill_title),
-                        description = stringResource(R.string.tutorial_budget_pill_description),
+                        title = if (hasNoBudget) {
+                            stringResource(R.string.tutorial_budget_pill_setup_title)
+                        } else {
+                            stringResource(R.string.tutorial_budget_pill_title)
+                        },
+                        description = if (hasNoBudget) {
+                            stringResource(R.string.tutorial_budget_pill_setup_description)
+                        } else {
+                            stringResource(R.string.tutorial_budget_pill_description)
+                        },
                     )
                     3 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_comment_title),

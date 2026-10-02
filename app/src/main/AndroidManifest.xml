@@ -1,11 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -18,7 +21,7 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Minus">
+        android:theme="@style/Theme.Wafeer">
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -43,6 +46,10 @@
             android:exported="false" />
 
         <receiver
+            android:name=".presentation.notification.DailyFinancialCheckReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".presentation.notification.MidnightPeriodTransitionReceiver"
             android:exported="false" />
 
@@ -64,7 +71,7 @@
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Minus">
+            android:theme="@style/Theme.Wafeer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -203,6 +210,28 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_add_expense_info" />
+        </receiver>
+
+        <receiver
+            android:name=".presentation.widget.WalletIncomeWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_wallet_income_info" />
+        </receiver>
+
+        <receiver
+            android:name=".presentation.widget.FinancialCoachWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_financial_coach_info" />
         </receiver>
     </application>
 

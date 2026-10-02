@@ -27,9 +27,9 @@ class NotificationHelper @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {
     companion object {
-        const val CHANNEL_PERIOD_END = "budget_period_end"
-        const val CHANNEL_RECURRENT = "recurrent_expenses"
-        const val CHANNEL_CREDIT = "credit_expenses"
+        const val CHANNEL_PERIOD_END = "budget_period_end_v131"
+        const val CHANNEL_RECURRENT = "recurrent_expenses_v131"
+        const val CHANNEL_CREDIT = "credit_expenses_v131"
 
         const val NOTIFICATION_ID_PERIOD_END = 1001
         const val NOTIFICATION_ID_RECURRENT = 1002
@@ -51,15 +51,19 @@ class NotificationHelper @Inject constructor(
         ).apply {
             description = context.getString(R.string.notification_channel_period_end_description)
             enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
         }
 
         val recurrentChannel = NotificationChannel(
             CHANNEL_RECURRENT,
             context.getString(R.string.notification_channel_recurrent_name),
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = context.getString(R.string.notification_channel_recurrent_description)
             enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
         }
 
         val creditChannel = NotificationChannel(
@@ -69,12 +73,14 @@ class NotificationHelper @Inject constructor(
         ).apply {
             description = context.getString(R.string.notification_channel_credit_description)
             enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
         }
 
         notificationManager.createNotificationChannel(periodEndChannel)
         notificationManager.createNotificationChannel(recurrentChannel)
         notificationManager.createNotificationChannel(creditChannel)
-        logcat { "Notification channels created" }
+        logcat { "Notification channels created (v131)" }
     }
 
     private fun checkNotificationPermission(): Boolean {
@@ -91,6 +97,93 @@ class NotificationHelper @Inject constructor(
         }
     }
 
+    fun isNotificationPermissionGranted(): Boolean = checkNotificationPermission()
+
+    fun showRichCustomNotification(
+        notificationId: Int,
+        channelId: String,
+        title: String,
+        message: String,
+        tag: String = "وفير • الرقيب المالي الذكي",
+    ): Boolean {
+        if (!checkNotificationPermission()) {
+            logcat { "Cannot show notification: permission not granted" }
+            return false
+        }
+        val managerCompat = NotificationManagerCompat.from(context)
+        if (!managerCompat.areNotificationsEnabled()) {
+            logcat { "Cannot show notification: notifications disabled in system settings" }
+            return false
+        }
+
+        val mainIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val mainPendingIntent = PendingIntent.getActivity(
+            context,
+            notificationId,
+            mainIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val addExpenseIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("NAVIGATE_TO", "ADD_EXPENSE")
+        }
+        val addPendingIntent = PendingIntent.getActivity(
+            context,
+            notificationId + 2000,
+            addExpenseIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+            .setBigContentTitle(title)
+            .bigText(message)
+            .setSummaryText(tag)
+
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFFA3CD51.toInt())
+            .setContentTitle(title)
+            .setContentText(message)
+            .setSubText(tag)
+            .setStyle(bigTextStyle)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setVibrate(longArrayOf(0, 300, 200, 300))
+            .setContentIntent(mainPendingIntent)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(
+                R.drawable.ic_notification,
+                "تسجيل مصروف +",
+                addPendingIntent
+            )
+            .addAction(
+                0,
+                "عرض الميزانية",
+                mainPendingIntent
+            )
+            .build()
+
+        managerCompat.notify(notificationId, notification)
+        logcat { "Rich notification ($notificationId) sent successfully via $channelId" }
+        return true
+    }
+
+    fun showTestNotification(): Boolean {
+        val title = "تنبيه وفير الذكي • تجربة الإشعار"
+        val message = "انقضى 75% من يومك دون تسجيل أي مصروف. بلمسة واحدة دوّن مصاريفك وحافظ على انضباطك المالي."
+        return showRichCustomNotification(
+            notificationId = NOTIFICATION_ID_PERIOD_END + 99,
+            channelId = CHANNEL_PERIOD_END,
+            title = title,
+            message = message,
+            tag = "وفير • الرقيب المالي الذكي",
+        )
+    }
+
     fun showPeriodEndNotification(remainingBudget: String, currency: String) {
         val hasPermission = checkNotificationPermission()
         if (!hasPermission) {
@@ -98,34 +191,27 @@ class NotificationHelper @Inject constructor(
             return
         }
 
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val formattedAmount = formatAmount(remainingBudget, currency)
         val message = buildPeriodEndMessage(remainingBudget, formattedAmount)
+        val title = context.getString(R.string.notification_period_end_title)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_PERIOD_END)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(context.getString(R.string.notification_period_end_title))
-            .setContentText(message)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .setCategory(NotificationCompat.CATEGORY_REMINDER)
-            .build()
+        showRichCustomNotification(
+            notificationId = NOTIFICATION_ID_PERIOD_END,
+            channelId = CHANNEL_PERIOD_END,
+            title = title,
+            message = message,
+            tag = "وفير • تجديد الميزانية",
+        )
+    }
 
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_PERIOD_END, notification)
-        logcat { "Period end notification shown successfully" }
+    fun showDaily75PercentAlert(): Boolean {
+        return showRichCustomNotification(
+            notificationId = 1005,
+            channelId = CHANNEL_PERIOD_END,
+            title = "يوم هادئ وموفر، أم نسيت تدوين مصاريفك؟",
+            message = "انقضى 75% من يومك دون تسجيل أي حركة مالية. بلمسة واحدة دوّن مصاريفك وحافظ على انضباط ميزانيتك اليومية.",
+            tag = "وفير • نشاط اليوم",
+        )
     }
 
     private fun buildPeriodEndMessage(remainingBudget: String, formattedAmount: String): String {
@@ -232,6 +318,8 @@ class NotificationHelper @Inject constructor(
 
         val builder = NotificationCompat.Builder(context, CHANNEL_RECURRENT)
             .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFF2E7D32.toInt())
+            .setSubText(context.getString(R.string.app_name))
             .setContentTitle(title)
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
@@ -299,6 +387,8 @@ class NotificationHelper @Inject constructor(
             ?: (NOTIFICATION_ID_RECURRENT + daysUntil.toInt())
         val builder = NotificationCompat.Builder(context, CHANNEL_RECURRENT)
             .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFF2E7D32.toInt())
+            .setSubText(context.getString(R.string.app_name))
             .setContentTitle(title)
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
@@ -347,6 +437,8 @@ class NotificationHelper @Inject constructor(
 
         val notification = NotificationCompat.Builder(context, CHANNEL_CREDIT)
             .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFF2E7D32.toInt())
+            .setSubText(context.getString(R.string.app_name))
             .setContentTitle(context.getString(R.string.notification_credit_cutoff_title))
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))

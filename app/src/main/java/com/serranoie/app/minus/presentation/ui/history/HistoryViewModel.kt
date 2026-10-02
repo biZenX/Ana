@@ -1,4 +1,4 @@
-﻿package com.serranoie.app.minus.presentation.ui.history
+package com.serranoie.app.minus.presentation.ui.history
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -286,6 +286,8 @@ class HistoryViewModel @Inject constructor(
                 s, periodTransactions, today, paidOccurrences, transactions,
                 reserveUpcomingCharges = userSettings?.reserveUpcomingChargesEnabled == true,
                 leftoverChoices = userSettings?.leftoverChoices.orEmpty(),
+                allowanceDaysEnabled = userSettings?.allowanceDaysEnabled == true,
+                activeSpendingDays = userSettings?.activeSpendingDays ?: setOf(7, 1, 2, 3, 4),
             )
         }
 

@@ -565,6 +565,7 @@ private fun LanguageSection(
     val languages = listOf(
         "system" to stringResource(R.string.settings_theme_system),
         "ar" to stringResource(R.string.settings_language_ar),
+        "ar-EG" to stringResource(R.string.settings_language_ar_eg),
         "en" to stringResource(R.string.settings_language_en),
         "de" to stringResource(R.string.settings_language_de),
         "el" to stringResource(R.string.settings_language_el),

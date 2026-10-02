@@ -68,6 +68,8 @@ class SettingsViewModelTest {
         budgetRepository = budgetRepository,
         updateNotificationTimeUseCase = updateNotificationTimeUseCase,
         censorManager = censorManager,
+        notificationHelper = mockk(relaxed = true),
+        appUpdateManager = mockk(relaxed = true),
     )
 
     private fun budgetSettings(cutoff: Int? = null) = BudgetSettings(

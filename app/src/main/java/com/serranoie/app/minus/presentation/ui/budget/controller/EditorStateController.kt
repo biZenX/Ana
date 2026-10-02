@@ -27,6 +27,7 @@ class EditorStateController {
         data class PendingRecurrentAmountChanged(val amount: BigDecimal?) : EditorChange
         data class PendingRecurrentCommentChanged(val comment: String) : EditorChange
         data class SelectedDateChanged(val date: LocalDate) : EditorChange
+        data class WalletIncomeEnabledChanged(val enabled: Boolean) : EditorChange
     }
 
     fun process(
@@ -41,6 +42,7 @@ class EditorStateController {
         is EditorIntent.SetLockDraggable -> setLockDraggable(intent.locked)
         is EditorIntent.SetRecurrentEnabled -> setRecurrentEnabled(intent.enabled)
         is EditorIntent.SetCreditEnabled -> setCreditEnabled(intent.enabled, hasCreditCardCutoffDay)
+        is EditorIntent.SetWalletIncomeEnabled -> setWalletIncomeEnabled(intent.enabled)
         is EditorIntent.DismissRecurrentDialog -> dismissRecurrentDialog()
         is EditorIntent.DismissCreditCutoffDialog -> dismissCreditCutoffDialog()
         is EditorIntent.DateSelected -> setSelectedDate(intent.date)
@@ -77,8 +79,21 @@ class EditorStateController {
     }
 
     private fun setRecurrentEnabled(enabled: Boolean): List<EditorChange> {
-        _state.value = _state.value.copy(isRecurrentEnabled = enabled)
-        return listOf(EditorChange.RecurrentEnabledChanged(enabled))
+        val wasWallet = _state.value.isWalletIncomeEnabled
+        val updated = if (enabled) {
+            _state.value.copy(
+                isRecurrentEnabled = true,
+                isWalletIncomeEnabled = false,
+            )
+        } else {
+            _state.value.copy(isRecurrentEnabled = false)
+        }
+        _state.value = updated
+        val changes = mutableListOf<EditorChange>(EditorChange.RecurrentEnabledChanged(enabled))
+        if (enabled && wasWallet) {
+            changes.add(EditorChange.WalletIncomeEnabledChanged(false))
+        }
+        return changes
     }
 
     private fun setCreditEnabled(enabled: Boolean, hasCutoff: Boolean): List<EditorChange> {
@@ -93,16 +108,46 @@ class EditorStateController {
                 EditorChange.CreditCutoffDialogVisibilityChanged(false),
             )
         }
+        val wasWallet = _state.value.isWalletIncomeEnabled
         val showDialog = !hasCutoff
         val updated = _state.value.copy(
             isCreditEnabled = enabled,
+            isWalletIncomeEnabled = false,
             showCreditCutoffDialog = showDialog,
         )
         _state.value = updated
-        return listOf(
+        val changes = mutableListOf<EditorChange>(
             EditorChange.CreditEnabledChanged(enabled),
             EditorChange.CreditCutoffDialogVisibilityChanged(showDialog),
         )
+        if (wasWallet) {
+            changes.add(EditorChange.WalletIncomeEnabledChanged(false))
+        }
+        return changes
+    }
+
+    private fun setWalletIncomeEnabled(enabled: Boolean): List<EditorChange> {
+        val wasCredit = _state.value.isCreditEnabled
+        val wasRecurrent = _state.value.isRecurrentEnabled
+        val updated = if (enabled) {
+            _state.value.copy(
+                isWalletIncomeEnabled = true,
+                isCreditEnabled = false,
+                isRecurrentEnabled = false,
+                showCreditCutoffDialog = false,
+            )
+        } else {
+            _state.value.copy(isWalletIncomeEnabled = false)
+        }
+        _state.value = updated
+        val changes = mutableListOf<EditorChange>(EditorChange.WalletIncomeEnabledChanged(enabled))
+        if (enabled && wasCredit) {
+            changes.add(EditorChange.CreditEnabledChanged(false))
+        }
+        if (enabled && wasRecurrent) {
+            changes.add(EditorChange.RecurrentEnabledChanged(false))
+        }
+        return changes
     }
 
     private fun dismissRecurrentDialog(): List<EditorChange> {
@@ -199,6 +244,7 @@ data class EditorLocalState(
     val lockDraggable: Boolean = false,
     val isRecurrentEnabled: Boolean = false,
     val isCreditEnabled: Boolean = false,
+    val isWalletIncomeEnabled: Boolean = false,
     val showRecurrentDialog: Boolean = false,
     val showCreditCutoffDialog: Boolean = false,
     val pendingRecurrentAmount: BigDecimal? = null,
@@ -215,6 +261,7 @@ sealed interface EditorIntent {
     data class SetLockDraggable(val locked: Boolean) : EditorIntent
     data class SetRecurrentEnabled(val enabled: Boolean) : EditorIntent
     data class SetCreditEnabled(val enabled: Boolean) : EditorIntent
+    data class SetWalletIncomeEnabled(val enabled: Boolean) : EditorIntent
     data object DismissRecurrentDialog : EditorIntent
     data object DismissCreditCutoffDialog : EditorIntent
     data class DateSelected(val date: LocalDate) : EditorIntent

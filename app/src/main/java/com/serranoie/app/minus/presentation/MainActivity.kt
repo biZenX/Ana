@@ -106,6 +106,11 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var midnightTransitionManager: MidnightTransitionManager
 
+    @Inject
+    lateinit var appUpdateManager: com.serranoie.app.minus.data.updater.AppUpdateManager
+
+    private val autoUpdateInfo: MutableState<com.serranoie.app.minus.domain.model.updater.AppUpdateInfo?> = mutableStateOf(null)
+
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { isGranted ->
@@ -164,6 +169,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             notificationScheduler.initializeNotifications()
+
+            launch(kotlinx.coroutines.Dispatchers.IO) {
+                try {
+                    appUpdateManager.checkForUpdates().onSuccess { info ->
+                        if (info != null) {
+                            autoUpdateInfo.value = info
+                        }
+                    }
+                } catch (_: Exception) {
+                    // Ignore offline
+                }
+            }
         }
 
         settingsRepository.observeSettings().onEach { settings ->
@@ -232,6 +249,25 @@ class MainActivity : AppCompatActivity() {
 
                             MidnightRolloverDialogHost(navController)
                             HandleBudgetSetupNavigation(navController)
+
+                            val currentUpdateInfo by autoUpdateInfo
+                            val downloadState by appUpdateManager.downloadState.collectAsStateWithLifecycle()
+
+                            currentUpdateInfo?.let { info ->
+                                com.serranoie.app.minus.presentation.ui.updater.UpdatePromptDialog(
+                                    updateInfo = info,
+                                    downloadState = downloadState,
+                                    onStartDownload = {
+                                        lifecycleScope.launch {
+                                            appUpdateManager.downloadUpdate(info)
+                                        }
+                                    },
+                                    onDismiss = {
+                                        autoUpdateInfo.value = null
+                                        appUpdateManager.resetState()
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -315,14 +351,16 @@ class MainActivity : AppCompatActivity() {
                 midnightTransitionManager.onBudgetSetupHandled()
 
                 val hasBudget = settingsRepository.observeBudgetEndDate().first() != null
-                navController.navigate(
-                    Screen.Main.createRoute(
-                        openWallet = true,
-                        forceWalletSetup = !hasBudget,
-                    ),
-                ) {
-                    popUpTo(Screen.Main.route) { inclusive = true }
-                    launchSingleTop = true
+                if (hasBudget) {
+                    navController.navigate(
+                        Screen.Main.createRoute(
+                            openWallet = true,
+                            forceWalletSetup = false,
+                        ),
+                    ) {
+                        popUpTo(Screen.Main.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             } else if (needsBudgetSetup && !onboardingComplete.value) {
                 logcat {

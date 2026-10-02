@@ -1,8 +1,7 @@
-Initial public release.
-
-- Calculator-style expense entry.
-- Budget and recurring expense tracking.
-- CSV export support.
-- Widgets for quick expense information and actions.
-- Wear OS companion app integration.
-- Automatic GitHub release publishing from tagged builds.
+- feat: وضع المحفظة والدخل الإضافي (Wallet Mode) لتسجيل الهدايا ورد الديون والمكافآت دون تشويه ميزانية الشهر الأصلية.
+- feat: نصائح وفير المالية الذكية التفاعلية (7 قواعد ذهبية تنطلق تلقائياً وفق سلوك الإنفاق).
+- feat: تحديد أيام المصروف (Custom Allowance Days) لحساب الميزانية اليومية على الأيام النشطة فقط.
+- feat: خطوة اختيار اللغة فور تثبيت التطبيق لأول مرة.
+- feat: الدعم الشامل للغة العربية المصرية الأصيلة والالتزام بقاعدة "قد إيه".
+- feat: تنبيهات ذكية استباقية عند الاقتراب من الحد اليومي للمصروف أو تجاوزه.
+- improve: تحديث الهوية بالكامل إلى «وفير» والتخلص من أي تسميات قديمة وتنقية التعريب من الكلمات الهجينة.

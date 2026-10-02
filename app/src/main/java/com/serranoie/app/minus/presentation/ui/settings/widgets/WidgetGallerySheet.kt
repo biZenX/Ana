@@ -79,6 +79,10 @@ import com.serranoie.app.minus.presentation.widget.MonthCellState
 import com.serranoie.app.minus.presentation.widget.MonthHeatmapContent
 import com.serranoie.app.minus.presentation.widget.MonthHeatmapWidgetReceiver
 import com.serranoie.app.minus.presentation.widget.MonthWidgetCellState
+import com.serranoie.app.minus.presentation.widget.WalletIncomeWidget
+import com.serranoie.app.minus.presentation.widget.WalletIncomeWidgetReceiver
+import com.serranoie.app.minus.presentation.widget.FinancialCoachWidget
+import com.serranoie.app.minus.presentation.widget.FinancialCoachWidgetReceiver
 import com.serranoie.app.minus.presentation.widget.formatWidgetCurrency
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -278,6 +282,27 @@ private val widgetGalleryItems = listOf(
             daysRemaining = 12,
             totalDays = 30,
             periodLabel = context.getString(R.string.days_left),
+        )
+    },
+    WidgetGalleryItem(
+        titleRes = R.string.widget_wallet_title,
+        descriptionRes = R.string.widget_wallet_desc,
+        receiver = WalletIncomeWidgetReceiver::class.java,
+        previewHeight = 65.dp,
+    ) {
+        WalletIncomeWidget().WalletIncomeContent(
+            extraIncome = 750,
+            currency = PREVIEW_CURRENCY,
+        )
+    },
+    WidgetGalleryItem(
+        titleRes = R.string.widget_coach_title,
+        descriptionRes = R.string.widget_coach_desc,
+        receiver = FinancialCoachWidgetReceiver::class.java,
+        previewHeight = 135.dp,
+    ) {
+        FinancialCoachWidget().FinancialCoachContent(
+            tipIndex = 7,
         )
     },
 )

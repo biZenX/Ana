@@ -3,6 +3,7 @@ package com.serranoie.app.minus.presentation.ui.onboarding
 import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.serranoie.app.minus.data.repository.BudgetRepository
 import com.serranoie.app.minus.data.repository.SettingsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,6 +22,7 @@ import org.junit.Test
 class OnboardingViewModelTest {
 
     private val settingsRepository: SettingsRepository = mockk(relaxed = true)
+    private val budgetRepository: BudgetRepository = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -34,6 +36,7 @@ class OnboardingViewModelTest {
 
     private fun newViewModel() = OnboardingViewModel(
         settingsRepository = settingsRepository,
+        budgetRepository = budgetRepository,
     )
 
     private suspend fun <T> ReceiveTurbine<T>.awaitCondition(predicate: (T) -> Boolean): T {

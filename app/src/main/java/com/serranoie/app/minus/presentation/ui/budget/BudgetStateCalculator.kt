@@ -48,10 +48,24 @@ class BudgetStateCalculator @Inject constructor() {
         allTransactions: List<Transaction> = transactions,
         reserveUpcomingCharges: Boolean = false,
         leftoverChoices: Map<LocalDate, LeftoverChoice> = emptyMap(),
+        allowanceDaysEnabled: Boolean = false,
+        activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
     ): BudgetState {
         val periodEnd = settings.getPeriodEndDate()
-        val daysRemaining = ChronoUnit.DAYS.between(currentDate, periodEnd).toInt() + 1
-        val originalTotalDays = ChronoUnit.DAYS.between(settings.startDate, periodEnd).toInt() + 1
+        val calendarDaysRemaining = ChronoUnit.DAYS.between(currentDate, periodEnd).toInt() + 1
+        val calendarTotalDays = ChronoUnit.DAYS.between(settings.startDate, periodEnd).toInt() + 1
+
+        val isTodayAllowanceDay = !allowanceDaysEnabled || (currentDate.dayOfWeek.value in activeSpendingDays)
+        val originalTotalDays = if (allowanceDaysEnabled) {
+            countActiveDays(settings.startDate, periodEnd, activeSpendingDays).coerceAtLeast(1)
+        } else {
+            calendarTotalDays
+        }
+        val daysRemaining = if (allowanceDaysEnabled) {
+            countActiveDays(currentDate, periodEnd, activeSpendingDays)
+        } else {
+            calendarDaysRemaining
+        }
 
         val activeTransactions = transactions.filter { !it.isDeleted && !it.isRecurrent }
         val unpaidRecurringCharges = splitRecurringAndOneTime(
@@ -104,33 +118,37 @@ class BudgetStateCalculator @Inject constructor() {
         val spentToday = regularSpentToday.add(recurringDueToday)
 
         val remainingBudget = effectiveTotalBudget.subtract(totalExpensesInPeriod)
-        val originalDailyBudget = when (settings.splitMode) {
-            BudgetSplitMode.DYNAMIC -> {
-                if (daysRemaining <= 0) {
-                    BigDecimal.ZERO
-                } else {
-                    val remaining = effectiveTotalBudget.subtract(totalExpensesInPeriod)
-                        .subtract(carryForFirstDay)
-                        .add(spentToday)
-                    if (remaining <= BigDecimal.ZERO) {
+        val originalDailyBudget = if (allowanceDaysEnabled && !isTodayAllowanceDay) {
+            BigDecimal.ZERO
+        } else {
+            when (settings.splitMode) {
+                BudgetSplitMode.DYNAMIC -> {
+                    if (daysRemaining <= 0) {
                         BigDecimal.ZERO
                     } else {
-                        remaining.divide(BigDecimal(daysRemaining), 2, RoundingMode.HALF_UP)
+                        val remaining = effectiveTotalBudget.subtract(totalExpensesInPeriod)
+                            .subtract(carryForFirstDay)
+                            .add(spentToday)
+                        if (remaining <= BigDecimal.ZERO) {
+                            BigDecimal.ZERO
+                        } else {
+                            remaining.divide(BigDecimal(daysRemaining), 2, RoundingMode.HALF_UP)
+                        }
                     }
                 }
-            }
 
-            BudgetSplitMode.ASK_ME -> leftovers?.rate?.setScale(2, RoundingMode.HALF_UP) ?: BigDecimal.ZERO
+                BudgetSplitMode.ASK_ME -> leftovers?.rate?.setScale(2, RoundingMode.HALF_UP) ?: BigDecimal.ZERO
 
-            BudgetSplitMode.STATIC, BudgetSplitMode.CARRY_OVER -> {
-                if (originalTotalDays > 0) {
-                    splitBudget.divide(
-                        BigDecimal(originalTotalDays),
-                        2,
-                        RoundingMode.HALF_UP,
-                    )
-                } else {
-                    BigDecimal.ZERO
+                BudgetSplitMode.STATIC, BudgetSplitMode.CARRY_OVER -> {
+                    if (originalTotalDays > 0) {
+                        splitBudget.divide(
+                            BigDecimal(originalTotalDays),
+                            2,
+                            RoundingMode.HALF_UP,
+                        )
+                    } else {
+                        BigDecimal.ZERO
+                    }
                 }
             }
         }
@@ -145,7 +163,9 @@ class BudgetStateCalculator @Inject constructor() {
             activeTransactions + unpaidRecurringCharges, settings.startDate, currentDate, 30
         )
 
-        val remainingToday = if (leftovers != null) {
+        val remainingToday = if (allowanceDaysEnabled && !isTodayAllowanceDay) {
+            BigDecimal.ZERO.add(incomeToday).subtract(spentToday)
+        } else if (leftovers != null) {
             leftovers.remainingToday
         } else if (settings.splitMode == BudgetSplitMode.CARRY_OVER) {
             val surplus =
@@ -271,5 +291,18 @@ class BudgetStateCalculator @Inject constructor() {
                 txDate != null && !txDate.isBefore(blockStart) && !txDate.isAfter(blockEnd)
             }
             .sumOf { it.amount }
+    }
+
+    private fun countActiveDays(from: LocalDate, to: LocalDate, activeDays: Set<Int>): Int {
+        if (from.isAfter(to)) return 0
+        var count = 0
+        var curr = from
+        while (!curr.isAfter(to)) {
+            if (curr.dayOfWeek.value in activeDays) {
+                count++
+            }
+            curr = curr.plusDays(1)
+        }
+        return count
     }
 }

@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -73,15 +74,22 @@ fun isArabicLocale(): Boolean {
     if (!appLocales.isEmpty) {
         val lang = appLocales[0]?.language
         if (!lang.isNullOrEmpty()) {
-            return lang.equals("ar", ignoreCase = true)
+            return !lang.equals("en", ignoreCase = true) &&
+                    !lang.equals("de", ignoreCase = true) &&
+                    !lang.equals("es", ignoreCase = true) &&
+                    !lang.equals("fr", ignoreCase = true) &&
+                    !lang.equals("ru", ignoreCase = true) &&
+                    !lang.equals("zh", ignoreCase = true) &&
+                    !lang.equals("ja", ignoreCase = true)
         }
     }
-    return java.util.Locale.getDefault().language.equals("ar", ignoreCase = true)
+    // Default is always Arabic in Wafeer
+    return true
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
-    val displaySalt = "'salt' 1"
+    val noPadding = PlatformTextStyle(includeFontPadding = false)
     val base = Typography(
         displayLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -89,7 +97,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 54.sp,
             lineHeight = 62.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         displayMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -97,7 +105,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 44.sp,
             lineHeight = 52.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         displaySmall = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -105,7 +113,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 34.sp,
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         headlineLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -113,70 +121,79 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 30.sp,
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         headlineMedium = TextStyle(
-            fontFamily = ThmanyahSerifDisplayFamily,
-            fontWeight = FontWeight.Medium,
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 26.sp,
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineSmall = TextStyle(
-            fontFamily = ThmanyahSerifDisplayFamily,
-            fontWeight = FontWeight.Medium,
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 22.sp,
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleLarge = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             lineHeight = 28.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleMedium = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
-            fontWeight = FontWeight.Medium,
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleSmall = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            letterSpacing = 0.sp,
-        ),
-        bodyLarge = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            letterSpacing = 0.sp,
-        ),
-        bodyMedium = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            letterSpacing = 0.sp,
-        ),
-        bodySmall = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            letterSpacing = 0.sp,
-        ),
-        labelLarge = TextStyle(
             fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
+        ),
+        bodyLarge = TextStyle(
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            letterSpacing = 0.sp,
+            platformStyle = noPadding,
+        ),
+        bodyMedium = TextStyle(
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.sp,
+            platformStyle = noPadding,
+        ),
+        bodySmall = TextStyle(
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.sp,
+            platformStyle = noPadding,
+        ),
+        labelLarge = TextStyle(
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelMedium = TextStyle(
             fontFamily = ThmanyahSansFamily,
@@ -184,6 +201,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 12.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelSmall = TextStyle(
             fontFamily = ThmanyahSansFamily,
@@ -191,6 +209,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 11.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
     )
 
@@ -201,7 +220,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 60.sp,
             lineHeight = 68.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         displayMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -209,7 +228,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 48.sp,
             lineHeight = 56.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         displaySmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -217,7 +236,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 40.sp,
             lineHeight = 48.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         headlineLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -225,65 +244,71 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 34.sp,
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         headlineMediumEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifDisplayFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         headlineSmallEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifDisplayFamily,
-            fontWeight = FontWeight.SemiBold,
+            fontFamily = ThmanyahSansFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 26.sp,
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
-            fontFeatureSettings = displaySalt,
+            platformStyle = noPadding,
         ),
         titleLargeEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleMediumEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleSmallEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyLargeEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Medium,
             fontSize = 17.sp,
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyMediumEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Medium,
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodySmallEmphasized = TextStyle(
-            fontFamily = ThmanyahSerifTextFamily,
+            fontFamily = ThmanyahSansFamily,
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             lineHeight = 18.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSansFamily,
@@ -291,6 +316,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSansFamily,
@@ -298,6 +324,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 13.sp,
             lineHeight = 18.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelSmallEmphasized = TextStyle(
             fontFamily = ThmanyahSansFamily,
@@ -305,12 +332,14 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             fontSize = 11.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
     )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun getIbmPlexTypography(): Typography {
+    val noPadding = PlatformTextStyle(includeFontPadding = false)
     val base = Typography(
         displayLarge = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -318,6 +347,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 54.sp,
             lineHeight = 62.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         displayMedium = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -325,6 +355,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 44.sp,
             lineHeight = 52.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         displaySmall = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -332,6 +363,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 34.sp,
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineLarge = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -339,6 +371,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 30.sp,
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineMedium = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -346,6 +379,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 26.sp,
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineSmall = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -353,6 +387,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 22.sp,
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleLarge = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -360,6 +395,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 20.sp,
             lineHeight = 28.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleMedium = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -367,6 +403,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 16.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleSmall = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -374,6 +411,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 14.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyLarge = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -381,6 +419,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 16.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyMedium = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -388,6 +427,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 14.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodySmall = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -395,6 +435,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 12.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelLarge = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -402,6 +443,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 14.sp,
             lineHeight = 20.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelMedium = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -409,6 +451,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 12.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelSmall = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -416,6 +459,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 11.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
     )
 
@@ -426,6 +470,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 60.sp,
             lineHeight = 68.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         displayMediumEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -433,6 +478,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 48.sp,
             lineHeight = 56.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         displaySmallEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -440,6 +486,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 40.sp,
             lineHeight = 48.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineLargeEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -447,6 +494,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 34.sp,
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineMediumEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -454,6 +502,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 30.sp,
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         headlineSmallEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -461,6 +510,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 26.sp,
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleLargeEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -468,6 +518,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 22.sp,
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleMediumEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -475,6 +526,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 18.sp,
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         titleSmallEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -482,6 +534,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyLargeEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -489,6 +542,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 17.sp,
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodyMediumEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -496,6 +550,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         bodySmallEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -503,6 +558,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 13.sp,
             lineHeight = 18.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelLargeEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -510,6 +566,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 15.sp,
             lineHeight = 22.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelMediumEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -517,6 +574,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 13.sp,
             lineHeight = 18.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
         labelSmallEmphasized = TextStyle(
             fontFamily = IbmPlexSansArabicFamily,
@@ -524,6 +582,7 @@ fun getIbmPlexTypography(): Typography {
             fontSize = 11.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.sp,
+            platformStyle = noPadding,
         ),
     )
 }
@@ -838,155 +897,220 @@ fun Typography.withCondensedStyles(isRounded: Boolean = true): Typography {
     )
 }
 
+private fun isThmanyah(family: FontFamily?): Boolean {
+    return family == ThmanyahSerifTextFamily || family == ThmanyahSansFamily || family == ThmanyahSerifDisplayFamily
+}
+
+private fun ibmNumeralCondensed(
+    weight: FontWeight,
+    fontSize: androidx.compose.ui.unit.TextUnit,
+    lineHeight: androidx.compose.ui.unit.TextUnit,
+    letterSpacing: androidx.compose.ui.unit.TextUnit = 0.sp
+): TextStyle {
+    return TextStyle(
+        fontFamily = IbmPlexSansArabicFamily,
+        fontWeight = weight,
+        fontSize = fontSize,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+    )
+}
+
 val Typography.displayLargeCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(500, 65f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 64.sp,
-            lineHeight = 72.sp,
-            letterSpacing = 0.sp
-        )
-    } else displayLarge
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(500, 65f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 64.sp,
+                lineHeight = 72.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 64.sp, 72.sp)
+        else -> displayLarge
+    }
 
 val Typography.displayMediumCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(700, 75f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 52.sp,
-            lineHeight = 60.sp,
-            letterSpacing = 0.sp
-        )
-    } else displayMedium
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(700, 75f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 52.sp,
+                lineHeight = 60.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 52.sp, 60.sp)
+        else -> displayMedium
+    }
 
 val Typography.displaySmallCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(600, 75f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 44.sp,
-            lineHeight = 52.sp,
-            letterSpacing = 0.sp
-        )
-    } else displaySmall
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(600, 75f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 44.sp,
+                lineHeight = 52.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 44.sp, 52.sp)
+        else -> displaySmall
+    }
 
 val Typography.headlineLargeCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(800, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 36.sp,
-            lineHeight = 44.sp,
-            letterSpacing = 0.sp
-        )
-    } else headlineLarge
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(800, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 36.sp,
+                lineHeight = 44.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 36.sp, 44.sp)
+        else -> headlineLarge
+    }
 
 val Typography.headlineMediumCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 32.sp,
-            lineHeight = 40.sp,
-            letterSpacing = 0.sp
-        )
-    } else headlineMedium
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 32.sp,
+                lineHeight = 40.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 32.sp, 40.sp)
+        else -> headlineMedium
+    }
 
 val Typography.headlineSmallCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 28.sp,
-            lineHeight = 36.sp,
-            letterSpacing = 0.sp
-        )
-    } else headlineSmall
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 28.sp,
+                lineHeight = 36.sp,
+                letterSpacing = 0.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 28.sp, 36.sp)
+        else -> headlineSmall
+    }
 
 val Typography.titleLargeCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 24.sp,
-            lineHeight = 32.sp,
-            letterSpacing = 0.15.sp
-        )
-    } else titleLarge
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(700, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 24.sp,
+                lineHeight = 32.sp,
+                letterSpacing = 0.15.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 24.sp, 32.sp, 0.15.sp)
+        else -> titleLarge
+    }
 
 val Typography.titleMediumCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(600, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 18.sp,
-            lineHeight = 26.sp,
-            letterSpacing = 0.2.sp
-        )
-    } else titleMedium
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(600, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 18.sp,
+                lineHeight = 26.sp,
+                letterSpacing = 0.2.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 18.sp, 26.sp, 0.2.sp)
+        else -> titleMedium
+    }
 
 val Typography.titleSmallCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            letterSpacing = 0.15.sp
-        )
-    } else titleSmall
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.15.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
+        else -> titleSmall
+    }
 
 val Typography.bodyLargeCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 70f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 18.sp,
-            lineHeight = 28.sp,
-            letterSpacing = 0.6.sp
-        )
-    } else bodyLarge
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 70f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 18.sp,
+                lineHeight = 28.sp,
+                letterSpacing = 0.6.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 18.sp, 28.sp, 0.6.sp)
+        else -> bodyLarge
+    }
 
 val Typography.bodyMediumCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 80f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            letterSpacing = 0.4.sp
-        )
-    } else bodyMedium
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 80f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.4.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 16.sp, 24.sp, 0.4.sp)
+        else -> bodyMedium
+    }
 
 val Typography.bodySmallCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 85f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            letterSpacing = 0.5.sp
-        )
-    } else bodySmall
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 85f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                letterSpacing = 0.5.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 14.sp, 20.sp, 0.5.sp)
+        else -> bodySmall
+    }
 
 val Typography.labelLargeCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 75f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            letterSpacing = 0.15.sp
-        )
-    } else labelLarge
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 75f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.15.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
+        else -> labelLarge
+    }
 
 val Typography.labelMediumCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 65f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            letterSpacing = 0.6.sp
-        )
-    } else labelMedium
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 65f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                letterSpacing = 0.6.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 14.sp, 20.sp, 0.6.sp)
+        else -> labelMedium
+    }
 
 val Typography.labelSmallCondensed: TextStyle
-    get() = if (bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(400, 75f, bodyLarge.fontFamily.isRounded()),
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            letterSpacing = 0.6.sp
-        )
-    } else labelSmall
+    get() = when {
+        bodyLarge.fontFamily == GoogleSansFlexBaseRounded || bodyLarge.fontFamily == GoogleSansFlexBaseNonRounded ->
+            TextStyle(
+                fontFamily = googleSansFlex(400, 75f, bodyLarge.fontFamily.isRounded()),
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                letterSpacing = 0.6.sp
+            )
+        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 12.sp, 16.sp, 0.6.sp)
+        else -> labelSmall
+    }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 val ExpressiveTypography = Typography.withEmphasizedStyles()

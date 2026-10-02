@@ -292,4 +292,51 @@ class EditorStateControllerTest {
         assertThat(controller.state.value.selectedDate).isEqualTo(date)
         assertThat(changes).containsExactly(EditorChange.SelectedDateChanged(date))
     }
+
+    // -------------------------------------------------------------------------
+    // SetWalletIncomeEnabled & Mutual Exclusion
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `when_set_wallet_income_enabled_true_then_wallet_is_enabled_and_credit_recurrent_are_disabled`() {
+        val controller = newController()
+        controller.process(EditorIntent.SetCreditEnabled(true), hasCreditCardCutoffDay = true)
+
+        val changes = controller.process(EditorIntent.SetWalletIncomeEnabled(true), hasCreditCardCutoffDay = true)
+
+        val state = controller.state.value
+        assertThat(state.isWalletIncomeEnabled).isTrue()
+        assertThat(state.isCreditEnabled).isFalse()
+        assertThat(state.isRecurrentEnabled).isFalse()
+        assertThat(changes).contains(EditorChange.WalletIncomeEnabledChanged(true))
+        assertThat(changes).contains(EditorChange.CreditEnabledChanged(false))
+    }
+
+    @Test
+    fun `when_set_credit_enabled_true_while_wallet_enabled_then_wallet_is_disabled`() {
+        val controller = newController()
+        controller.process(EditorIntent.SetWalletIncomeEnabled(true), hasCreditCardCutoffDay = true)
+
+        val changes = controller.process(EditorIntent.SetCreditEnabled(true), hasCreditCardCutoffDay = true)
+
+        val state = controller.state.value
+        assertThat(state.isCreditEnabled).isTrue()
+        assertThat(state.isWalletIncomeEnabled).isFalse()
+        assertThat(changes).contains(EditorChange.CreditEnabledChanged(true))
+        assertThat(changes).contains(EditorChange.WalletIncomeEnabledChanged(false))
+    }
+
+    @Test
+    fun `when_set_recurrent_enabled_true_while_wallet_enabled_then_wallet_is_disabled`() {
+        val controller = newController()
+        controller.process(EditorIntent.SetWalletIncomeEnabled(true), hasCreditCardCutoffDay = true)
+
+        val changes = controller.process(EditorIntent.SetRecurrentEnabled(true), hasCreditCardCutoffDay = true)
+
+        val state = controller.state.value
+        assertThat(state.isRecurrentEnabled).isTrue()
+        assertThat(state.isWalletIncomeEnabled).isFalse()
+        assertThat(changes).contains(EditorChange.RecurrentEnabledChanged(true))
+        assertThat(changes).contains(EditorChange.WalletIncomeEnabledChanged(false))
+    }
 }

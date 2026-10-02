@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Minus" parent="Theme.AppCompat.DayNight.NoActionBar" />
+    <style name="Theme.Wafeer" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/thmanyah_sans_medium</item>
+        <item name="fontFamily">@font/thmanyah_sans_medium</item>
+    </style>
+    <style name="Theme.Minus" parent="Theme.Wafeer" />
 </resources>

@@ -51,6 +51,11 @@ data class BudgetUiState(
      * Kept here so a view-mode change alone still re-emits this state and refreshes the widgets.
      */
     val selectedViewPeriod: BudgetPeriod? = null,
+    val allowanceDaysEnabled: Boolean = false,
+    val activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
+    val budgetAlertThresholdPercent: Int = 80,
+    val financialTipsEnabled: Boolean = true,
+    val isWalletIncomeEnabled: Boolean = false,
 ) {
     companion object {
         val INITIAL = BudgetUiState()

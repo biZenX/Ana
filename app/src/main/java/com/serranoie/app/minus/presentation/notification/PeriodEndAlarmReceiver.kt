@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.serranoie.app.minus.data.repository.BudgetRepository
+import com.serranoie.app.minus.data.repository.SettingsRepository
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -21,6 +22,7 @@ class PeriodEndAlarmReceiver : BroadcastReceiver() {
     @InstallIn(SingletonComponent::class)
     interface PeriodEndAlarmReceiverEntryPoint {
         fun budgetRepository(): BudgetRepository
+        fun settingsRepository(): SettingsRepository
         fun notificationHelper(): NotificationHelper
     }
 
@@ -34,13 +36,20 @@ class PeriodEndAlarmReceiver : BroadcastReceiver() {
                     PeriodEndAlarmReceiverEntryPoint::class.java
                 )
                 val budgetRepository = entryPoint.budgetRepository()
+                val settingsRepository = entryPoint.settingsRepository()
                 val notificationHelper = entryPoint.notificationHelper()
                 val settings = budgetRepository.getBudgetSettingsSync() ?: return@launch
+                val userSettings = settingsRepository.getSettings()
+
                 val periodEnd = settings.getPeriodEndDate()
                 val today = LocalDate.now()
-                if (!today.isAfter(periodEnd)) {
+
+                val shouldShow = today.isAfter(periodEnd) || !today.isBefore(periodEnd)
+                if (!shouldShow) {
+                    logcat { "Period end notification condition not met: today=$today periodEnd=$periodEnd" }
                     return@launch
                 }
+
                 val transactions = budgetRepository.getTransactions().first()
                 val periodTransactions = transactions.filter { transaction ->
                     val txDate = transaction.date?.toLocalDate()

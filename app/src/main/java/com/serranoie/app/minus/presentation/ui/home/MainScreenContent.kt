@@ -824,14 +824,13 @@ private fun PhoneLayout(
                 focusRequester.requestFocus()
             }
         }
-        val halfExpandedOffsetPx =
-            with(localDensity) {
-                (-contentHeight + navBarHeightPx + 18.dp.toPx() + editorHeightAnimatedState.value).coerceAtMost(
-                    0f
-                )
+        val isSheetExpanding by remember {
+            derivedStateOf {
+                val halfExpandedOffsetPx = with(localDensity) {
+                    (-contentHeight + navBarHeightPx + 18.dp.toPx() + editorHeightAnimatedState.value).coerceAtMost(0f)
+                }
+                topSheetState.offset.value > halfExpandedOffsetPx + 10f
             }
-        val isSheetExpanding by remember(halfExpandedOffsetPx) {
-            derivedStateOf { topSheetState.offset.value > halfExpandedOffsetPx + 10f }
         }
 
         Card(
@@ -909,7 +908,7 @@ private fun PhoneLayout(
         val expandHeightPx = contentHeight - navBarHeightPx - with(localDensity) { 18.dp.toPx() }
         TopSheetLayout(
             swipeableState = topSheetState,
-            customHalfHeight = editorHeightAnimatedState.value,
+            customHalfHeight = { editorHeightAnimatedState.value },
             customCardHeight = {
                 val halfHeightPx = editorHeightAnimatedState.value
                 val maxOffset = (-(expandHeightPx - halfHeightPx)).coerceAtMost(0f)
@@ -1195,7 +1194,7 @@ private fun TabletLayout(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(with(localDensity) { (keyboardHeightAnimatedState.value + navBarHeightPx).toDp() }),
+                        .animatedHeightPx { keyboardHeightAnimatedState.value + navBarHeightPx },
             ) {
                 Box(
                     modifier = Modifier
@@ -1502,6 +1501,13 @@ private fun MainScreenEditorSection(
                 ),
             )
         },
+        onWalletIncomeToggle = { enabled ->
+            actions.onProcessIntent(
+                MainScreenUiIntent.ProcessBudgetEditorIntent(
+                    BudgetEditorIntent.SetWalletIncomeEnabled(enabled),
+                ),
+            )
+        },
         showCreditQuickToggleFeature = featureFlags.showCreditQuickToggleFeature,
         extraNoteEnabled = featureFlags.extraNoteEnabled,
         newCategoryTagEnabled = featureFlags.newCategoryTagEnabled,
@@ -1555,6 +1561,13 @@ private fun MainScreenEditorSection(
             actions.onProcessIntent(
                 MainScreenUiIntent.ProcessBudgetEditorIntent(
                     BudgetEditorIntent.UpdateSettings(settings),
+                ),
+            )
+        },
+        onSaveAllowanceDays = { enabled, days ->
+            actions.onProcessIntent(
+                MainScreenUiIntent.ProcessBudgetEditorIntent(
+                    BudgetEditorIntent.UpdateAllowanceDays(enabled, days),
                 ),
             )
         },

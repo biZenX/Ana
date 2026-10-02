@@ -59,12 +59,16 @@ private fun changelogSectionAccent(type: ReleaseType): Color = when (type) {
     ReleaseType.FEATURE -> MaterialTheme.colorScheme.tertiary
     ReleaseType.IMPROVEMENT -> MaterialTheme.colorScheme.primary
     ReleaseType.BUG_FIX -> MaterialTheme.colorScheme.error
+    ReleaseType.REMOVED -> MaterialTheme.colorScheme.outline
+    ReleaseType.SECURITY -> MaterialTheme.colorScheme.secondary
 }
 
 private fun changelogSectionIcon(type: ReleaseType): ImageVector = when (type) {
     ReleaseType.FEATURE -> Icons.Rounded.RocketLaunch
     ReleaseType.IMPROVEMENT -> Icons.Rounded.AutoAwesome
     ReleaseType.BUG_FIX -> Icons.Rounded.BugReport
+    ReleaseType.REMOVED -> Icons.Rounded.AutoAwesome // or general indicator
+    ReleaseType.SECURITY -> Icons.Rounded.AutoAwesome // or shield
 }
 
 @Preview(showBackground = true, name = "Section header — Bug Fixes", heightDp = 56)

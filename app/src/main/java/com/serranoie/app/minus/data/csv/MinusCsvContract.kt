@@ -1,7 +1,7 @@
 package com.serranoie.app.minus.data.csv
 
 object MinusCsvContract {
-    const val FILE_NAME = "minus_export.csv"
+    const val FILE_NAME = "wafeer_export.csv"
 
     const val COL_DATE = "date"
     const val COL_AMOUNT = "amount"

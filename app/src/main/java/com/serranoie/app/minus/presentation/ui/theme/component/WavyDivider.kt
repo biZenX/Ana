@@ -1,5 +1,11 @@
 package com.serranoie.app.minus.presentation.ui.theme.component
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +18,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -109,6 +116,16 @@ private fun WavyLine(
     strokeWidth: Float = 3f,
     color: Color,
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "waveTransition")
+    val phase by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = (2 * Math.PI).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "wavePhase",
+    )
     val d = LocalDensity.current.density
     Canvas(
         modifier = modifier.height(((amplitude + strokeWidth) * 2 * d).dp)
@@ -126,7 +143,7 @@ private fun WavyLine(
 
             var x = 0f
             while (x < width) {
-                val y = centerY + sin((x / wl) * 2 * Math.PI.toFloat()) * amp
+                val y = centerY + sin(((x / wl) * 2 * Math.PI.toFloat()) + phase) * amp
                 lineTo(x, y)
                 x += 2f
             }

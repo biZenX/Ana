@@ -10,7 +10,6 @@
     android:updatePeriodMillis="1800000"
     android:description="@string/widget_average_spend_description"
     android:previewLayout="@layout/widget_average_spend_preview"
-    android:previewImage="@drawable/ic_launcher_foreground"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

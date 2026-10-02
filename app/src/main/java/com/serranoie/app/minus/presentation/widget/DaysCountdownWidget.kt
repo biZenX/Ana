@@ -16,6 +16,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.background
@@ -65,6 +66,7 @@ class DaysCountdownWidget : GlanceAppWidget() {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
+                .cornerRadius(24.dp)
                 .background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
                 .padding(8.dp),
@@ -73,27 +75,24 @@ class DaysCountdownWidget : GlanceAppWidget() {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
+                WidgetThmanyahText(
                     text = "$daysRemaining",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = if (daysRemaining <= 3)
-                            GlanceTheme.colors.error
-                        else
-                            GlanceTheme.colors.primary,
-                        textAlign = TextAlign.Center,
-                        fontSize = 28.sp
-                    )
+                    fontWeight = FontWeight.Bold,
+                    color = if (daysRemaining <= 3)
+                        GlanceTheme.colors.error
+                    else
+                        GlanceTheme.colors.primary,
+                    textAlign = TextAlign.Center,
+                    fontSize = 28.sp,
+                    useDisplayFont = true,
                 )
 
                 Spacer(modifier = GlanceModifier.height(2.dp))
 
-                Text(
+                WidgetThmanyahText(
                     text = periodLabel,
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                 )
             }
         }

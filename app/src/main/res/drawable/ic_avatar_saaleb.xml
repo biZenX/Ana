@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Circular Badge Background -->
+    <path
+        android:fillColor="#E05252"
+        android:pathData="M24,2A22,22 0 1,0 24,46A22,22 0 1,0 24,2Z"/>
+    <!-- Subtle Inner Ring -->
+    <path
+        android:strokeColor="#FF7A7A"
+        android:strokeWidth="1.5"
+        android:pathData="M24,5A19,19 0 1,0 24,43A19,19 0 1,0 24,5Z"/>
+    <!-- Witty Half-lidded Eyes (Flat 2D, stylish like Lily) -->
+    <!-- Left Eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,20Q18,18 22,20C22,24 14,24 14,20Z"/>
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M17,19.5A2,2 0 1,0 17,23.5A2,2 0 1,0 17,19.5Z"/>
+    <!-- Right Eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M26,20Q30,18 34,20C34,24 26,24 26,20Z"/>
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M31,19.5A2,2 0 1,0 31,23.5A2,2 0 1,0 31,19.5Z"/>
+    <!-- Sleek Eyebrows (skeptical / questioning) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M14,16L21,17"/>
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M27,15L34,17.5"/>
+    <!-- Flat Minimalist Minus Bar on chest/badge -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,31H30A2,2 0 0,1 32,33A2,2 0 0,1 30,35H18A2,2 0 0,1 16,33A2,2 0 0,1 18,31Z"/>
+</vector>

@@ -1,5 +1,11 @@
 package com.serranoie.app.minus.presentation.ui.onboarding
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -20,6 +26,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -60,6 +70,11 @@ import logcat.logcat
 
 private const val TAG = "OnboardingScreen"
 
+enum class OnboardingStep {
+    LANGUAGE,
+    WELCOME,
+}
+
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
@@ -83,6 +98,9 @@ fun OnboardingScreen(
     }
 
     OnboardingScreenContent(
+        onLanguageSelected = { lang ->
+            viewModel.setLanguage(lang)
+        },
         onContinue = {
             logcat(TAG) { "Set Budget tapped -> dispatching OnWelcomeDismissed" }
             viewModel.processIntent(OnboardingUiIntent.OnWelcomeDismissed)
@@ -92,11 +110,36 @@ fun OnboardingScreen(
 
 @Composable
 internal fun OnboardingScreenContent(
+    onLanguageSelected: (String) -> Unit = {},
     onContinue: () -> Unit = {},
 ) {
-    WelcomeStep(
-        onContinue = onContinue,
-    )
+    var currentStep by androidx.compose.runtime.saveable.rememberSaveable {
+        mutableStateOf(OnboardingStep.LANGUAGE)
+    }
+
+    AnimatedContent(
+        targetState = currentStep,
+        transitionSpec = {
+            (slideInHorizontally { it } + fadeIn()).togetherWith(slideOutHorizontally { -it } + fadeOut())
+        },
+        label = "onboardingStepTransition",
+    ) { step ->
+        when (step) {
+            OnboardingStep.LANGUAGE -> {
+                LanguageStep(
+                    onLanguageConfirmed = { lang ->
+                        onLanguageSelected(lang)
+                        currentStep = OnboardingStep.WELCOME
+                    }
+                )
+            }
+            OnboardingStep.WELCOME -> {
+                WelcomeStep(
+                    onContinue = onContinue,
+                )
+            }
+        }
+    }
 }
 
 private data class StepItem(
@@ -360,6 +403,218 @@ private fun StepCard(
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
+        }
+    }
+}
+
+private data class LanguageOption(
+    val code: String,
+    val flag: String,
+    val title: String,
+    val description: String,
+)
+
+@Composable
+private fun LanguageStep(
+    onLanguageConfirmed: (String) -> Unit,
+) {
+    val localBottomSheetScrollState = LocalBottomSheetScrollState.current
+    val statusBarHeight = LocalWindowInsets.current.calculateTopPadding()
+    val navigationBarHeight =
+        LocalWindowInsets.current.calculateBottomPadding().coerceAtLeast(16.dp)
+
+    val scrollState = rememberScrollState()
+    val localDensity = LocalDensity.current
+    var pageSize by remember { mutableStateOf(Size(0.dp, 0.dp)) }
+
+    var selectedLanguage by androidx.compose.runtime.saveable.rememberSaveable {
+        mutableStateOf("ar-EG")
+    }
+
+    val options = listOf(
+        LanguageOption(
+            code = "ar-EG",
+            flag = "🇪🇬",
+            title = "عربي (مصري)",
+            description = "لهجة مصرية يومية لمتابعة مصروفك وتوفيرك بسهولة",
+        ),
+        LanguageOption(
+            code = "ar",
+            flag = "🌍",
+            title = "العربية (الفصحى)",
+            description = "واجهة متكاملة باللغة العربية الفصحى الفخمة",
+        ),
+        LanguageOption(
+            code = "en",
+            flag = "🇬🇧",
+            title = "English",
+            description = "Clean, complete English interface",
+        ),
+        LanguageOption(
+            code = "system",
+            flag = "⚙️",
+            title = "لغة الجهاز",
+            description = "المطابقة التلقائية للغة إعدادات هاتفك",
+        ),
+    )
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = if (localBottomSheetScrollState.topPadding > 0.dp) {
+                    localBottomSheetScrollState.topPadding
+                } else {
+                    statusBarHeight
+                }
+            )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .onGloballyPositioned {
+                    pageSize = Size(
+                        width = with(localDensity) { it.size.width.toDp() },
+                        height = with(localDensity) { it.size.height.toDp() }
+                    )
+                }
+        ) {
+            WelcomeBackground(scrollState = scrollState, pageSize = pageSize)
+
+            Column(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(Modifier.height(24.dp))
+                    Text(
+                        text = stringResource(R.string.onboarding_language_title),
+                        style = MaterialTheme.typography.headlineLargeEmphasized,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.onboarding_language_subtitle),
+                        style = MaterialTheme.typography.bodyMediumCondensed,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    Spacer(Modifier.height(28.dp))
+
+                    options.forEach { opt ->
+                        val isSelected = selectedLanguage == opt.code
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp)
+                                .clip(MaterialTheme.shapes.large)
+                                .clickable { selectedLanguage = opt.code },
+                            shape = MaterialTheme.shapes.large,
+                            color = if (isSelected) {
+                                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+                            } else {
+                                MaterialTheme.colorScheme.surfaceContainerLow
+                            },
+                            border = if (isSelected) {
+                                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                            } else {
+                                androidx.compose.foundation.BorderStroke(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                                )
+                            },
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(42.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                            else MaterialTheme.colorScheme.surfaceContainerHigh
+                                        ),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = opt.flag,
+                                        style = MaterialTheme.typography.titleMedium,
+                                    )
+                                }
+
+                                Spacer(Modifier.width(14.dp))
+
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = opt.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = opt.description,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (isSelected) MaterialTheme.colorScheme.primary
+                                            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                                        ),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    if (isSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onPrimary,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = navigationBarHeight),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    val buttonText = when (selectedLanguage) {
+                        "ar-EG" -> "كمّل"
+                        "en" -> "Continue"
+                        else -> "متابعة"
+                    }
+                    DescriptionButton(
+                        title = { Text(buttonText) },
+                        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
+                        onClick = { onLanguageConfirmed(selectedLanguage) },
+                    )
+                    Spacer(Modifier.height(12.dp))
+                }
+            }
         }
     }
 }

@@ -67,6 +67,46 @@ class NotificationScheduler @Inject constructor(
         scheduleCreditCutoffReminder()
         checkAndReschedulePeriodEndNotification()
         scheduleMidnightPeriodCheck()
+        scheduleDaily75PercentCheck()
+    }
+
+    fun scheduleDaily75PercentCheck() {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmIntent = Intent(context, DailyFinancialCheckReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            5003,
+            alarmIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
+
+        val now = LocalDateTime.now()
+        var targetTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(18, 30))
+        if (now.isAfter(targetTime)) {
+            targetTime = targetTime.plusDays(1)
+        }
+
+        val triggerTime = targetTime.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+        logcat { "Scheduling daily 75% financial check for $targetTime ($triggerTime)" }
+
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms() -> {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTime,
+                    pendingIntent
+                )
+            }
+            else -> {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTime,
+                    pendingIntent
+                )
+            }
+        }
     }
 
     fun scheduleMidnightPeriodCheck() {

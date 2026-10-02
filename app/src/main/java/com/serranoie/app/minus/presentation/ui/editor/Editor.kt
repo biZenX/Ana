@@ -34,11 +34,26 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountBalance
+import androidx.compose.material.icons.rounded.AccountBalanceWallet
 import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.CreditScore
 import androidx.compose.material.icons.rounded.EventRepeat
+import androidx.compose.material.icons.rounded.HourglassTop
+import androidx.compose.material.icons.rounded.NotificationsActive
+import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.LocalOffer
+import androidx.compose.material.icons.rounded.TrendingUp
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.annotation.StringRes
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ButtonGroupDefaults
@@ -48,6 +63,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -171,6 +189,7 @@ fun Editor(
     onCategoryEditingChanged: (Boolean) -> Unit = {},
     onRecurrentToggle: (Boolean) -> Unit = {},
     onCreditToggle: (Boolean) -> Unit = {},
+    onWalletIncomeToggle: (Boolean) -> Unit = {},
     showCreditQuickToggleFeature: Boolean = false,
     extraNoteEnabled: Boolean = false,
     newCategoryTagEnabled: Boolean = false,
@@ -185,6 +204,7 @@ fun Editor(
     onDismissCreditCutoffDialog: () -> Unit = {},
     onRecurrentExpenseConfirm: (RecurrentFrequency, LocalDate, Int?, String) -> Unit = { _, _, _, _ -> },
     onCreditCutoffConfirm: (Int) -> Unit = {},
+    onSaveAllowanceDays: (Boolean, Set<Int>) -> Unit = { _, _ -> },
     onApply: () -> Unit = {},
     showAnalyticsButton: Boolean = true,
     showSettingsButton: Boolean = true,
@@ -314,6 +334,10 @@ fun Editor(
                         modifier = Modifier.fillMaxHeight(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val walletDescription = stringResource(R.string.wallet_mode_tooltip)
+                        val recurrentDescription = "Recurrent payment"
+                        val creditDescription = "Credit card payment"
+
                         if (showCreditQuickToggleFeature) {
                             FlowRow(
                                 modifier = Modifier.fillMaxHeight(),
@@ -322,7 +346,6 @@ fun Editor(
                                 ),
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                val creditDescription = "Credit card payment"
                                 TooltipBox(
                                     positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                                         TooltipAnchorPosition.Above
@@ -369,7 +392,46 @@ fun Editor(
                                     }
                                 }
 
-                                val recurrentDescription = "Recurrent payment"
+                                TooltipBox(
+                                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                        TooltipAnchorPosition.Above
+                                    ),
+                                    tooltip = {
+                                        PlainTooltip(
+                                            modifier = Modifier.semantics {
+                                                liveRegion = LiveRegionMode.Assertive
+                                                paneTitle = walletDescription
+                                            }
+                                        ) { Text(walletDescription) }
+                                    },
+                                    state = rememberTooltipState(),
+                                ) {
+                                    ToggleButton(
+                                        checked = uiState.isWalletIncomeEnabled,
+                                        onCheckedChange = {
+                                            performUIHaptic(view)
+                                            onWalletIncomeToggle(it)
+                                        },
+                                        shapes = ButtonGroupDefaults.connectedMiddleButtonShapes(),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .semantics { role = Role.RadioButton },
+                                        colors = ToggleButtonDefaults.toggleButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                alpha = 0.65f
+                                            ),
+                                            checkedContainerColor = Color(0xFF10B981),
+                                            contentColor = Color(0xFF10B981),
+                                            checkedContentColor = Color.White
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.AccountBalanceWallet,
+                                            contentDescription = walletDescription
+                                        )
+                                    }
+                                }
+
                                 TooltipBox(
                                     positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                                         TooltipAnchorPosition.Above
@@ -417,50 +479,97 @@ fun Editor(
                                 }
                             }
                         } else {
-                            val recurrentDescription = "Recurrent payment"
-                            TooltipBox(
-                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                                    TooltipAnchorPosition.Below
+                            FlowRow(
+                                modifier = Modifier.fillMaxHeight(),
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    ButtonGroupDefaults.ConnectedSpaceBetween
                                 ),
-                                tooltip = {
-                                    PlainTooltip(
-                                        modifier = Modifier.semantics {
-                                            liveRegion = LiveRegionMode.Assertive
-                                            paneTitle = recurrentDescription
-                                        }
-                                    ) { Text(recurrentDescription) }
-                                },
-                                state = rememberTooltipState(),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                ToggleButton(
-                                    checked = uiState.isRecurrentEnabled,
-                                    onCheckedChange = { checked ->
-                                        performUIHaptic(view)
-                                        onRecurrentToggle(checked)
+                                TooltipBox(
+                                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                        TooltipAnchorPosition.Above
+                                    ),
+                                    tooltip = {
+                                        PlainTooltip(
+                                            modifier = Modifier.semantics {
+                                                liveRegion = LiveRegionMode.Assertive
+                                                paneTitle = walletDescription
+                                            }
+                                        ) { Text(walletDescription) }
                                     },
-                                    shapes = ToggleButtonDefaults.shapes(),
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .semantics { role = Role.RadioButton }
-                                        .let { m ->
-                                            if (tutorialBoxState != null) m.markForTutorial(
-                                                tutorialBoxState,
-                                                index = 4
-                                            ) else m
-                                        },
-                                    colors = ToggleButtonDefaults.toggleButtonColors(
-                                        containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                            alpha = 0.65f
-                                        ),
-                                        checkedContainerColor = MaterialTheme.colorScheme.tertiary,
-                                        contentColor = MaterialTheme.colorScheme.tertiary,
-                                        checkedContentColor = MaterialTheme.colorScheme.onTertiary
-                                    )
+                                    state = rememberTooltipState(),
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.EventRepeat,
-                                        contentDescription = recurrentDescription
-                                    )
+                                    ToggleButton(
+                                        checked = uiState.isWalletIncomeEnabled,
+                                        onCheckedChange = {
+                                            performUIHaptic(view)
+                                            onWalletIncomeToggle(it)
+                                        },
+                                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .semantics { role = Role.RadioButton },
+                                        colors = ToggleButtonDefaults.toggleButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                alpha = 0.65f
+                                            ),
+                                            checkedContainerColor = Color(0xFF10B981),
+                                            contentColor = Color(0xFF10B981),
+                                            checkedContentColor = Color.White
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.AccountBalanceWallet,
+                                            contentDescription = walletDescription
+                                        )
+                                    }
+                                }
+
+                                TooltipBox(
+                                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                        TooltipAnchorPosition.Below
+                                    ),
+                                    tooltip = {
+                                        PlainTooltip(
+                                            modifier = Modifier.semantics {
+                                                liveRegion = LiveRegionMode.Assertive
+                                                paneTitle = recurrentDescription
+                                            }
+                                        ) { Text(recurrentDescription) }
+                                    },
+                                    state = rememberTooltipState(),
+                                ) {
+                                    ToggleButton(
+                                        checked = uiState.isRecurrentEnabled,
+                                        onCheckedChange = { checked ->
+                                            performUIHaptic(view)
+                                            onRecurrentToggle(checked)
+                                        },
+                                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .semantics { role = Role.RadioButton }
+                                            .let { m ->
+                                                if (tutorialBoxState != null) m.markForTutorial(
+                                                    tutorialBoxState,
+                                                    index = 4
+                                                ) else m
+                                            },
+                                        colors = ToggleButtonDefaults.toggleButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                alpha = 0.65f
+                                            ),
+                                            checkedContainerColor = MaterialTheme.colorScheme.tertiary,
+                                            contentColor = MaterialTheme.colorScheme.tertiary,
+                                            checkedContentColor = MaterialTheme.colorScheme.onTertiary
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.EventRepeat,
+                                            contentDescription = recurrentDescription
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -542,6 +651,7 @@ fun Editor(
                     tags = uiState.tags,
                     currentComment = uiState.currentComment,
                     currentNote = uiState.currentNote,
+                    isWalletIncomeEnabled = uiState.isWalletIncomeEnabled,
                     extraNoteEnabled = extraNoteEnabled,
                     onCommentUpdate = onCommentUpdate,
                     onNoteUpdate = onNoteUpdate,
@@ -563,6 +673,7 @@ fun Editor(
                 )
             } else {
                 IdleContent(
+                    uiState = uiState,
                     onCreateCategory = onCreateCategory,
                     newCategoryTagEnabled = newCategoryTagEnabled,
                     modifier = Modifier
@@ -589,6 +700,9 @@ fun Editor(
                 pendingExpensesCount = uiState.pendingExpensesForNextPeriod.size,
                 currencyCode = uiState.budgetSettings?.currencyCode ?: "USD",
                 startInEditMode = forceBudgetPeriodSheetSetup,
+                allowanceDaysEnabled = uiState.allowanceDaysEnabled,
+                activeSpendingDays = uiState.activeSpendingDays,
+                onSaveAllowanceDays = onSaveAllowanceDays,
                 onPeriodSelected = { newPeriod ->
                     logcat { "BudgetPeriodSheet onPeriodSelected -> newPeriod=$newPeriod" }
                     onPeriodSelected(newPeriod)
@@ -630,6 +744,7 @@ private fun EditingContent(
     tags: List<String>,
     currentComment: String,
     currentNote: String = "",
+    isWalletIncomeEnabled: Boolean = false,
     extraNoteEnabled: Boolean = false,
     onCommentUpdate: (String) -> Unit,
     onNoteUpdate: (String) -> Unit = {},
@@ -648,6 +763,15 @@ private fun EditingContent(
     modifier: Modifier = Modifier
 ) {
     val currencyFormat = symbolOnlyCurrencyFormat(currencyCode)
+
+    val effectiveTags = remember(isWalletIncomeEnabled, tags) {
+        if (isWalletIncomeEnabled) {
+            val incomeTags = listOf("هدية", "رد دين", "مكافأة", "شغل إضافي")
+            (incomeTags + tags).distinct()
+        } else {
+            tags
+        }
+    }
 
     val hasExpressionOperators = remember(input) { input.any { it in "+-×÷" } }
 
@@ -888,7 +1012,7 @@ private fun EditingContent(
                                 readOnly = true,
                                 modifier = Modifier.wrapContentWidth(Alignment.End),
                                 textStyle = baseTextStyle.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
+                                    color = if (isWalletIncomeEnabled) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.End
                                 ),
                                 singleLine = true,
@@ -922,7 +1046,7 @@ private fun EditingContent(
                             readOnly = true,
                             modifier = Modifier.wrapContentWidth(Alignment.End),
                             textStyle = baseTextStyle.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = if (isWalletIncomeEnabled) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.End
                             ),
                             singleLine = true,
@@ -966,7 +1090,7 @@ private fun EditingContent(
                         }
                         EditableCategoryTag(
                             currentComment = currentComment,
-                            tags = tags,
+                            tags = effectiveTags,
                             onCommentUpdate = onCommentUpdate,
                             editorFocusController = editorFocusController,
                             modifier = Modifier.let { m ->
@@ -994,7 +1118,7 @@ private fun EditingContent(
                 }
             } else {
                 CategoryToolbar(
-                    tags = tags,
+                    tags = effectiveTags,
                     currentComment = currentComment,
                     stage = EditStage.EDIT_SPENT,
                     onCommentUpdate = onCommentUpdate,
@@ -1026,8 +1150,20 @@ private fun EditingContent(
     }
 }
 
+private data class ContextualFinancialTip(
+    val id: Int,
+    @StringRes val titleRes: Int,
+    @StringRes val bodyRes: Int,
+    val icon: ImageVector,
+    val isWarning: Boolean,
+)
+
+private var sessionTipDismissed: Boolean = false
+private val sessionDismissedTipIds = mutableSetOf<Int>()
+
 @Composable
 private fun IdleContent(
+    uiState: BudgetUiState,
     onCreateCategory: suspend (String) -> Boolean = { true },
     newCategoryTagEnabled: Boolean = false,
     modifier: Modifier = Modifier
@@ -1040,44 +1176,451 @@ private fun IdleContent(
         }
     }
 
+    val budgetState = uiState.budgetState
+    val dailyLimit = budgetState?.dailyBudget ?: BigDecimal.ZERO
+    val spentToday = budgetState?.totalSpentToday ?: BigDecimal.ZERO
+    val remainingToday = budgetState?.remainingToday ?: BigDecimal.ZERO
+    val alertThreshold = uiState.budgetAlertThresholdPercent
+
+    val percentSpent = remember(dailyLimit, spentToday) {
+        if (dailyLimit > BigDecimal.ZERO) {
+            (spentToday.toFloat() / dailyLimit.toFloat() * 100f).toInt()
+        } else 0
+    }
+
+    val isAlertExceeded = dailyLimit > BigDecimal.ZERO && (spentToday > dailyLimit || remainingToday < BigDecimal.ZERO)
+    val isAlertWarning = !isAlertExceeded && dailyLimit > BigDecimal.ZERO && percentSpent >= alertThreshold && percentSpent > 0
+
+    var tipDismissedState by rememberSaveable { mutableStateOf(sessionTipDismissed) }
+    var dismissedIdsState by rememberSaveable { mutableStateOf(sessionDismissedTipIds.toSet()) }
+
+    val activeTip: ContextualFinancialTip? = remember(
+        uiState.financialTipsEnabled,
+        uiState.numpadInput,
+        budgetState,
+        uiState.creditOwed,
+        uiState.transactions,
+        uiState.hasUnresolvedRolloverSurplus,
+        dismissedIdsState,
+        tipDismissedState,
+    ) {
+        if (!uiState.financialTipsEnabled || tipDismissedState || sessionTipDismissed ||
+            (uiState.numpadInput.isNotEmpty() && uiState.numpadInput != "0")
+        ) return@remember null
+
+        val totalBudget = uiState.budgetSettings?.totalBudget ?: BigDecimal.ZERO
+        val totalSpent = budgetState?.totalSpentInPeriod ?: BigDecimal.ZERO
+        val daysRemaining = budgetState?.daysRemaining ?: 0
+        val periodTotalDays = budgetState?.periodTotalDays ?: 30
+        val creditOwed = uiState.creditOwed ?: BigDecimal.ZERO
+        val transactions = uiState.transactions
+
+        // Trigger 1 (Violating Tip 1: "لا تنفق أكثر مما تكسب"):
+        // Fired ONLY when the user is ACTUALLY in deficit / overbudget:
+        val isActualDeficit = remainingToday < BigDecimal.ZERO ||
+            (budgetState?.isOverBudget == true && totalBudget > BigDecimal.ZERO && totalSpent > totalBudget)
+        if (isActualDeficit && 1 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 1,
+                titleRes = R.string.financial_tip_1_title,
+                bodyRes = R.string.financial_tip_1_body,
+                icon = Icons.Rounded.Warning,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 3 (Violating Tip 3: "تجنّب الديون الاستهلاكية"):
+        // Fired when the user is accumulating consumer credit card debt (> 20% of budget or multiple credit charges)
+        val creditTransactionsCount = transactions.count { it.isCredit }
+        if (creditOwed > BigDecimal.ZERO && (creditTransactionsCount >= 2 || (totalBudget > BigDecimal.ZERO && creditOwed >= totalBudget.multiply(BigDecimal("0.20"))))) {
+            if (3 !in dismissedIdsState) {
+                return@remember ContextualFinancialTip(
+                    id = 3,
+                    titleRes = R.string.financial_tip_3_title,
+                    bodyRes = R.string.financial_tip_3_body,
+                    icon = Icons.Rounded.CreditScore,
+                    isWarning = true,
+                )
+            }
+        }
+
+        // Trigger 6 (Violating Tip 6: "ارفع دخلك قبل أن ترفع مستوى معيشتك"):
+        // Fired when there is a disproportionately large single purchase (> 40% of total budget)
+        val largestExpense = transactions.filter { it.amount > BigDecimal.ZERO && !it.isRecurrent }.maxOfOrNull { it.amount } ?: BigDecimal.ZERO
+        if (totalBudget > BigDecimal.ZERO && largestExpense >= totalBudget.multiply(BigDecimal("0.40")) && largestExpense > BigDecimal("50")) {
+            if (6 !in dismissedIdsState) {
+                return@remember ContextualFinancialTip(
+                    id = 6,
+                    titleRes = R.string.financial_tip_6_title,
+                    bodyRes = R.string.financial_tip_6_body,
+                    icon = Icons.Rounded.TrendingUp,
+                    isWarning = true,
+                )
+            }
+        }
+
+        // Trigger 2 (Violating Tip 2: "احتفظ باحتياطي للطوارئ"):
+        // Fired when more than half the period remains, but over 65% of the total budget has been consumed
+        val periodProgressRatio = if (periodTotalDays > 0) (periodTotalDays - daysRemaining).toFloat() / periodTotalDays else 0f
+        val budgetSpentRatio = if (totalBudget > BigDecimal.ZERO) totalSpent.divide(totalBudget, 4, java.math.RoundingMode.HALF_UP).toFloat() else 0f
+        if (daysRemaining > 5 && periodProgressRatio < 0.5f && budgetSpentRatio >= 0.65f) {
+            if (2 !in dismissedIdsState) {
+                return@remember ContextualFinancialTip(
+                    id = 2,
+                    titleRes = R.string.financial_tip_2_title,
+                    bodyRes = R.string.financial_tip_2_body,
+                    icon = Icons.Rounded.Shield,
+                    isWarning = true,
+                )
+            }
+        }
+
+        // Trigger 5 (Opportunity for Tip 5: "استثمر جزءاً من دخلك"):
+        // Fired when user has surplus rollover savings or significant daily surplus
+        if (uiState.hasUnresolvedRolloverSurplus || (dailyLimit > BigDecimal.ZERO && remainingToday >= dailyLimit.multiply(BigDecimal("2.0")))) {
+            if (5 !in dismissedIdsState) {
+                return@remember ContextualFinancialTip(
+                    id = 5,
+                    titleRes = R.string.financial_tip_5_title,
+                    bodyRes = R.string.financial_tip_5_body,
+                    icon = Icons.Rounded.Savings,
+                    isWarning = false,
+                )
+            }
+        }
+
+        // Trigger 4 (Opportunity for Tip 4: "لا تعتمد على مصدر دخل واحد إلى الأبد"):
+        // Fired ONLY when approaching end of period (1..5 days left) with tight balance and no secondary income recorded.
+        if (daysRemaining in 1..5 && remainingToday > BigDecimal.ZERO && dailyLimit > BigDecimal.ZERO &&
+            remainingToday < dailyLimit.multiply(BigDecimal("0.5")) &&
+            transactions.none { it.amount < BigDecimal.ZERO } &&
+            4 !in dismissedIdsState
+        ) {
+            return@remember ContextualFinancialTip(
+                id = 4,
+                titleRes = R.string.financial_tip_4_title,
+                bodyRes = R.string.financial_tip_4_body,
+                icon = Icons.Rounded.AccountBalance,
+                isWarning = false,
+            )
+        }
+
+        // Trigger 7 (Violating Tip 7: "لا تطارد الثراء السريع"):
+        // Fired when user logs an expense with high-risk speculation keywords
+        val speculationKeywords = listOf("تداول", "عملات", "كريبتو", "بورصة", "crypto", "trading", "forex", "قمار", "رهان")
+        val hasSpeculationExpense = transactions.any { tx ->
+            val commentLower = tx.comment.lowercase()
+            speculationKeywords.any { kw -> commentLower.contains(kw) }
+        }
+        if (hasSpeculationExpense && 7 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 7,
+                titleRes = R.string.financial_tip_7_title,
+                bodyRes = R.string.financial_tip_7_body,
+                icon = Icons.Rounded.HourglassTop,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 8 (Violating Tip 8: "فخ العروض والتخفيضات" - The Discount Trap):
+        // Fired when user logs an expense with keywords like عرض, تخفيض, خصم, sale, offer, discount, أوفر
+        val discountKeywords = listOf("عرض", "تخفيض", "خصم", "sale", "offer", "discount", "أوفر", "تخفيضات", "عروض")
+        val hasDiscountExpense = transactions.any { tx ->
+            val commentLower = tx.comment.lowercase()
+            discountKeywords.any { kw -> commentLower.contains(kw) }
+        }
+        if (hasDiscountExpense && 8 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 8,
+                titleRes = R.string.financial_tip_8_title,
+                bodyRes = R.string.financial_tip_8_body,
+                icon = Icons.Rounded.LocalOffer,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 10 (Violating Tip 10: "تدقيق الاشتراكات الدورية" - Subscription Audit):
+        // Fired when user has 4 or more recurring expenses registered
+        val recurrentCount = transactions.count { it.isRecurrent }
+        if (recurrentCount >= 4 && 10 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 10,
+                titleRes = R.string.financial_tip_10_title,
+                bodyRes = R.string.financial_tip_10_body,
+                icon = Icons.Rounded.EventRepeat,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 9 (Violating Tip 9: "قاعدة الـ 24 ساعة" - The 24-Hour Impulse Rule):
+        // Fired when user logs an impulse purchase keyword
+        val impulseKeywords = listOf("شراء مندفع", "فوري", "مفاجئ", "اندفاع", "عجبني", "impulse")
+        val hasImpulseExpense = transactions.any { tx ->
+            val commentLower = tx.comment.lowercase()
+            impulseKeywords.any { kw -> commentLower.contains(kw) }
+        }
+        if (hasImpulseExpense && 9 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 9,
+                titleRes = R.string.financial_tip_9_title,
+                bodyRes = R.string.financial_tip_9_body,
+                icon = Icons.Rounded.HourglassTop,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 11 (Violating Tip 11: "الحذر من تضخم نمط الحياة" - Lifestyle Inflation):
+        // Fired when user received extra income (wallet deposit) but today's non-recurrent spend consumed more than 80% of it
+        val extraIncomeSum = transactions.filter { it.amount < BigDecimal.ZERO }.sumOf { it.amount.abs() }
+        if (extraIncomeSum > BigDecimal.ZERO && spentToday >= extraIncomeSum.multiply(BigDecimal("0.80")) && 11 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 11,
+                titleRes = R.string.financial_tip_11_title,
+                bodyRes = R.string.financial_tip_11_body,
+                icon = Icons.Rounded.TrendingUp,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 12 (Tip 12: "تكلفة الفرصة البديلة" - Opportunity Cost):
+        // Fired when remaining budget is tight (< 20% of total budget) and today spent is non-zero
+        if (totalBudget > BigDecimal.ZERO && remainingToday > BigDecimal.ZERO && remainingToday < totalBudget.multiply(BigDecimal("0.20")) && spentToday > BigDecimal.ZERO && 12 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 12,
+                titleRes = R.string.financial_tip_12_title,
+                bodyRes = R.string.financial_tip_12_body,
+                icon = Icons.Rounded.Savings,
+                isWarning = false,
+            )
+        }
+
+        // Trigger 13 (Tip 13: "قاعدة الأوعية المالية الثلاثة" - Three-Bucket System):
+        // Fired when budget is healthy with good surplus (> 50% of budget remains and daysRemaining in 1..15)
+        if (totalBudget > BigDecimal.ZERO && daysRemaining in 1..15 && budgetSpentRatio < 0.4f && 13 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 13,
+                titleRes = R.string.financial_tip_13_title,
+                bodyRes = R.string.financial_tip_13_body,
+                icon = Icons.Rounded.AccountBalance,
+                isWarning = false,
+            )
+        }
+
+        // Trigger 14 (Tip 14: "التوقف عن محاولة مواكبة الآخرين" - Comparison Trap):
+        // Fired when user logs a luxury purchase keyword
+        val luxuryKeywords = listOf("ماركة", "براند", "فاخر", "luxury", "brand", "كشخة")
+        val hasLuxuryExpense = transactions.any { tx ->
+            val commentLower = tx.comment.lowercase()
+            luxuryKeywords.any { kw -> commentLower.contains(kw) }
+        }
+        if (hasLuxuryExpense && 14 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 14,
+                titleRes = R.string.financial_tip_14_title,
+                bodyRes = R.string.financial_tip_14_body,
+                icon = Icons.Rounded.AccountBalanceWallet,
+                isWarning = false,
+            )
+        }
+
+        // Trigger 15 (Tip 15: "حساب التكلفة الكاملة قبل اتخاذ قرار كبير" - Total Cost of Ownership):
+        // Fired when spending >= 40% of total budget
+        if (totalBudget > BigDecimal.ZERO && spentToday >= totalBudget.multiply(BigDecimal("0.40")) && 15 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 15,
+                titleRes = R.string.financial_tip_15_title,
+                bodyRes = R.string.financial_tip_15_body,
+                icon = Icons.Rounded.BarChart,
+                isWarning = true,
+            )
+        }
+
+        // Trigger 16 (Tip 16: "وضع حد واضح لما يمكنك تحمّله" - Clear Spending Ceiling):
+        // Fired when remaining budget is critically low (spent >= 85%) and days remain (> 5)
+        if (totalBudget > BigDecimal.ZERO && daysRemaining > 5 && budgetSpentRatio >= 0.85f && 16 !in dismissedIdsState) {
+            return@remember ContextualFinancialTip(
+                id = 16,
+                titleRes = R.string.financial_tip_16_title,
+                bodyRes = R.string.financial_tip_16_body,
+                icon = Icons.Rounded.Shield,
+                isWarning = true,
+            )
+        }
+
+        null
+    }
+
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val tagWidth = maxWidth - 48.dp
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.CenterEnd
+                    .padding(top = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val dashWidth = 4.dp
-                val dashHeight = 96.dp
-                Box(
-                    modifier = Modifier
-                        .size(width = dashWidth, height = dashHeight)
-                        .graphicsLayer {
-                            alpha = if (cursorVisible.value) 1f else 0f
+                if (isAlertExceeded || isAlertWarning) {
+                    val alertColor = if (isAlertExceeded) Color(0xFFE57373) else Color(0xFFFFB74D)
+                    val alertBgColor = alertColor.copy(alpha = 0.12f)
+                    val alertText = if (isAlertExceeded) {
+                        stringResource(R.string.budget_alert_exceeded)
+                    } else {
+                        stringResource(R.string.budget_alert_warning, percentSpent)
+                    }
+                    val alertIcon = if (isAlertExceeded) Icons.Rounded.Warning else Icons.Rounded.NotificationsActive
+
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = alertBgColor,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = alertIcon,
+                                contentDescription = null,
+                                tint = alertColor,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = alertText,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
-                        .background(
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
-                            shape = CircleShape
-                        )
-                )
+                    }
+                }
             }
 
-            if (newCategoryTagEnabled) {
-                Row(
+            if (activeTip != null) {
+                val tipColor = if (activeTip.isWarning) Color(0xFFE57373) else MaterialTheme.colorScheme.primary
+                val tipBgColor = if (activeTip.isWarning) {
+                    tipColor.copy(alpha = 0.10f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = tipBgColor,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 24.dp, end = 24.dp, bottom = 26.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
+                        .padding(vertical = 12.dp)
                 ) {
-                    NewCategoryTag(
-                        onCreateCategory = onCreateCategory,
-                        extendWidth = tagWidth,
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = activeTip.icon,
+                                    contentDescription = null,
+                                    tint = tipColor,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.financial_tip_title),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = tipColor,
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    dismissedIdsState = dismissedIdsState + activeTip.id
+                                    sessionDismissedTipIds.add(activeTip.id)
+                                    tipDismissedState = true
+                                    sessionTipDismissed = true
+                                },
+                                modifier = Modifier.size(24.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Close,
+                                    contentDescription = "Dismiss",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            text = stringResource(activeTip.titleRes),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = stringResource(activeTip.bodyRes),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 18.sp,
+                        )
+                    }
+                }
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 12.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    val dashWidth = 4.dp
+                    val dashHeight = 48.dp
+                    Box(
+                        modifier = Modifier
+                            .size(width = dashWidth, height = dashHeight)
+                            .graphicsLayer {
+                                alpha = if (cursorVisible.value) 1f else 0f
+                            }
+                            .background(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
+                                shape = CircleShape
+                            )
                     )
+                }
+
+                if (newCategoryTagEnabled) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 26.dp),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        NewCategoryTag(
+                            onCreateCategory = onCreateCategory,
+                            extendWidth = tagWidth,
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.height(26.dp))
                 }
             }
         }

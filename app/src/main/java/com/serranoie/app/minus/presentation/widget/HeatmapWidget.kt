@@ -192,13 +192,11 @@ private fun MonthGrid(
     val calendarCells = buildCalendarCells(yearMonth, monthCells)
 
     Column(modifier = modifier.fillMaxSize()) {
-        Text(
+        WidgetThmanyahText(
             text = monthTitle(yearMonth),
-            style = TextStyle(
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                color = GlanceTheme.colors.onSurfaceVariant,
-            ),
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Bold,
+            color = GlanceTheme.colors.onSurfaceVariant,
             modifier = GlanceModifier.padding(bottom = 2.dp),
         )
 
@@ -294,6 +292,7 @@ class HeatmapWidget : GlanceAppWidget() {
                 Box(
                     modifier = GlanceModifier
                         .fillMaxSize()
+                        .cornerRadius(24.dp)
                         .background(GlanceTheme.colors.surface)
                         .clickable(actionRunCallback<OpenAppAction>())
                         .padding(8.dp)

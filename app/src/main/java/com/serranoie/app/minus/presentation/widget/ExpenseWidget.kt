@@ -28,6 +28,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.background
@@ -132,6 +133,7 @@ class ExpenseWidget : GlanceAppWidget() {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
+                .cornerRadius(24.dp)
                 .background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
                 .padding(horizontal = paddingH, vertical = paddingV)
@@ -175,21 +177,18 @@ class ExpenseWidget : GlanceAppWidget() {
                 modifier = GlanceModifier.defaultWeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                WidgetThmanyahText(
                     text = totalSpentLabel,
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                        fontSize = labelSize
-                    ),
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                    fontSize = labelSize,
                     maxLines = 1
                 )
-                Text(
+                WidgetThmanyahText(
                     text = amount,
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurface,
-                        fontSize = amountSize,
-                        fontWeight = FontWeight.Bold
-                    ),
+                    color = GlanceTheme.colors.onSurface,
+                    fontSize = amountSize,
+                    fontWeight = FontWeight.Bold,
+                    useDisplayFont = true,
                     maxLines = 1
                 )
             }
@@ -209,21 +208,18 @@ class ExpenseWidget : GlanceAppWidget() {
         Column(
             modifier = GlanceModifier.fillMaxSize()
         ) {
-            Text(
+            WidgetThmanyahText(
                 text = totalSpentLabel,
-                style = TextStyle(
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                    fontSize = labelSize
-                )
+                color = GlanceTheme.colors.onSurfaceVariant,
+                fontSize = labelSize
             )
             Spacer(modifier = GlanceModifier.height(4.dp))
-            Text(
+            WidgetThmanyahText(
                 text = amount,
-                style = TextStyle(
-                    color = GlanceTheme.colors.onSurface,
-                    fontSize = amountSize,
-                    fontWeight = FontWeight.Bold
-                )
+                color = GlanceTheme.colors.onSurface,
+                fontSize = amountSize,
+                fontWeight = FontWeight.Bold,
+                useDisplayFont = true
             )
             Spacer(modifier = GlanceModifier.defaultWeight())
             Row(

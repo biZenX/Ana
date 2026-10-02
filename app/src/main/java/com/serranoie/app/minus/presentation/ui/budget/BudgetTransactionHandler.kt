@@ -54,6 +54,7 @@ class BudgetTransactionHandler @Inject constructor(
         note: String = "",
         budgetSettings: BudgetSettings?,
         resolveActivePeriodId: suspend () -> Long,
+        isWalletIncomeEnabled: Boolean = false,
     ): ApplyTransactionResult {
         var normalizedInput = input
 
@@ -72,8 +73,9 @@ class BudgetTransactionHandler @Inject constructor(
             return ApplyTransactionResult.InvalidInput
         }
 
-        // Logic for unary leading operators
+        // Logic for unary leading operators or wallet income
         amount = when {
+            isWalletIncomeEnabled -> amount.abs().negate()
             input.startsWith("+") -> amount.negate()
             input.startsWith("-") -> amount.abs()
             else -> amount
@@ -86,11 +88,12 @@ class BudgetTransactionHandler @Inject constructor(
             )
         }
 
-        val isAdjustment = input.startsWith("+") || input.startsWith("-")
+        val isAdjustment = isWalletIncomeEnabled || input.startsWith("+") || input.startsWith("-")
+        val effectiveComment = if (comment.isBlank() && isWalletIncomeEnabled) "إيداع محفظة" else comment
         val today = LocalDate.now()
         return try {
-            val categoryId: Long? = if (comment.isNotBlank()) {
-                budgetRepository.findOrCreateCategory(comment.trim()).id
+            val categoryId: Long? = if (effectiveComment.isNotBlank()) {
+                budgetRepository.findOrCreateCategory(effectiveComment.trim()).id
             } else {
                 null
             }
@@ -99,7 +102,7 @@ class BudgetTransactionHandler @Inject constructor(
 
                 val pendingTransaction = Transaction.create(
                     amount = amount,
-                    comment = comment,
+                    comment = effectiveComment,
                     note = note.trim(),
                     date = LocalDateTime.now(),
                     periodId = 0L,
@@ -114,7 +117,7 @@ class BudgetTransactionHandler @Inject constructor(
             val activePeriodId = resolveActivePeriodId()
             val transaction = Transaction.create(
                 amount = amount,
-                comment = comment,
+                comment = effectiveComment,
                 note = note.trim(),
                 date = LocalDateTime.now(),
                 periodId = activePeriodId,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Minus</string>
+    <string name="app_name">وفير</string>
     <string name="tile_new_transaction_label">नया लेन-देन</string>
     <string name="tutorial_numpad_title">नंपैड</string>
     <string name="tutorial_numpad_description">अपनी खर्च की गई रकम डालें और सेव करने के लिए हरे रंग के चेक मार्क पर टैप करें। कैलकुलेट करने के लिए नंपैड पर ऊपर की ओर स्वाइप करें।</string>
@@ -225,7 +225,7 @@
         <item quantity="other">%d महीने</item>
     </plurals>
     <string name="day_total_format">कुल: %1$s</string>
-    <string name="onboarding_welcome_title">Minus में आपका स्वागत है</string>
+    <string name="onboarding_welcome_title">Wafeer में आपका स्वागत है</string>
     <string name="onboarding_welcome_subtitle">नमस्ते और स्वागत है, आइए मिलकर बचत करना शुरू करें।</string>
     <string name="onboarding_welcome_intro">एक आसान बजट ट्रैकर जो आपको यह तय करने में मदद करता है कि आप हर दिन, हफ़्ते, हर दो हफ़्ते या महीने में कितना खर्च कर सकते हैं।</string>
     <string name="onboarding_step_1_title">बजट सेट करें</string>
@@ -233,7 +233,7 @@
     <string name="onboarding_step_2_title">खर्चों को ट्रैक करें</string>
     <string name="onboarding_step_2_subtitle">अपने खर्चों को रिकॉर्ड करें और देखें कि हर दिन कितना बचा है।</string>
     <string name="onboarding_step_3_title">बार-बार होने वाले खर्च</string>
-    <string name="onboarding_step_3_subtitle">सब्सक्रिप्शन जोड़ें और Minus उन्हें आपके लिए अपने-आप ट्रैक करेगा।</string>
+    <string name="onboarding_step_3_subtitle">सब्सक्रिप्शन जोड़ें और Wafeer उन्हें आपके लिए अपने-आप ट्रैक करेगा।</string>
     <string name="onboarding_step_4_title">तुरंत हिसाब लगाएं</string>
     <string name="onboarding_step_4_subtitle">जैसे-जैसे आप खर्च करते हैं, आपका बचा हुआ बजट रियल-टाइम में अपडेट होता रहता है।</string>
     <string name="onboarding_step_5_title">अपना एनालिटिक्स देखें</string>
@@ -260,7 +260,7 @@
     <string name="changelog_close">बंद करें</string>
     <string name="changelog_previous_versions">पिछला वर्शन</string>
     <string name="changelog_updated_to">इस वर्शन पर अपडेट किया गया: %1$s</string>
-    <string name="changelog_see_changes">Minus अब अपडेट हो गया है।</string>
+    <string name="changelog_see_changes">Wafeer अब अपडेट हो गया है।</string>
     <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">पीरियड चुनें</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d दिन · %2$s - %3$s</string>
@@ -388,8 +388,8 @@
     <string name="bug_report_attachments_label_bug">स्क्रीनशॉट या रिकॉर्डिंग</string>
     <string name="bug_report_submit">रिपोर्ट सबमिट करें</string>
     <string name="bug_report_share_title">रिपोर्ट भेजें</string>
-    <string name="bug_report_help_title">Minus को बेहतर बनाने में हमारी मदद करें</string>
-    <string name="bug_report_help_message_prefix">इश्यू की रिपोर्ट करने या सुधार का सुझाव देने से हमें Minus को सभी के लिए बेहतर बनाने में मदद मिलती है। यह गाइडेड फ़ॉर्म आपको सभी ज़रूरी जानकारी को एक रिपोर्ट में इकट्ठा करने में मदद करता है। यह हमारी जांच को तेज़ करने के लिए अपने-आप डिवाइस मेटाडेटा और ऐप डायग्नोस्टिक्स को भी जोड़ देता है। एक बार तैयार हो जाने पर, आप रिपोर्ट ईमेल से भेज सकते हैं या सीधे हमारी रिपॉज़िटरी में योगदान कर सकते हैं।</string>
+    <string name="bug_report_help_title">Wafeer को बेहतर बनाने में हमारी मदद करें</string>
+    <string name="bug_report_help_message_prefix">इश्यू की रिपोर्ट करने या सुधार का सुझाव देने से हमें Wafeer को सभी के लिए बेहतर बनाने में मदद मिलती है। यह गाइडेड फ़ॉर्म आपको सभी ज़रूरी जानकारी को एक रिपोर्ट में इकट्ठा करने में मदद करता है। यह हमारी जांच को तेज़ करने के लिए अपने-आप डिवाइस मेटाडेटा और ऐप डायग्नोस्टिक्स को भी जोड़ देता है। एक बार तैयार हो जाने पर, आप रिपोर्ट ईमेल से भेज सकते हैं या सीधे हमारी रिपॉज़िटरी में योगदान कर सकते हैं।</string>
     <string name="bug_report_help_github_issues">GitHub इश्यू</string>
     <string name="bug_report_help_message_suffix">सीधे हमारे रिपॉज़िटरी पर।</string>
     <string name="bug_report_steps_to_reproduce_label">दोहराने के चरण</string>
@@ -405,7 +405,7 @@
     <string name="bug_report_upload_assets_selected_count">%1$d अटैचमेंट चुने गए</string>
     <string name="bug_report_remove_attachment">अटैचमेंट हटाएं</string>
     <string name="settings_backup_title">डेटा का बैकअप लें</string>
-    <string name="settings_backup_subtitle">डेटा का बैकअप minus_export.csv में लें</string>
+    <string name="settings_backup_subtitle">डेटा का बैकअप wafeer_export.csv में लें</string>
     <string name="settings_import_csv_title">CSV इंपोर्ट करें</string>
     <string name="settings_import_csv_subtitle">CSV फ़ाइल से डेटा इंपोर्ट करें</string>
     <string name="settings_reset_tutorial_title">ट्यूटोरियल रीसेट करें</string>
@@ -705,7 +705,7 @@
     <string name="extra_note_label">नोट</string>
     <string name="budget_graph_view_mode_cumulative">ट्रेंड</string>
     <string name="budget_graph_view_mode_categories">कैटेगरी</string>
-    <string name="settings_widgets_pin_not_supported">आपका डिवाइस इस तरह से विजेट जोड़ने का समर्थन नहीं करता है। अपनी होम स्क्रीन को देर तक दबाएं और इसके बजाय Minus खोजें।</string>
+    <string name="settings_widgets_pin_not_supported">आपका डिवाइस इस तरह से विजेट जोड़ने का समर्थन नहीं करता है। अपनी होम स्क्रीन को देर तक दबाएं और इसके बजाय Wafeer खोजें।</string>
     <string name="widget_complete_budget_title">पूरा बजट</string>
     <string name="widget_average_spend_title">औसत खर्च</string>
     <string name="widget_days_countdown_title">दिनों का काउंटडाउन</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Minus</string>
+    <string name="app_name">وفير</string>
     <string name="tile_new_transaction_label">새 거래</string>
     <string name="tutorial_numpad_title">숫자 패드</string>
     <string name="tutorial_numpad_description">지출 금액을 입력하고 녹색 체크 표시를 탭하여 저장하세요. 숫자 패드를 위로 쓸어 올리면 계산 기능을 사용할 수 있습니다.</string>
@@ -225,7 +225,7 @@
         <item quantity="one">%d개월</item>
     </plurals>
     <string name="day_total_format">합계: %1$s</string>
-    <string name="onboarding_welcome_title">Minus에 오신 것을 환영합니다</string>
+    <string name="onboarding_welcome_title">Wafeer에 오신 것을 환영합니다</string>
     <string name="onboarding_welcome_subtitle">안녕하세요! 환영합니다. 함께 저축을 시작해 볼까요?</string>
     <string name="onboarding_welcome_intro">일, 주, 2주, 또는 월 단위로 지출 가능한 금액을 결정하도록 도와주는 간편한 예산 관리 도구입니다.</string>
     <string name="onboarding_step_1_title">예산을 설정하세요</string>
@@ -233,7 +233,7 @@
     <string name="onboarding_step_2_title">지출 내역을 추적하세요</string>
     <string name="onboarding_step_2_subtitle">지출 내역을 기록하고 매일 남은 금액을 확인하세요.</string>
     <string name="onboarding_step_3_title">반복 지출</string>
-    <string name="onboarding_step_3_subtitle">구독 서비스를 추가하면 Minus에서 자동으로 추적해 드립니다.</string>
+    <string name="onboarding_step_3_subtitle">구독 서비스를 추가하면 Wafeer에서 자동으로 추적해 드립니다.</string>
     <string name="onboarding_step_4_title">즉시 계산하기</string>
     <string name="onboarding_step_4_subtitle">지출할 때마다 남은 예산이 실시간으로 업데이트됩니다.</string>
     <string name="onboarding_step_5_title">분석 데이터 확인하기</string>
@@ -260,7 +260,7 @@
     <string name="changelog_close">닫기</string>
     <string name="changelog_previous_versions">이전 버전</string>
     <string name="changelog_updated_to">업데이트된 내용: %1$s</string>
-    <string name="changelog_see_changes">Minus가 업데이트되었습니다.</string>
+    <string name="changelog_see_changes">Wafeer가 업데이트되었습니다.</string>
     <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">기간을 선택하세요</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d일 · %2$s - %3$s</string>
@@ -390,8 +390,8 @@
     <string name="bug_report_attachments_label_bug">스크린샷 또는 녹화 영상</string>
     <string name="bug_report_submit">보고서 제출</string>
     <string name="bug_report_share_title">보고서 제출</string>
-    <string name="bug_report_help_title">Minus를 더 좋게 만드는 데 도움을 주세요</string>
-    <string name="bug_report_help_message_prefix">문제 제보나 개선 제안은 모두를 위해 Minus를 더 좋게 만드는 데 도움이 됩니다. 이 안내 양식을 사용하면 필요한 모든 세부 정보를 보고서로 구성할 수 있으며, 기기 메타데이터와 앱 진단 정보가 자동으로 첨부되어 조사가 신속하게 진행됩니다. 보고서가 준비되면 이메일로 보내거나 다음을 통해 기여할 수 있습니다.</string>
+    <string name="bug_report_help_title">Wafeer를 더 좋게 만드는 데 도움을 주세요</string>
+    <string name="bug_report_help_message_prefix">문제 제보나 개선 제안은 모두를 위해 Wafeer를 더 좋게 만드는 데 도움이 됩니다. 이 안내 양식을 사용하면 필요한 모든 세부 정보를 보고서로 구성할 수 있으며, 기기 메타데이터와 앱 진단 정보가 자동으로 첨부되어 조사가 신속하게 진행됩니다. 보고서가 준비되면 이메일로 보내거나 다음을 통해 기여할 수 있습니다.</string>
     <string name="bug_report_help_github_issues">GitHub 이슈</string>
     <string name="bug_report_help_message_suffix">저장소에 직접 기여하기.</string>
     <string name="bug_report_steps_to_reproduce_label">재현 단계</string>
@@ -407,7 +407,7 @@
     <string name="bug_report_upload_assets_selected_count">첨부 파일 %1$d개 선택됨</string>
     <string name="bug_report_remove_attachment">첨부 파일 제거</string>
     <string name="settings_backup_title">데이터 백업</string>
-    <string name="settings_backup_subtitle">데이터를 minus_export.csv 파일로 백업합니다.</string>
+    <string name="settings_backup_subtitle">데이터를 wafeer_export.csv 파일로 백업합니다.</string>
     <string name="settings_import_csv_title">CSV 가져오기</string>
     <string name="settings_import_csv_subtitle">CSV 파일에서 데이터 가져오기</string>
     <string name="settings_reset_tutorial_title">튜토리얼 초기화</string>
@@ -706,7 +706,7 @@
     <string name="extra_note_label">메모</string>
     <string name="budget_graph_view_mode_cumulative">트랜드</string>
     <string name="budget_graph_view_mode_categories">카테고리</string>
-    <string name="settings_widgets_pin_not_supported">이 기기에서는 이 방식으로 위젯을 추가할 수 없습니다. 홈 화면을 길게 누른 다음 Minus를 찾아보세요.</string>
+    <string name="settings_widgets_pin_not_supported">이 기기에서는 이 방식으로 위젯을 추가할 수 없습니다. 홈 화면을 길게 누른 다음 Wafeer를 찾아보세요.</string>
     <string name="widget_complete_budget_title">전체 예산</string>
     <string name="widget_average_spend_title">평균 지출</string>
     <string name="widget_days_countdown_title">남은 일수 카운트다운</string>

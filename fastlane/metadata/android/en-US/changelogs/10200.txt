@@ -1,5 +1,5 @@
-- chore: typo on strings.xml
-- feat: changed StepToReproduceField to use outlined instead of a basic
-- feat: enhance UI interactions, bug reporting, and transaction details
-- feat: implement MVI-based bug reporting system
-- fix: generate BugReportForm UI screen
+- feat: نصائح مالية ذكية ومحفزة تظهر بدقة حسب سلوكك المالي
+- feat: ويدجتس جديدة للشاشة الرئيسية بحواف ناعمة وتصميم عصري
+- improve: إشعارات أنيقة وواضحة لتجديد الميزانية ومواعيد الاستحقاق
+- improve: عرض التحديثات وتواريخ الإصدار في سجل التغييرات بشكل مرتب
+- fix: اعتماد الجنيه المصري (ج.م) كعملة افتراضية وتحسين استقرار التطبيق

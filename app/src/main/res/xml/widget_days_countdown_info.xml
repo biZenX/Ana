@@ -10,7 +10,6 @@
     android:updatePeriodMillis="3600000"
     android:description="@string/widget_days_countdown_description"
     android:previewLayout="@layout/widget_days_countdown_preview"
-    android:previewImage="@drawable/ic_launcher_foreground"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

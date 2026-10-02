@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
     <string name="app_name">وفير</string>
-
     <string name="tutorial_numpad_title">لوحة الأرقام</string>
     <string name="tutorial_numpad_description">أدخل المبلغ الذي أنفقته واضغط على علامة الصح الخضراء للحفظ. اسحب للأعلى على لوحة الأرقام لبدء العمليات الحسابية.</string>
     <string name="tutorial_comment_title">إضافة تصنيف</string>
     <string name="tutorial_comment_description">حدد تصنيفاً أو اكتب ملاحظة سريعة لتتذكر وجه إنفاق هذا المبلغ.</string>
     <string name="tutorial_budget_pill_title">مؤشر الميزانية</string>
     <string name="tutorial_budget_pill_description">انقر للتبديل بين عرض الميزانية اليومية أو الأسبوعية أو الشهرية، أو لتعديل إعدادات الفترة. اضغط مطولاً لمعرفة تفاصيل احتساب الرصيد.</string>
+    <string name="tutorial_budget_pill_setup_title">إعداد الميزانية</string>
+    <string name="tutorial_budget_pill_setup_description">انقر هنا لتحديد ميزانيتك وفترة مصروفك لتبدأ استخدام التطبيق.</string>
     <string name="tutorial_settings_title">الإعدادات</string>
     <string name="tutorial_settings_description">افتح الإعدادات لتخصيص الخصائص، إعداد ودجات الشاشة الرئيسية، أو إعادة تشغيل هذا الدليل الترحيبي.</string>
     <string name="tutorial_recurrent_title">المدفوعات الدورية</string>
@@ -20,7 +21,6 @@
     <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
     <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>
     <string name="tutorial_credit_toggle_description">اضغط هنا لتحديد أن هذه النفقة دُفعت بالبطاقة الائتمانية. وستُتابع بشكل مستقل في تقاريرك المالية.</string>
-
     <string name="today">اليوم</string>
     <string name="yesterday">أمس</string>
     <string name="tomorrow">غداً</string>
@@ -62,8 +62,6 @@
     <string name="credit_cutoff_dialog_label">يوم كشف الحساب</string>
     <string name="expand_numpad">توسيع لوحة الأرقام</string>
     <string name="numpad_action">إجراء التحرير</string>
-
-    <!-- Rollover Dialog -->
     <string name="period_finished">انتهت الفترة</string>
     <string name="remaining_budget">الميزانية المتبقية</string>
     <string name="rollover_question">كيف ترغب في التصرف بالمبلغ المتبقي؟</string>
@@ -73,8 +71,6 @@
     <string name="carry_to_next_day_desc">إضافة %1$s بالكامل إلى ميزانية الغد</string>
     <string name="view_analytics">عرض التحليلات</string>
     <string name="view_analytics_desc">مراجعة ملخص الفترة المنتهية</string>
-
-    <!-- Edit Transaction -->
     <string name="edit_recurrent_expense_title">تعديل المصروف الدوري</string>
     <string name="edit_expense_title">تعديل المصروف</string>
     <string name="cancel_edit_content_desc">إلغاء التعديل</string>
@@ -86,7 +82,6 @@
     <string name="frequency_label">معدل التكرار</string>
     <string name="weekly_with_desc">أسبوعياً (كل 7 أيام)</string>
     <string name="biweekly_with_desc">نصف شهرياً (كل 14 يوماً)</string>
-
     <string name="edit_budget">تعديل الميزانية</string>
     <string name="new_budget">فترة ميزانية جديدة</string>
     <plurals name="pending_expense">
@@ -128,8 +123,6 @@
     <string name="budget_split_period_weekly">أسبوع</string>
     <string name="budget_split_period_biweekly">أسبوعين</string>
     <string name="budget_split_period_monthly">شهر</string>
-
-    <!-- History -->
     <string name="expense_deleted_format">تم حذف %1$s</string>
     <string name="expense_modified_format">تم تعديل %1$s</string>
     <string name="generic_expense">مصروف</string>
@@ -145,7 +138,6 @@
     <string name="history_snackbar_mark_paid_failed">تعذر تحديد العملية كمدفوعة</string>
     <string name="history_snackbar_restore_transaction_failed">تعذر استعادة العملية</string>
     <string name="expense_queued_for_next_period">تم تأجيل المصروف للفترة القادمة</string>
-
     <string name="add_new_category">التصنيف</string>
     <string name="add_new_category_action">إضافة تصنيف جديد</string>
     <string name="new_category">تصنيف جديد</string>
@@ -154,15 +146,11 @@
     <string name="sort_alphabetically">ترتيب أبجدياً</string>
     <string name="add_extra_note">ملاحظة إضافية</string>
     <string name="extra_note_label">ملاحظة</string>
-
     <string name="budget_validation_major_zero">يجب أن تكون الميزانية أكبر من 0</string>
     <string name="budget_no_date_defined">لم يتم تحديد تاريخ انتهاء</string>
     <string name="budget_no_days_defined">لم يتم تحديد عدد الأيام</string>
     <string name="budget_less_than_one_day_validation">يجب أن تمتد الميزانية ليوم واحد على الأقل</string>
-
-    <!-- Analytics -->
     <string name="analytics_title">الإحصائيات</string>
-
     <plurals name="days">
         <item quantity="zero">0 يوم</item>
         <item quantity="one">يوم واحد</item>
@@ -171,7 +159,6 @@
         <item quantity="many">%d يوماً</item>
         <item quantity="other">%d يوم</item>
     </plurals>
-
     <plurals name="analytics_days_left">
         <item quantity="zero">لم يتبقَّ أي يوم</item>
         <item quantity="one">متبقٍ يوم واحد</item>
@@ -180,14 +167,11 @@
         <item quantity="many">متبقٍ %d يوماً</item>
         <item quantity="other">متبقٍ %d يوم</item>
     </plurals>
-
     <string name="total_budget">إجمالي الميزانية</string>
     <string name="minimum_spent">أقل مصروف</string>
     <string name="maximum_spent">أعلى مصروف</string>
     <string name="average_spent">متوسط الإنفاق اليومي</string>
     <string name="days_remaining_label">الأيام\nالمتبقية</string>
-
-    <!-- Widget Gallery -->
     <string name="settings_widgets_pin_not_supported">جهازك لا يدعم إضافة الودجات بهذه الطريقة. اضغط مطولاً على الشاشة الرئيسية وابحث عن تطبيق وفير لإضافته.</string>
     <string name="widget_complete_budget_title">الميزانية الشاملة</string>
     <string name="widget_average_spend_title">متوسط الإنفاق</string>
@@ -196,8 +180,6 @@
     <string name="widget_heatmap_title">خريطة كثافة الإنفاق</string>
     <string name="widget_min_max_spent_title">أعلى / أدنى إنفاق</string>
     <string name="widget_month_heatmap_title">خريطة إنفاق الشهر</string>
-
-    <!-- Widget Descriptions -->
     <string name="widget_complete_budget_description">تتبع الإنفاق، إجمالي الميزانية، والأيام المتبقية — مع زر إضافة سريعة لمصروف جديد</string>
     <string name="widget_budget_overview_description">نظرة خاطفة على المبلغ المنفق والمتبقي من الميزانية</string>
     <string name="widget_days_countdown_description">عد تنازلي للأيام المتبقية في فترة الميزانية</string>
@@ -207,11 +189,7 @@
     <string name="widget_add_expense_description">اختصار سريع لإضافة مصروف جديد</string>
     <string name="widget_add_expense_label">إضافة مصروف جديد</string>
     <string name="widget_add_expense_compact_label">إضافة مصروف</string>
-
-    <!-- Quick Settings Tile -->
     <string name="tile_new_transaction_label">عملية جديدة</string>
-
-    <!-- Widget Labels -->
     <string name="spent">المصروف</string>
     <string name="left">المتبقي</string>
     <string name="remaining">المتبقي</string>
@@ -219,22 +197,18 @@
     <string name="days_left">أيام\nمتبقية</string>
     <string name="budget_overview">نظرة عامة على الميزانية</string>
     <string name="spent_per_day">الإنفاق اليومي</string>
-
     <string name="budget_period_daily">يومياً</string>
     <string name="budget_period_weekly">أسبوعياً</string>
     <string name="budget_period_biweekly">نصف شهرياً</string>
     <string name="budget_period_monthly">شهرياً</string>
-
     <string name="budget_period_label_today">اليوم</string>
     <string name="budget_period_label_this_week">هذا الأسبوع</string>
     <string name="budget_period_label_this_biweek">الأسبوعان الحاليان</string>
     <string name="budget_period_label_this_month">هذا الشهر</string>
-
     <string name="budget_pill_next_daily">للغد: %1$s</string>
     <string name="budget_pill_next_weekly">للأسبوع القادم: %1$s</string>
     <string name="budget_pill_next_biweekly">للأسبوعين القادمين: %1$s</string>
     <string name="budget_pill_next_monthly">للشهر القادم: %1$s</string>
-
     <string name="budget_pill_label_daily_exceeded">تجاوزت الحد اليومي</string>
     <string name="budget_pill_label_weekly_exceeded">تجاوزت الحد الأسبوعي</string>
     <string name="budget_pill_label_biweekly_exceeded">تجاوزت حد الأسبوعين</string>
@@ -242,7 +216,6 @@
     <string name="budget_pill_sub_exceeded_single">تجاوزت حد %1$s</string>
     <string name="budget_pill_sub_exceeded_double">تجاوزت حدي %1$s و%2$s</string>
     <string name="budget_pill_sub_exceeded_triple">تجاوزت حدود %1$s و%2$s و%3$s</string>
-
     <string name="budget_formula_title">طريقة احتساب الميزانية</string>
     <string name="budget_formula_hold_hint">عرض تفاصيل احتساب المبلغ</string>
     <string name="budget_formula_mode_static">توزيع ثابت</string>
@@ -263,7 +236,6 @@
     <string name="budget_formula_card_tap_hint">انقر لعرض التفاصيل الكاملة</string>
     <string name="budget_formula_tip_hold_pill">فائدة: اضغط مطولاً على شريط الميزانية في الشاشة الرئيسية للاطلاع على هذه الحسبة في أي وقت</string>
     <string name="budget_formula_tip_tap_card">فائدة: يمكنك أيضاً النقر على المبلغ المحسوب في بطاقة الفترة</string>
-
     <plurals name="budget_formula_weeks">
         <item quantity="zero">0 أسبوع</item>
         <item quantity="one">أسبوع واحد</item>
@@ -288,9 +260,7 @@
         <item quantity="many">%d شهراً</item>
         <item quantity="other">%d شهر</item>
     </plurals>
-
     <string name="day_total_format">المجموع: %1$s</string>
-
     <string name="onboarding_welcome_title">مرحباً بك في وفير</string>
     <string name="onboarding_welcome_subtitle">أهلاً بك، لنبدأ معاً رحلة الادخار والتحكم المالي الذكي.</string>
     <string name="onboarding_welcome_intro">متتبع ميزانية بسيط وذكي يساعدك على تحديد المقدار المتاح لإنفاقه يومياً أو أسبوعياً أو نصف شهرياً أو شهرياً.</string>
@@ -327,13 +297,9 @@
     <string name="changelog_previous_versions">الإصدارات السابقة</string>
     <string name="changelog_updated_to">تم التحديث إلى: %1$s</string>
     <string name="changelog_see_changes">تم تحديث تطبيق وفير بنجاح.</string>
-
-    <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">تحديد الفترة</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d يوماً · %2$s - %3$s</string>
     <string name="onboarding_finish_date_selector_budget_view_question">كيف ترغب في عرض ميزانيتك؟</string>
-
-    <!-- Settings -->
     <string name="settings_title">الإعدادات</string>
     <string name="settings_section_appearance">المظهر والتصميم</string>
     <string name="settings_section_language">اللغة</string>
@@ -347,9 +313,10 @@
     <string name="settings_contrast_normal">عادي</string>
     <string name="settings_contrast_medium">متوسط</string>
     <string name="settings_contrast_high">مرتفع</string>
-    <string name="settings_typography_condensed">آي بي إم بلكس (IBM Plex)</string>
+    <string name="settings_typography_condensed">خط بلكس العصري</string>
     <string name="settings_typography_expressive">خط ثمانية (تعبيري)</string>
-    <string name="settings_language_ar" translatable="false">العربية</string>
+    <string name="settings_language_ar" translatable="false">العربية (الفصحى)</string>
+    <string name="settings_language_ar_eg" translatable="false">عربي (مصري)</string>
     <string name="settings_color_scheme_title">سمة الألوان</string>
     <string name="settings_section_notifications">التنبيهات</string>
     <string name="settings_section_features">الميزات المتقدمة</string>
@@ -357,7 +324,6 @@
     <string name="settings_section_data_backup">النسخ الاحتياطي للبيانات</string>
     <string name="settings_section_tutorial">الدليل الترحيبي</string>
     <string name="settings_section_savings">الادخار</string>
-
     <string name="settings_theme_title">المظهر</string>
     <string name="settings_theme_subtitle">تغيير نمط وألوان التطبيق</string>
     <string name="settings_appearance_title">السمات والألوان</string>
@@ -365,11 +331,11 @@
     <string name="settings_widgets_title">الودجات</string>
     <string name="settings_widgets_subtitle">استكشف الودجات المتاحة لإضافتها لشاشتك الرئيسية</string>
     <string name="settings_typography_title">الخطوط</string>
-    <string name="settings_typography_subtitle">تغيير نمط خطوط التطبيق (ثمانية، IBM Plex، الافتراضي)</string>
-    <string name="settings_rounded_font_title">نمط الخط المنحني (Rounded)</string>
-    <string name="settings_material_you_title">ألوان النظام (Material You)</string>
+    <string name="settings_typography_subtitle">تغيير نمط خطوط التطبيق (ثمانية، بلكس، الافتراضي)</string>
+    <string name="settings_rounded_font_title">نمط الخط المستدير الانسيابي</string>
+    <string name="settings_material_you_title">ألوان النظام المتناسقة</string>
     <string name="settings_material_you_subtitle">استخراج ألوان السمة ديناميكياً من خلفية جهازك</string>
-    <string name="settings_amoled_title">سمة الشاشات السوداء (AMOLED)</string>
+    <string name="settings_amoled_title">السمة الداكنة الموفرة للطاقة</string>
     <string name="settings_amoled_subtitle">استخدام خلفيات شديدة السواد لتوفير البطارية وراحة العين</string>
     <string name="settings_censor_mode_title">وضع الخصوصية</string>
     <string name="settings_censor_mode_subtitle">حجب وتعتيم كافة الأرقام المالية في التطبيق</string>
@@ -413,7 +379,6 @@
     <string name="settings_recurrent_payments_view_mode_horizontal_subtitle">عرض المدفوعات الدورية في بطاقات أفقية متجاورة</string>
     <string name="settings_recurrent_payments_view_mode_vertical_title">رأسي</string>
     <string name="settings_recurrent_payments_view_mode_vertical_subtitle">عرض المدفوعات الدورية كقائمة رأسية للمصروفات</string>
-
     <string name="settings_period_end_time_title">وقت تنبيه نهاية الفترة</string>
     <string name="settings_period_end_time_subtitle">سيظهر إشعار انتهاء فترة الميزانية في هذا التوقيت</string>
     <string name="settings_recurrent_notification_time_title">وقت تنبيه المدفوعات الدورية</string>
@@ -422,12 +387,17 @@
     <string name="settings_notification_permission_granted_subtitle">ممنوح — ستصلك الإشعارات في مواعيدها</string>
     <string name="settings_notification_permission_denied_subtitle">مرفوض — اضغط لفتح إعدادات النظام وتفعيل التنبيهات</string>
     <string name="settings_notification_permission_action">فتح</string>
-    <string name="settings_exact_alarm_title">التنبيهات الدقيقة (Exact Alarms)</string>
+    <string name="settings_exact_alarm_title">التنبيهات الفورية الدقيقة</string>
     <string name="settings_exact_alarm_enabled_subtitle">مفعل لعرض التنبيهات في وقتها المحدد تماماً</string>
     <string name="settings_exact_alarm_disabled_subtitle">معطل؛ قد يؤخر نظام أندرويد الإشعار لتوفير الطاقة</string>
+    <string name="settings_test_notification_title">إرسال إشعار تجريبي</string>
+    <string name="settings_test_notification_subtitle">اضغط للتحقق الفوري من ظهور التنبيهات وصلاحية الأذونات على هاتفك</string>
+    <string name="notification_test_title">تنبيه تجريبي من وفير 🔔</string>
+    <string name="notification_test_message">الإشعارات تعمل بنجاح وبأعلى كفاءة! ستصلك تنبيهات نهاية الفترة والمدفوعات والميزانية في مواعيدها.</string>
+    <string name="notification_test_sent_toast">تم إرسال الإشعار التجريبي بنجاح 🔔</string>
+    <string name="notification_permission_needed_toast">يرجى منح إذن الإشعارات أولاً لتتمكن من استقبال التنبيهات</string>
     <string name="settings_time_picker_cancel">إلغاء</string>
     <string name="settings_time_picker_confirm">تأكيد</string>
-
     <string name="settings_about_title">حول التطبيق</string>
     <string name="settings_about_subtitle">تطبيق وفير — المطور عبدالرحمن كريم</string>
     <string name="settings_bug_report_title">إرسال ملاحظات أو إبلاغ عن مشكلة</string>
@@ -435,8 +405,6 @@
     <string name="settings_what_is_this_for">ما فائدة هذا الإجراء؟</string>
     <string name="settings_version_title">الإصدار</string>
     <string name="settings_version_metadata_copied">تم نسخ معلومات التطبيق والجهاز إلى الحافظة</string>
-
-    <!-- Bug Report -->
     <string name="bug_report_title">الملاحظات والدعم الفني</string>
     <string name="bug_report_type_label">نوع الرسالة</string>
     <string name="bug_report_type_bug_report">إبلاغ عن خطأ</string>
@@ -478,15 +446,12 @@
     <string name="bug_report_upload_assets_subtitle">صور أو مقاطع فيديو (حتى 10 ميجابايت)</string>
     <string name="bug_report_upload_assets_selected_count">تم اختيار %1$d مرفق</string>
     <string name="bug_report_remove_attachment">حذف المرفق</string>
-
     <string name="settings_backup_title">نسخ احتياطي للبيانات</string>
     <string name="settings_backup_subtitle">تصدير بياناتك إلى ملف wafeer_export.csv</string>
     <string name="settings_import_csv_title">استيراد ملف CSV</string>
     <string name="settings_import_csv_subtitle">استيراد بياناتك السابقة من ملف CSV</string>
-
     <string name="settings_reset_tutorial_title">إعادة تشغيل الدليل الترحيبي</string>
     <string name="settings_reset_tutorial_subtitle">ستظهر لك تلميحات الإيماءات والإرشادات التفاعلية مجدداً.</string>
-
     <string name="settings_theme_dialog_title">مظهر التطبيق</string>
     <string name="settings_theme_light_title">فاتح</string>
     <string name="settings_theme_light_subtitle">استخدام المظهر الفاتح دائماً</string>
@@ -494,19 +459,15 @@
     <string name="settings_theme_dark_subtitle">استخدام المظهر الداكن دائماً</string>
     <string name="settings_theme_system_title">حسب النظام</string>
     <string name="settings_theme_system_subtitle">مطابقة إعداد مظهر نظام التشغيل</string>
-
     <string name="settings_typography_dialog_title">خطوط التطبيق</string>
     <string name="settings_typography_default_title">خط ثمانية (ثمانية الأصيل)</string>
     <string name="settings_typography_default_subtitle">خط عربي فخم مع أحرف منسدلة للعناوين</string>
-    <string name="settings_typography_condensed_title">آي بي إم بلكس (IBM Plex Arabic)</string>
+    <string name="settings_typography_condensed_title">خط بلكس العصري</string>
     <string name="settings_typography_condensed_subtitle">خط تقني عصري فائق الوضوح والأناقة</string>
-    <string name="settings_typography_expressive_title">تعبيري (Expressive)</string>
+    <string name="settings_typography_expressive_title">خط ثمانية التعبيري</string>
     <string name="settings_typography_expressive_subtitle">الخط التعبيري المتفاعل مع الواجهة</string>
-
     <string name="expand">توسيع</string>
     <string name="collapse">طي</string>
-
-    <!-- Budget Pill -->
     <string name="budget_pill_over_budget">تجاوزت الحد المسموح</string>
     <string name="budget_pill_no_budget">لا توجد ميزانية</string>
     <string name="budget_pill_no_budget_action">إعداد الميزانية</string>
@@ -518,33 +479,21 @@
     <string name="budget_pill_exhausted_single">تم استنفاد ميزانية %1$s</string>
     <string name="budget_pill_exhausted_double">تم استنفاد ميزانيتي %1$s و%2$s</string>
     <string name="budget_pill_exhausted_triple">تم استنفاد ميزانيات %1$s و%2$s و%3$s</string>
-
-    <!-- Spend Budget Card -->
     <string name="spend_budget_card_spent_label">المصروف</string>
     <string name="spend_budget_card_available_percent_format">المتاح: %1$s%%</string>
-
-    <!-- Categories Chart -->
     <string name="categories_chart_uncategorized">دون تصنيف</string>
     <string name="categories_chart_rest">المتبقي</string>
     <string name="categories_chart_empty_title">لا يمكن تقسيم المصروفات حالياً</string>
     <string name="categories_chart_empty_subtitle">سجل نفقاتك مع تحديد تصنيف لها لتقسيمها</string>
     <string name="category_no_expenses">لا توجد مصروفات في هذا التصنيف</string>
     <string name="day_no_expenses">لا توجد نفقات في هذا اليوم حتى الآن…</string>
-
-    <!-- Calendar Heatmap -->
     <string name="calendar_heatmap_info_text">يوضح هذا الرسم حجم الإنفاق المالي لكل يوم خلال الفترة</string>
     <string name="heatmap_legend_less">أقل</string>
     <string name="heatmap_legend_more">أكثر</string>
-
-    <!-- No Transactions -->
     <string name="no_transactions_title">لا توجد مصروفات مسجلة</string>
     <string name="no_transactions_subtitle">أضف مصروفاً جديداً للبدء</string>
-
-    <!-- Recurrent Payments Divider -->
     <string name="recurrent_payments_divider_title_upcoming">المدفوعات الدورية القادمة</string>
     <string name="recurrent_payments_divider_title_current_period">المدفوعات الدورية في هذه الفترة</string>
-
-    <!-- Upcoming Recurrent Item -->
     <string name="upcoming_recurrent_today">اليوم</string>
     <string name="upcoming_recurrent_tomorrow">غداً</string>
     <string name="upcoming_recurrent_in_days">خلال %1$d أيام</string>
@@ -554,8 +503,6 @@
     <string name="delete_recurrent_expense_fallback_name">هذا المصروف الدوري</string>
     <string name="delete_recurrent_expense_message">هل أنت متأكد من رغبتك بحذف \"%1$s\"؟</string>
     <string name="delete_recurrent_expense_warning">سيؤدي هذا الإجراء إلى حذف إعدادات المصروف الدوري بالكامل ولن تتلقى تنبيهات عنه مجدداً.</string>
-
-    <!-- Recurrent Ticket -->
     <string name="recurrent_ticket_unnamed_subscription">اشتراك بدون اسم</string>
     <string name="recurrent_ticket_weekly_unnamed">اشتراك أسبوعي بدون اسم</string>
     <string name="recurrent_ticket_biweekly_unnamed">اشتراك نصف شهري بدون اسم</string>
@@ -563,8 +510,6 @@
     <string name="recurrent_ticket_frequency_weekly">أسبوعياً</string>
     <string name="recurrent_ticket_frequency_biweekly">نصف شهرياً</string>
     <string name="recurrent_ticket_frequency_monthly">شهرياً</string>
-
-    <!-- Subscriptions screen -->
     <string name="subscriptions_title">الاشتراكات والالتزامات</string>
     <string name="subscriptions_analytics_card_label">دوري</string>
     <string name="subscriptions_monthly_commitment_label">الالتزام الشهري</string>
@@ -592,7 +537,6 @@
     <string name="subscriptions_weekly_week_badge">الأسبوع %d</string>
     <string name="subscriptions_weekly_category_distribution_title">توزيع التصنيفات</string>
     <string name="subscriptions_weekly_total_suffix">المجموع: %s</string>
-
     <plurals name="subscriptions_weekly_bills_scheduled">
         <item quantity="zero">لا توجد فواتير مجدولة هذا الأسبوع</item>
         <item quantity="one">فاتورة واحدة مجدولة هذا الأسبوع</item>
@@ -601,13 +545,10 @@
         <item quantity="many">%d فاتورة مجدولة هذا الأسبوع</item>
         <item quantity="other">%d فاتورة مجدولة هذا الأسبوع</item>
     </plurals>
-
     <string name="subscriptions_item_mark_paid_short">دُفع</string>
     <string name="subscriptions_item_skip_short">تخطي</string>
     <string name="subscriptions_item_due_in_days">خلال %1$d أيام (%2$s)</string>
     <string name="subscriptions_item_due_in_weeks">خلال %1$d أسابيع (%2$s)</string>
-
-    <!-- Rollover Dialog (component local) -->
     <string name="rollover_dialog_period_finished_title">انتهت الفترة</string>
     <string name="rollover_dialog_question">ماذا ترغب أن تفعل بالمبلغ المتبقي؟</string>
     <string name="rollover_dialog_split_equally_title">توزيع بالتساوي</string>
@@ -619,14 +560,10 @@
     <string name="unresolved_surplus_title">فائض مالي معلق</string>
     <string name="rollover_dialog_pending_label">من فترة سابقة</string>
     <string name="unresolved_surplus_tap_to_manage">انقر لإدارته</string>
-
-    <!-- Finished Period Header -->
     <string name="finished_period_header_title">انتهت الفترة</string>
     <string name="finished_period_header_no_spends">رائع! لم تنفق أي شيء خلال هذه الفترة</string>
     <string name="finished_period_header_over_budget">انتبه! تجاوزت حدود الميزانية المحددة لهذه الفترة</string>
     <string name="finished_period_header_summary">إليك تفاصيل وإحصائيات إنفاقك خلال هذه الفترة</string>
-
-    <!-- Savings Recommendation Card -->
     <string name="savings_recommendation_title">توصيات الادخار</string>
     <string name="savings_recommendation_method_brief" formatted="false">تعتمد قاعدة %1$d/%2$d/%3$d على تقسيم ميزانيتك إلى: %1$d%% للضروريات، و%2$d%% للرغبات، و%3$d%% للادخار، مما يمنحك استقراراً مالياً وتوفيراً مستمراً.</string>
     <string name="savings_recommendation_current_savings_label">المدخرات الحالية</string>
@@ -638,8 +575,6 @@
     <string name="savings_recommendation_six_month_example_intro" formatted="false">إذا وفرت %1$d%% في كل فترة لمدة 6 أشهر تقريباً، يمكنك جمع:</string>
     <string name="savings_recommendation_goal_format" formatted="false">للوصول إلى %1$s خلال %2$d أشهر، وفّر %3$s في كل فترة.</string>
     <string name="savings_recommendation_goal_disabled" formatted="false">يظهر مثال النسبة الافتراضية %1$d%%. يمكنك تعيين هدف ادخار بمبلغ محدد في الإعدادات.</string>
-
-    <!-- Settings: Savings Preferences -->
     <string name="settings_savings_preferences_title">تفضيلات الادخار</string>
     <string name="settings_savings_preferences_subtitle">تخصيص نسب 50/30/20 وتحديد هدف ادخاري مخصص</string>
     <string name="settings_savings_dialog_split_label">تقسيم الميزانية</string>
@@ -662,11 +597,7 @@
     <string name="settings_savings_dialog_goal_months_label">الفترة المستهدفة (بالأشهر)</string>
     <string name="settings_savings_dialog_goal_hint">اتركه فارغاً للاحتفاظ بمثال النسبة الافتراضية × 6.</string>
     <string name="settings_savings_dialog_reset">إعادة ضبط للافتراضي</string>
-
-    <!-- Wavy Divider -->
     <string name="wavy_divider_show_all_past_period_expenses">عرض كافة نفقات الفترة السابقة…</string>
-
-    <!-- Edit Budget Settings -->
     <string name="use_previous_period_days">استخدام %d يوماً</string>
     <string name="currency_label">العملة</string>
     <string name="budget_duration_label">المدة</string>
@@ -685,8 +616,6 @@
     <string name="clear">مسح</string>
     <string name="currency_no_results">لم يتم العثور على عملات مطابقة</string>
     <string name="currency_selected">تم التحديد</string>
-
-    <!-- Budget Split Mode -->
     <string name="split_mode_label">نمط التقسيم</string>
     <string name="split_mode_static">ثابت</string>
     <string name="split_mode_static_desc">تُقسم الميزانية بالتساوي على جميع الأيام، بصرف النظر عما تنفقه أو توفره.</string>
@@ -702,8 +631,6 @@
     <string name="leftover_choice_carry_outcome">%1$s للغد</string>
     <string name="leftover_choice_outcome">متبقٍ لليوم · ثم %1$s/يوم</string>
     <string name="leftover_choice_outcome_last_day">متبقٍ لليوم</string>
-
-    <!-- Transaction Detail -->
     <string name="without_date">دون تاريخ</string>
     <string name="no_name">بدون اسم</string>
     <string name="no_name_income">دخل بدون اسم</string>
@@ -714,27 +641,21 @@
     <string name="charge_day">يوم الخصم</string>
     <string name="day_number">اليوم %1$d</string>
     <string name="recurrence_end">نهاية التكرار</string>
-
-    <!-- Transaction Detail Ticket Card -->
     <string name="ticket_total_amount">إجمالي المبلغ</string>
     <string name="mark_all_as_paid">تحديد الكل كمدفوع</string>
     <string name="mark_all_as_paid_success">تم تحديد الكل كمدفوع</string>
     <string name="mark_as_paid">تحديد كمدفوع</string>
     <string name="mark_as_paid_success">تم التحديد كمدفوع</string>
-
-    <!-- Notifications -->
     <string name="notification_channel_period_end_name">نهاية فترة الميزانية</string>
     <string name="notification_channel_period_end_description">إشعارات عند انتهاء فترة الميزانية مع رصيد متبقٍ</string>
     <string name="notification_channel_recurrent_name">المصاريف والاشتراكات الدورية</string>
     <string name="notification_channel_recurrent_description">إشعارات عند حلول موعد المصاريف الدورية</string>
     <string name="notification_channel_credit_name">تذكيرات البطاقة الائتمانية</string>
     <string name="notification_channel_credit_description">تذكيرات قبل موعد صدور كشف حساب البطاقة الائتمانية</string>
-
     <string name="notification_period_end_title">انتهت فترة الميزانية</string>
     <string name="notification_period_end_message_positive">انتهت الفترة ومتبقٍ لديك %1$s وفراً. انقر لعرض التفاصيل.</string>
     <string name="notification_period_end_message_negative">انتهت الفترة بتجاوز للميزانية قدره %1$s. انقر لعرض التفاصيل.</string>
     <string name="notification_period_end_message_neutral">انتهت الفترة دون تسجيل أي مصاريف. انقر لعرض التفاصيل.</string>
-
     <string name="notification_recurrent_due_today_title">موعد سداد \"%1$s\" يحل اليوم</string>
     <string name="notification_recurrent_charged_weekly">مصروفك الأسبوعي بقيمة %1$s حان وقت سداده.</string>
     <string name="notification_recurrent_charged_biweekly">مصروفك نصف الشهري بقيمة %1$s حان وقت سداده.</string>
@@ -744,21 +665,16 @@
     <string name="notification_upcoming_subscription_title">مصروف قادم</string>
     <string name="notification_upcoming_subscription_message_with_comment">اشتراك \"%1$s\" لـ \"%2$s\" سيُخصم %3$s. استعد لسداده.</string>
     <string name="notification_upcoming_subscription_message_without_comment">لديك اشتراك بقيمة \"%1$s\" سيُخصم %2$s.</string>
-
     <string name="notification_credit_cutoff_title">موعد استحقاق البطاقة الائتمانية</string>
     <string name="notification_credit_cutoff_message">تاريخ الاستحقاق هو %1$s. يُنصح بدفع %2$s لتجنب أي فوائد.</string>
-
     <string name="credit_owed_label">إجمالي المستحق</string>
     <string name="debt_adjusted_balance_label">صافي الرصيد بعد الالتزامات</string>
     <string name="debt_adjusted_label_format">%1$s - %2$s دين ائتماني</string>
-
     <string name="credit_badge">ائتمان</string>
     <string name="credit_cutoff_subtitle">%1$s — الاستحقاق خلال %2$d أيام</string>
     <string name="credit_cutoff_subtitle_today">%1$s — الاستحقاق اليوم</string>
     <string name="ticket_expense">مصروف</string>
     <string name="ticket_recurrent_expense">مصروف دوري</string>
-
-    <!-- Past Periods -->
     <string name="past_periods_title">الفترات السابقة</string>
     <string name="past_periods_subtitle">انقر على أي فترة لعرض تفاصيلها، أو اضغط مطولاً لحذفها.</string>
     <string name="past_periods_empty">لا توجد فترات سابقة مؤرشفة</string>
@@ -779,8 +695,6 @@
     <string name="past_period_delete_confirm_title">حذف الفترة السابقة؟</string>
     <string name="past_period_delete_confirm_message">سيؤدي هذا إلى حذف الفترة %1$s – %2$s وجميع مصاريفها نهائياً مع الإبقاء على الاشتراكات. سيتطلب ذلك التحقق بالبصمة.</string>
     <string name="dialog_yes">نعم</string>
-
-    <!-- Analytics Tutorial -->
     <string name="analytics_tutorial_minmax_title">أنماط واتجاهات الإنفاق</string>
     <string name="analytics_tutorial_minmax_desc">توضح هذه البطاقات أدنى وأعلى نفقاتك المسجلة.\nوتتحدث تلقائياً مع إضافة العمليات لمساعدتك على رصد النفقات غير المعتادة.</string>
     <string name="analytics_tutorial_header_title">أرشيف الفترات السابقة</string>
@@ -800,7 +714,6 @@
     <string name="analytics_tutorial_history_title">سجل العمليات</string>
     <string name="analytics_tutorial_history_desc">اضغط هنا لعرض قائمة بجميع مصاريفك لهذه الفترة.</string>
     <string name="skip_tutorial">تخطي</string>
-
     <string name="budget_graph_header_spending">الإنفاق</string>
     <string name="budget_graph_legend_current">الحالي</string>
     <string name="budget_graph_legend_previous">السابق</string>
@@ -817,4 +730,124 @@
     <string name="unit_millions">مليون</string>
     <string name="widget_budget_pill_title">شريط الميزانية</string>
     <string name="widget_budget_pill_description">المتبقي وفق نمط العرض الذي تختاره — يومي، أسبوعي، نصف شهري أو شهري — في شريط رشيق وأنيق</string>
+    <string name="settings_language_pt" translatable="false">Português</string>
+    <string name="widget_min_max_spent_preview_max_date">١٥ يونيو ٢٠٢٦ ١٨:٤٥</string>
+    <string name="widget_average_spend_preview_meta">٨ · ١٢ يوم</string>
+    <string name="widget_complete_budget_preview_days">١٦ يوم</string>
+    <string name="widget_budget_overview_preview_start">٠٦ مارس</string>
+    <string name="settings_language_ru" translatable="false">Русский</string>
+    <string name="settings_language_zh" translatable="false">中文</string>
+    <string name="settings_language_de" translatable="false">Deutsch</string>
+    <string name="settings_language_ko" translatable="false">한국어</string>
+    <string name="settings_language_br" translatable="false">Bulgarian</string>
+    <string name="widget_complete_budget_preview_end">٢١ مارس</string>
+    <string name="widget_complete_budget_preview_amount">٥٠٠ ر.س</string>
+    <string name="bug_report_email_subject" translatable="false">%1$s</string>
+    <string name="settings_savings_dialog_split_format" translatable="false">%1$d / %2$d / %3$d</string>
+    <string name="bug_report_recipient_email" translatable="false">abdelrhmanBit@proton.me</string>
+    <string name="widget_budget_overview_preview_end">٢١ مارس</string>
+    <string name="widget_average_spend_preview_amount">٧٢ ر.س</string>
+    <string name="widget_complete_budget_preview_spent_amount">١٨٠ ر.س</string>
+    <string name="savings_recommendation_six_month_example_equation" translatable="false">%1$s × 6 = %2$s</string>
+    <string name="settings_language_es" translatable="false">Español</string>
+    <string name="settings_language_it" translatable="false">Italiano</string>
+    <string name="settings_language_hi" translatable="false">हिन्दी</string>
+    <string name="widget_complete_budget_preview_start">٠٦ مارس</string>
+    <string name="widget_month_heatmap_preview_month">يونيو</string>
+    <string name="widget_min_max_spent_preview_min_amount">٤٢ ر.س</string>
+    <string name="widget_min_max_spent_preview_min_date">١٤ يونيو ٢٠٢٦ ١٠:٢٠</string>
+    <string name="widget_heatmap_preview_apr">أبريل</string>
+    <string name="empty" translatable="false">—</string>
+    <string name="bug_report_github_issues_url" translatable="false" />
+    <string name="widget_heatmap_preview_months">٤ أشهر</string>
+    <string name="widget_min_max_spent_description">عرض أقل وأعلى مصروفاتك بلمحة سريعة</string>
+    <string name="widget_add_expense_plus" translatable="false">+</string>
+    <string name="settings_language_el" translatable="false">Ελληνικά</string>
+    <string name="widget_complete_budget_preview_spent_label">إجمالي المصروفات</string>
+    <string name="expense_item_unnamed_income">دخل غير مسمى</string>
+    <string name="widget_average_spend_description">عرض متوسط الإنفاق اليومي بلمحة سريعة</string>
+    <string name="settings_language_en" translatable="false">English</string>
+    <string name="settings_language_fr" translatable="false">Français</string>
+    <string name="widget_budget_pill_preview_amount">١١٠٫٠٠ ر.س</string>
+    <string name="widget_budget_overview_preview_amount">٥٠٠ ر.س</string>
+    <string name="widget_min_max_spent_preview_max_amount">١٨٦ ر.س</string>
+    <string name="settings_language_ja" translatable="false">日本語</string>
+    <string name="widget_heatmap_preview_mar">مارس</string>
+    <string name="budget_graph_page_indicator" translatable="false">%1$d / %2$d</string>
+    <string name="widget_budget_overview_preview_days">١٦ يوم</string>
+    <string name="budget_formula_subtitle" translatable="false">%1$s · %2$s</string>
+    <string name="budget_allowance_days_title">أيام المصروف والإنفاق</string>
+    <string name="budget_allowance_days_switch_title">حساب المصروف على أيام محددة فقط</string>
+    <string name="budget_allowance_days_switch_desc">تقسيم المبلغ على أيام الدراسة أو العمل الفعلية وتخطي أيام الإجازة.</string>
+    <string name="budget_allowance_preset_sun_thu">٥ أيام (الأحد - الخميس)</string>
+    <string name="budget_allowance_preset_mon_fri">٥ أيام (الإثنين - الجمعة)</string>
+    <string name="budget_allowance_preset_all_days">طوال الأسبوع (٧ أيام)</string>
+    <string name="budget_allowance_days_summary">يُحسب المصروف على %1$d أيام في الأسبوع فقط.</string>
+    <string name="day_sunday_short">أحد</string>
+    <string name="day_monday_short">إثنين</string>
+    <string name="day_tuesday_short">ثلاثاء</string>
+    <string name="day_wednesday_short">أربعاء</string>
+    <string name="day_thursday_short">خميس</string>
+    <string name="day_friday_short">جمعة</string>
+    <string name="day_saturday_short">سبت</string>
+    <string name="budget_alert_title">تنبيه المصروف اليومي</string>
+    <string name="budget_alert_warning">أنت تقترب من حد المصروف المخصص لليوم (%1$d%%)</string>
+    <string name="budget_alert_exceeded">تجاوزت الحد اليومي المحدد لمصروفك</string>
+    <string name="financial_tip_title">نصيحة وفير المالية</string>
+    <string name="financial_tip_1_title">لا تنفق أكثر مما تكسب</string>
+    <string name="financial_tip_1_body">مهما كان دخلك، اجعل نفقاتك أقل منه. الفرق بين ما تكسبه وما تنفقه هو المساحة التي تمنحك القدرة على الادخار ومواجهة الطوارئ.</string>
+    <string name="financial_tip_2_title">احتفظ باحتياطي للطوارئ</string>
+    <string name="financial_tip_2_body">لا تجعل كل أموالك مرتبطة بنفقاتك اليومية. بناء احتياطي يغطي عدة أشهر من احتياجاتك الأساسية يحميك من الاقتراض المفاجئ.</string>
+    <string name="financial_tip_3_title">تجنّب الديون الاستهلاكية</string>
+    <string name="financial_tip_3_body">شراء أشياء لا تحتاجها بأموال لم تكسبها بعد يحول دخلك المستقبلي إلى التزامات. كلما قلّت ديونك، زادت حريتك في التحكم بأموالك.</string>
+    <string name="financial_tip_4_title">لا تعتمد على مصدر دخل واحد إلى الأبد</string>
+    <string name="financial_tip_4_body">الاعتماد الكامل على راتب واحد يجعلك أكثر عرضة للخطر إذا انقطع. طوّر مهاراتك وابحث عن فرص لبناء دخل إضافي عندما تسمح ظروفك.</string>
+    <string name="financial_tip_5_title">استثمر جزءاً من دخلك</string>
+    <string name="financial_tip_5_body">الادخار يحمي جزءاً من أموالك، لكن الاستثمار يمكن أن يساعدها على النمو مع الوقت. تعلّم قبل أن تستثمر، وتجنب وضع أموالك في شيء لا تفهم مخاطره.</string>
+    <string name="financial_tip_6_title">ارفع دخلك قبل أن ترفع مستوى معيشتك</string>
+    <string name="financial_tip_6_body">عندما يزيد دخلك، لا تجعل الزيادة كلها تتحول إلى مصاريف جديدة. استغل جزءاً منها لبناء المدخرات والأصول وتحسين قدرتك على الكسب.</string>
+    <string name="financial_tip_7_title">لا تطارد الثراء السريع</string>
+    <string name="financial_tip_7_body">الوعود بالأرباح السهلة والسريعة قد تدفعك إلى مخاطر لا تستطيع تحملها. بناء وضع مالي قوي يحتاج إلى وقت، وانضباط، وقرارات محسوبة.</string>
+    <string name="wallet_mode_title">إيداع في المحفظة</string>
+    <string name="wallet_mode_tooltip">دخل إضافي (هدية، رد دين، مكافأة)</string>
+    <string name="wallet_mode_tag_gift">هدية</string>
+    <string name="wallet_mode_tag_debt_repaid">رد دين</string>
+    <string name="wallet_mode_tag_bonus">مكافأة</string>
+    <string name="wallet_mode_tag_freelance">عمل إضافي</string>
+    <string name="wallet_total_income_label">إجمالي الدخل الإضافي</string>
+    <string name="onboarding_language_title">اختر لغة التطبيق</string>
+    <string name="onboarding_language_subtitle">حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات.</string>
+    <string name="tutorial_end_tour">إنهاء</string>
+    <string name="tutorial_understood">فهمت</string>
+    <string name="financial_tip_8_title">فخ العروض والتخفيضات</string>
+    <string name="financial_tip_8_body" formatted="false">خصم 50% على سلعة لا تحتاجها فعلياً هو خسارة كاملة لمالك وليس توفيراً. لا تشترِ لمجرد وجود تخفيض.</string>
+    <string name="financial_tip_9_title">قاعدة الـ 24 ساعة</string>
+    <string name="financial_tip_9_body" formatted="false">عند الرغبة في شراء شيء غير أساسي، انتظر 24 ساعة كاملة. ستكتشف أن أكثر من 80% من الرغبات الاندفاعية تختفي.</string>
+    <string name="financial_tip_10_title">تدقيق الاشتراكات الدورية</string>
+    <string name="financial_tip_10_body">المبالغ الصغيرة المتكررة شهرياً للاشتراكات والخدمات غير المستعملة تستنزف ميزانيتك في صمت. راجعها وألغِ ما لا تحتاجه.</string>
+    <string name="financial_tip_11_title">الحذر من تضخم نمط الحياة</string>
+    <string name="financial_tip_11_body">عندما يرتفع دخلك، لا ترفع مصاريفك فوراً. وجّه الفارق نحو الادخار وصناعة الأصول بدلاً من الالتزامات.</string>
+    <string name="financial_tip_12_title">تكلفة الفرصة البديلة</string>
+    <string name="financial_tip_12_body">تذكر دائماً: كل مبلغ تنفقه اليوم بلا فائدة يحرمك من أرباح وأمان كان يمكن أن يبنيه لك مستقبلاً.</string>
+    <string name="financial_tip_13_title">قاعدة الأوعية المالية الثلاثة</string>
+    <string name="financial_tip_13_body">قسّم فائضك: وعاء للأمان والطوارئ، وعاء للأهداف والمناسبات القريبة، ووعاء للاستثمار طويل المدى.</string>
+    <string name="widget_wallet_title">وفير: المحفظة السريعة</string>
+    <string name="widget_wallet_desc">تسجيل دخل إضافي وإيداع بالمحفظة بلمسة واحدة</string>
+    <string name="widget_coach_title">وفير: الحكمة المالية</string>
+    <string name="widget_coach_desc">عرض القواعد والنصائح المالية اليومية على الشاشة الرئيسية</string>
+    <string name="financial_tip_14_title">التوقف عن محاولة مواكبة الآخرين</string>
+    <string name="financial_tip_14_body">لن تعرف الوضع المالي الحقيقي لمن حولك. إنفاقك لإثبات أنك تستطيع تحمّل ما يتحمله الآخرون قد يكلفك أكثر مما تتوقع.</string>
+    <string name="financial_tip_15_title">حساب التكلفة الكاملة قبل اتخاذ قرار كبير</string>
+    <string name="financial_tip_15_body">السيارة، المنزل، المشروع أو السفر لا يكلف ثمنه المعلن فقط. انظر إلى الصيانة، الوقت، الالتزامات، والفرص التي ستتخلى عنها مقابله.</string>
+    <string name="financial_tip_16_title">وضع حد واضح لما يمكنك تحمّله</string>
+    <string name="financial_tip_16_body">تحديد سقف مالي واضح لنفسك يساعدك على تجنّب القرارات الكبيرة المندفعة.</string>
+    <string name="changelog_section_features">المميزات الجديدة</string>
+    <string name="changelog_section_improvements">التعديلات والتغييرات</string>
+    <string name="changelog_section_bug_fixes">الإصلاحات</string>
+    <string name="changelog_section_removed">الميزات المحذوفة</string>
+    <string name="changelog_section_security">التحسينات وسد الثغرات الأمنية</string>
+    <string name="changelog_rating_title">رأيك يفرق معانا في رحلة التطوير</string>
+    <string name="changelog_rating_desc">إذا كان تطبيق وفير يساعدك في التحكم بميزانيتك ووعيك المالي، تقييمك بكلمة طيبة على المتجر يدعمنا لمواصلة التطوير المستمر.</string>
+    <string name="changelog_rating_button">تقييم التطبيق على المتجر</string>
+    <string name="notification_action_view_budget">عرض الميزانية</string>
 </resources>

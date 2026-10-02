@@ -15,6 +15,8 @@ import com.serranoie.app.minus.presentation.widget.updateExpenseWidget
 import com.serranoie.app.minus.presentation.widget.updateHeatmapWidget
 import com.serranoie.app.minus.presentation.widget.updateMinMaxSpentWidget
 import com.serranoie.app.minus.presentation.widget.updateMonthHeatmapWidget
+import com.serranoie.app.minus.presentation.widget.updateWalletIncomeWidget
+import com.serranoie.app.minus.presentation.widget.updateFinancialCoachWidget
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -40,6 +42,10 @@ class BudgetWidgetUpdater @Inject constructor(
         val heatmapData = buildHeatmapData(baseState)
         val currentPeriodTransactions = filterCurrentPeriodTransactions(baseState)
 
+        val walletTotalIncome = currentPeriodTransactions
+            .filter { it.amount < BigDecimal.ZERO }
+            .sumOf { it.amount.abs() }
+
         updateExpenseWidget(context, totalSpent, totalBudget, currency)
         updateBudgetOverviewWidget(context, budgetAmount, currency, startDate, endDate, daysLeft)
         updateCompleteBudgetWidget(context, totalSpent, budgetAmount, currency, startDate, endDate, daysLeft)
@@ -48,6 +54,8 @@ class BudgetWidgetUpdater @Inject constructor(
         updateMonthHeatmapWidget(context, heatmapData.currentMonthHeatmap, heatmapData.currentMonthTotalSpent, currency)
         updateMinMaxSpentWidget(context, currentPeriodTransactions, currency)
         updateAverageSpendWidget(context, currentPeriodTransactions, currency, startDate, endDate)
+        updateWalletIncomeWidget(context, walletTotalIncome.toInt(), currency)
+        updateFinancialCoachWidget(context)
     }
 
     /**

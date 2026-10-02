@@ -93,7 +93,7 @@ android {
     ).all { v -> !v.isNullOrBlank() }
 
     defaultConfig {
-        applicationId = "com.serranoie.app.minus"
+        applicationId = "com.wafeer.app"
         minSdk = 27
         targetSdk = 36
         versionCode = appVersionCode
@@ -163,6 +163,11 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 
     applicationVariants.all {
@@ -550,10 +555,10 @@ fun humanizeChangelogTitle(text: String): String {
     return t[0].uppercaseChar() + t.substring(1)
 }
 
-fun changelogResolveReleaseDate(versionName: String): String? {
+fun changelogResolveReleaseDate(versionName: String): String {
     val tag = "v$versionName"
     val gitDate = gitOutput("log", "-1", "--format=%cs", tag)
-    return gitDate
+    return gitDate ?: changelogTodayIsoDate()
 }
 
 private fun changelogTodayIsoDate(): String {

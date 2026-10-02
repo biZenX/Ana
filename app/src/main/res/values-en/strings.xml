@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Minus</string>
+    <string name="app_name">وفير</string>
     <string name="tutorial_numpad_title">Numpad</string>
     <string name="tutorial_numpad_description">Enter the amount you spent and tap the green checkmark to save. Swipe up on the numpad to calculate.</string>
     <string name="tutorial_comment_title">Add a category</string>
     <string name="tutorial_comment_description">Add a category or short note to remember what the spend was for.</string>
     <string name="tutorial_budget_pill_title">Budget progress</string>
     <string name="tutorial_budget_pill_description">Tap to switch between daily, weekly, and monthly budget views, or to edit the period setup.</string>
+    <string name="tutorial_budget_pill_setup_title">Set Up Budget</string>
+    <string name="tutorial_budget_pill_setup_description">Tap here to set your budget amount and spending period to get started.</string>
     <string name="tutorial_settings_title">Settings</string>
     <string name="tutorial_settings_description">Open Settings to enable features, set up home-screen widgets, or reset this tutorial.</string>
     <string name="tutorial_recurrent_title">Recurrent payments</string>
@@ -53,7 +55,6 @@
     <string name="credit_cutoff_dialog_title">Credit card cutoff date</string>
     <string name="credit_cutoff_dialog_message">To track credit expenses, set the billing cutoff day (1-31).</string>
     <string name="credit_cutoff_dialog_label">Cutoff day</string>
-    <!-- Rollover Dialog -->
     <string name="period_finished">Period finished</string>
     <string name="remaining_budget">Remaining budget</string>
     <string name="rollover_question">What do you want to do with the remaining money?</string>
@@ -63,7 +64,6 @@
     <string name="carry_to_next_day_desc">Add %1$s to tomorrow\'s budget</string>
     <string name="view_analytics">View analytics</string>
     <string name="view_analytics_desc">Review the summary of the finished period</string>
-    <!-- Edit Transaction -->
     <string name="edit_recurrent_expense_title">Edit recurrent expense</string>
     <string name="edit_expense_title">Edit expense</string>
     <string name="cancel_edit_content_desc">Cancel edit</string>
@@ -106,7 +106,6 @@
     <string name="budget_split_period_weekly">week</string>
     <string name="budget_split_period_biweekly">biweekly</string>
     <string name="budget_split_period_monthly">month</string>
-    <!-- History -->
     <string name="expense_deleted_format">%1$s deleted</string>
     <string name="expense_modified_format">%1$s has been modified</string>
     <string name="generic_expense">Expense</string>
@@ -122,7 +121,6 @@
     <string name="budget_no_date_defined">No end date defined</string>
     <string name="budget_no_days_defined">No days defined</string>
     <string name="budget_less_than_one_day_validation">Budget must be for at least one day</string>
-    <!--  Analytics  -->
     <string name="analytics_title">Analytics</string>
     <plurals name="days">
         <item quantity="one">%d day</item>
@@ -137,7 +135,6 @@
     <string name="maximum_spent">Maximum spent</string>
     <string name="average_spent">Average per day spent</string>
     <string name="days_remaining_label">Days\nremaining</string>
-    <!-- Widget Descriptions -->
     <string name="widget_budget_overview_description">See spent and remaining budget at a glance</string>
     <string name="widget_days_countdown_description">Countdown days remaining in budget period</string>
     <string name="widget_budget_detail_description">Full budget overview with top category and days left</string>
@@ -146,7 +143,6 @@
     <string name="widget_add_expense_description">Quick shortcut to add a new expense</string>
     <string name="widget_add_expense_label">Add new expense</string>
     <string name="widget_add_expense_compact_label">Add expense</string>
-    <!-- Widget Labels -->
     <string name="spent">Spent</string>
     <string name="left">Left</string>
     <string name="remaining">Remaining</string>
@@ -174,7 +170,7 @@
     <string name="budget_pill_sub_exceeded_double">%1$s and %2$s amount Exceeded</string>
     <string name="budget_pill_sub_exceeded_triple">%1$s, %2$s and %3$s amount Exceeded</string>
     <string name="day_total_format">Total: %1$s</string>
-    <string name="onboarding_welcome_title">Welcome to Minus</string>
+    <string name="onboarding_welcome_title">Welcome to Wafeer</string>
     <string name="onboarding_welcome_subtitle">Hi and welcome, let\'s start saving together.</string>
     <string name="onboarding_welcome_intro">A simple budget tracker that helps you decide how much you can spend each day, week, biweekly, or month.</string>
     <string name="onboarding_step_1_title">Set a budget</string>
@@ -182,7 +178,7 @@
     <string name="onboarding_step_2_title">Track expenses</string>
     <string name="onboarding_step_2_subtitle">Log what you spend and see what is left each day.</string>
     <string name="onboarding_step_3_title">Recurring expenses</string>
-    <string name="onboarding_step_3_subtitle">Add subscriptions and Minus will track them for you automatically.</string>
+    <string name="onboarding_step_3_subtitle">Add subscriptions and Wafeer will track them for you automatically.</string>
     <string name="onboarding_step_4_title">Calculate on the fly</string>
     <string name="onboarding_step_4_subtitle">Your remaining budget updates in real time as you spend.</string>
     <string name="onboarding_step_5_title">See your analytics</string>
@@ -208,11 +204,9 @@
     <string name="changelog_release_date">Released %1$s</string>
     <string name="changelog_close">Close</string>
     <string name="changelog_previous_versions">Previous version</string>
-    <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">Select the period</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d days · %2$s - %3$s</string>
     <string name="onboarding_finish_date_selector_budget_view_question">How do you want to view your budget?</string>
-    <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_section_appearance">Appearance</string>
     <string name="settings_section_notifications">Notifications</string>
@@ -257,6 +251,12 @@
     <string name="settings_exact_alarm_title">Exact alarms</string>
     <string name="settings_exact_alarm_enabled_subtitle">Enabled to try showing notifications at the selected time</string>
     <string name="settings_exact_alarm_disabled_subtitle">Disabled; Android may delay the notification</string>
+    <string name="settings_test_notification_title">Send test notification</string>
+    <string name="settings_test_notification_subtitle">Tap to verify that alerts and sounds appear properly on your device</string>
+    <string name="notification_test_title">Test alert from Wafeer 🔔</string>
+    <string name="notification_test_message">Notifications are working properly! You will receive period end and recurring payment alerts on time.</string>
+    <string name="notification_test_sent_toast">Test notification sent successfully 🔔</string>
+    <string name="notification_permission_needed_toast">Please allow notifications to receive alerts</string>
     <string name="settings_time_picker_cancel">Cancel</string>
     <string name="settings_time_picker_confirm">OK</string>
     <string name="settings_about_title">About</string>
@@ -265,7 +265,6 @@
     <string name="settings_bug_report_subtitle">Create a bug report and we will fix it soon</string>
     <string name="settings_version_title">Version</string>
     <string name="settings_version_metadata_copied">App and device metadata copied to clipboard</string>
-    <!-- Bug Report -->
     <string name="bug_report_title">Feedback &amp; Support</string>
     <string name="bug_report_type_label">Report type</string>
     <string name="bug_report_type_bug_report">Bug Report</string>
@@ -292,9 +291,9 @@
     <string name="bug_report_submit">Submit Report</string>
     <string name="bug_report_share_title">Send report</string>
     <string name="bug_report_email_subject">%1$s</string>
-    <string name="bug_report_email_body">Hi, attached is my generated Minus report.</string>
-    <string name="bug_report_help_title">Help us make Minus better</string>
-    <string name="bug_report_help_message_prefix">"Reporting issues or suggesting improvements helps us make Minus better for everyone.\n\nThis guided form helps you package all the necessary details into a report, automatically attaching device metadata and app diagnostics to speed up our investigation.\n\nOnce prepared, you can send the report via email or contribute via "</string>
+    <string name="bug_report_email_body">Hi, attached is my generated Wafeer report.</string>
+    <string name="bug_report_help_title">Help us make Wafeer better</string>
+    <string name="bug_report_help_message_prefix">"Reporting issues or suggesting improvements helps us make Wafeer better for everyone.\n\nThis guided form helps you package all the necessary details into a report, automatically attaching device metadata and app diagnostics to speed up our investigation.\n\nOnce prepared, you can send the report via email or contribute via "</string>
     <string name="bug_report_help_github_issues">" GitHub Issues "</string>
     <string name="bug_report_help_message_suffix"> directly on our repository.</string>
     <string name="bug_report_steps_to_reproduce_label">Steps to reproduce</string>
@@ -309,7 +308,7 @@
     <string name="bug_report_upload_assets_subtitle">Screenshots or videos (up to 10MB)</string>
     <string name="bug_report_upload_assets_selected_count">%1$d attachment(s) selected</string>
     <string name="settings_backup_title">Back up data</string>
-    <string name="settings_backup_subtitle">Back up data to minus_export.csv</string>
+    <string name="settings_backup_subtitle">Back up data to wafeer_export.csv</string>
     <string name="settings_import_csv_title">Import CSV</string>
     <string name="settings_import_csv_subtitle">Import data from a CSV file</string>
     <string name="settings_reset_tutorial_title">Reset tutorial</string>
@@ -330,7 +329,6 @@
     <string name="settings_typography_expressive_subtitle">Use expressive typography</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
-    <!-- Budget Pill -->
     <string name="budget_pill_over_budget">Budget amount Exceeded</string>
     <string name="budget_pill_no_budget">No budget</string>
     <string name="budget_pill_no_budget_action">Set up your budget</string>
@@ -340,27 +338,21 @@
     <string name="budget_pill_exhausted_single">%1$s budget exhausted</string>
     <string name="budget_pill_exhausted_double">%1$s and %2$s budget exhausted</string>
     <string name="budget_pill_exhausted_triple">%1$s, %2$s and %3$s budget exhausted</string>
-    <!-- Spend Budget Card -->
     <string name="spend_budget_card_spent_label">Spent</string>
     <string name="spend_budget_card_available_percent_format">Available: %1$s%%</string>
-    <!-- Categories Chart -->
     <string name="categories_chart_uncategorized">Uncategorized</string>
     <string name="categories_chart_rest">Remaining</string>
     <string name="categories_chart_empty_title">We can\'t split your expenses</string>
     <string name="categories_chart_empty_subtitle">Save expenses with a category to split them</string>
     <string name="category_no_expenses">No expenses in this category</string>
     <string name="day_no_expenses">No expenses on this day, yet…</string>
-    <!-- Calendar Heatmap -->
     <string name="calendar_heatmap_info_text">This chart shows money spent for each day in the period</string>
     <string name="heatmap_legend_less">Less</string>
     <string name="heatmap_legend_more">More</string>
-    <!-- No Transactions -->
     <string name="no_transactions_title">No recorded expenses</string>
     <string name="no_transactions_subtitle">Add an expense to get started</string>
-    <!-- Recurrent Payments Divider -->
     <string name="recurrent_payments_divider_title_upcoming">Upcoming recurrent payments</string>
     <string name="recurrent_payments_divider_title_current_period">Recurrent Payments on this period</string>
-    <!-- Upcoming Recurrent Item -->
     <string name="upcoming_recurrent_today">Today</string>
     <string name="upcoming_recurrent_tomorrow">Tomorrow</string>
     <string name="upcoming_recurrent_in_days">In %1$d days</string>
@@ -370,7 +362,6 @@
     <string name="delete_recurrent_expense_fallback_name">This recurrent expense</string>
     <string name="delete_recurrent_expense_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="delete_recurrent_expense_warning">This action will remove the whole recurrent expense configuration and you will not receive more notifications.</string>
-    <!-- Recurrent Ticket -->
     <string name="recurrent_ticket_unnamed_subscription">Unnamed subscription</string>
     <string name="recurrent_ticket_weekly_unnamed">Weekly subscription without name</string>
     <string name="recurrent_ticket_biweekly_unnamed">Biweekly subscription without name</string>
@@ -378,7 +369,6 @@
     <string name="recurrent_ticket_frequency_weekly">Weekly</string>
     <string name="recurrent_ticket_frequency_biweekly">Biweekly</string>
     <string name="recurrent_ticket_frequency_monthly">Monthly</string>
-    <!-- Rollover Dialog (component local) -->
     <string name="rollover_dialog_period_finished_title">Period finished</string>
     <string name="rollover_dialog_question">What do you want to do with the remaining money?</string>
     <string name="rollover_dialog_split_equally_title">Split equally</string>
@@ -387,12 +377,10 @@
     <string name="rollover_dialog_carry_to_tomorrow_desc">Add %1$s to tomorrow\'s budget</string>
     <string name="rollover_dialog_view_analytics_title">View analytics</string>
     <string name="rollover_dialog_view_analytics_desc">Review the summary of the finished period</string>
-    <!-- Finished Period Header -->
     <string name="finished_period_header_title">Period finished</string>
     <string name="finished_period_header_no_spends">Huh? You didn\'t spend anything this period</string>
     <string name="finished_period_header_over_budget">Watch out! You went over budget in this period</string>
     <string name="finished_period_header_summary">Here are the stats for all your spending</string>
-    <!-- Savings Recommendation Card -->
     <string name="savings_recommendation_title">Savings recommendation</string>
     <string name="savings_recommendation_method_brief" formatted="false">This %1$d/%2$d/%3$d method divides your budget into %1$d%% needs, %2$d%% wants, and %3$d%% savings, helping you control spending and save consistently.</string>
     <string name="savings_recommendation_current_savings_label">Current savings</string>
@@ -404,7 +392,6 @@
     <string name="savings_recommendation_six_month_example_intro" formatted="false">If you save the 20% each period for about 6 months, you could build:</string>
     <string name="savings_recommendation_goal_format" formatted="false">To reach %1$s in %2$d months, save %3$s per period.</string>
     <string name="savings_recommendation_goal_disabled" formatted="false">Showing the default %1$d%% example. Set a savings goal in Settings to target a specific amount.</string>
-    <!-- Settings: Savings Preferences -->
     <string name="settings_savings_preferences_title">Savings preferences</string>
     <string name="settings_savings_preferences_subtitle">Customize the 50/30/20 split and set an optional savings goal</string>
     <string name="settings_savings_dialog_split_label">Budget split</string>
@@ -427,9 +414,7 @@
     <string name="settings_savings_dialog_goal_months_label">Target period (months)</string>
     <string name="settings_savings_dialog_goal_hint">Leave blank to keep the default %1$d%% × 6 example.</string>
     <string name="settings_savings_dialog_reset">Reset to defaults</string>
-    <!-- Wavy Divider -->
     <string name="wavy_divider_show_all_past_period_expenses">Show all expenses from the previous period…</string>
-    <!-- Edit Budget Settings -->
     <string name="use_previous_period_days">Use %d days</string>
     <string name="remaining_budget_label">Remaining</string>
     <string name="currency_label">Currency</string>
@@ -438,7 +423,6 @@
     <string name="clear">Clear</string>
     <string name="currency_no_results">No currencies found</string>
     <string name="currency_selected">Selected</string>
-    <!-- Remaining Budget Strategy -->
     <string name="strategy_dialog_title">Budget surplus</string>
     <string name="strategy_dialog_description" formatted="false">You can choose how to distribute your budget balance at the end of each day.\n\nFor example, you have a budget of 500 per day, and yesterday you spent 400: you can spread the 100 across the remaining days, or spend 600 today (daily budget + surplus from previous period).</string>
     <string name="strategy_ask_always">Ask me always</string>
@@ -447,7 +431,6 @@
     <string name="strategy_split_equally_desc">The surplus is divided equally among all days of the new period</string>
     <string name="strategy_add_to_first_day">Add to first day</string>
     <string name="strategy_add_to_first_day_desc">All surplus is added to the first day of the new period</string>
-    <!-- Budget Split Mode -->
     <string name="split_mode_label">Split mode</string>
     <string name="split_mode_dialog_title">How should we split your budget?</string>
     <string name="split_mode_dialog_description" formatted="false">Choose how the per-period amount is calculated.</string>
@@ -455,7 +438,6 @@
     <string name="split_mode_static_desc">Total budget is split equally across all periods, regardless of how much you spend.</string>
     <string name="split_mode_dynamic">Dynamic (Recommended)</string>
     <string name="split_mode_dynamic_desc">Recalculates daily as you spend. The remaining balance is spread over the days still left in the period.</string>
-    <!-- Transaction Detail -->
     <string name="without_date">Without date</string>
     <string name="no_name">No name</string>
     <string name="description">Purchase Reason</string>
@@ -464,13 +446,11 @@
     <string name="charge_day">Charge day</string>
     <string name="day_number">Day %1$d</string>
     <string name="recurrence_end">Recurrence end</string>
-    <!-- Transaction Detail Ticket Card -->
     <string name="ticket_total_amount">TOTAL AMOUNT</string>
     <string name="mark_all_as_paid">Mark all as paid</string>
     <string name="mark_all_as_paid_success">Marked all as paid</string>
     <string name="mark_as_paid">Mark as paid</string>
     <string name="mark_as_paid_success">Marked as paid</string>
-    <!-- Notifications -->
     <string name="notification_channel_period_end_name">Budget Period End</string>
     <string name="notification_channel_period_end_description">Notifications when your budget period ends with remaining balance</string>
     <string name="notification_channel_recurrent_name">Recurring Expenses</string>
@@ -499,7 +479,6 @@
     <string name="credit_cutoff_subtitle_today">%1$s — Cutoff today</string>
     <string name="ticket_expense">EXPENSE</string>
     <string name="ticket_recurrent_expense">RECURRENT EXPENSE</string>
-    <!-- Past Periods -->
     <string name="past_periods_title">Past periods</string>
     <string name="past_periods_empty">No archived periods found</string>
     <string name="past_periods_spent_label">Spent</string>
@@ -507,7 +486,6 @@
     <string name="past_periods_status_on_track">On Track</string>
     <string name="past_periods_status_over_budget">Over Budget</string>
     <string name="past_periods_status_saved">Saved %1$s</string>
-    <!-- Analytics Tutorial -->
     <string name="analytics_tutorial_minmax_title">Spending Trends</string>
     <string name="analytics_tutorial_minmax_desc">These cards show your lowest and highest expenses.\nAs you add more transactions, these will update to help you spot outliers.</string>
     <string name="analytics_tutorial_header_title">Historical Periods</string>
@@ -524,4 +502,78 @@
     <string name="analytics_tutorial_credit_desc">Tap the credit card to view all CC transactions, mark them as paid, or adjust your billing cutoff date to avoid interest.</string>
     <string name="analytics_tutorial_history_title">Transaction History</string>
     <string name="analytics_tutorial_history_desc">Tap here to see a list of all your expenses for this period.</string>
+    <string name="budget_allowance_days_title">Allowance Spending Days</string>
+    <string name="budget_allowance_days_switch_title">Calculate allowance on active days only</string>
+    <string name="budget_allowance_days_switch_desc">Divide your allowance across school or work days instead of all calendar days.</string>
+    <string name="budget_allowance_preset_sun_thu">5 Days (Sun - Thu)</string>
+    <string name="budget_allowance_preset_mon_fri">5 Days (Mon - Fri)</string>
+    <string name="budget_allowance_preset_all_days">All 7 Days</string>
+    <string name="budget_allowance_days_summary">Calculated across %1$d active days per week.</string>
+    <string name="day_sunday_short">Sun</string>
+    <string name="day_monday_short">Mon</string>
+    <string name="day_tuesday_short">Tue</string>
+    <string name="day_wednesday_short">Wed</string>
+    <string name="day_thursday_short">Thu</string>
+    <string name="day_friday_short">Fri</string>
+    <string name="day_saturday_short">Sat</string>
+    <string name="budget_alert_title">Daily Budget Alert</string>
+    <string name="budget_alert_warning">Approaching your daily spending limit (%1$d%%)</string>
+    <string name="budget_alert_exceeded">You exceeded your daily budget limit</string>
+    <string name="financial_tip_title">Wafeer Financial Wisdom</string>
+    <string name="financial_tip_1_title">Never spend more than you earn</string>
+    <string name="financial_tip_1_body">Whatever your income, spend less than you make. The surplus gives you room to save, invest, and weather emergencies.</string>
+    <string name="financial_tip_2_title">Maintain an emergency fund</string>
+    <string name="financial_tip_2_body">Keep an emergency buffer covering essential expenses so unexpected events never force you into high-interest debt.</string>
+    <string name="financial_tip_3_title">Avoid consumer debt</string>
+    <string name="financial_tip_3_body">Buying unnecessary items with money you have not earned borrows from your future freedom. Keep consumer debt to zero.</string>
+    <string name="financial_tip_4_title">Never rely on a single income source forever</string>
+    <string name="financial_tip_4_body">Relying entirely on a single salary makes you vulnerable if it stops. Build skills and pursue opportunities for additional income.</string>
+    <string name="financial_tip_5_title">Invest a portion of your income</string>
+    <string name="financial_tip_5_body">Saving protects your capital, but investing helps it grow over time. Learn before you invest and never risk what you do not understand.</string>
+    <string name="financial_tip_6_title">Grow your income before increasing lifestyle</string>
+    <string name="financial_tip_6_body">When your income increases, do not turn it all into new expenses. Use part of it to build savings, assets, and earning power.</string>
+    <string name="financial_tip_7_title">Do not chase get-rich-quick promises</string>
+    <string name="financial_tip_7_body">Promises of quick, easy wealth often carry hidden risks. Building lasting financial strength takes time, discipline, and calculated steps.</string>
+    <string name="wallet_mode_title">Wallet Inflow</string>
+    <string name="wallet_mode_tooltip">Extra income (Gift, Repaid debt, Bonus)</string>
+    <string name="wallet_mode_tag_gift">Gift</string>
+    <string name="wallet_mode_tag_debt_repaid">Repaid debt</string>
+    <string name="wallet_mode_tag_bonus">Bonus</string>
+    <string name="wallet_mode_tag_freelance">Side income</string>
+    <string name="wallet_total_income_label">Extra Income</string>
+    <string name="onboarding_language_title">Choose your language</string>
+    <string name="onboarding_language_subtitle">Select your preferred language. You can change this anytime in Settings.</string>
+    <string name="tutorial_end_tour">End Tour</string>
+    <string name="tutorial_understood">Got it</string>
+    <string name="financial_tip_8_title">The Discount Trap</string>
+    <string name="financial_tip_8_body" formatted="false">A 50% discount on an item you do not need is 100% waste of your money, not savings. Never buy just because it is on sale.</string>
+    <string name="financial_tip_9_title">The 24-Hour Rule</string>
+    <string name="financial_tip_9_body">When tempted by an impulse buy, wait a full 24 hours. You will find that most spontaneous impulses fade away completely.</string>
+    <string name="financial_tip_10_title">Subscription Audit</string>
+    <string name="financial_tip_10_body">Small recurring monthly subscriptions for unused apps or services drain your budget quietly. Audit and cancel what you do not use.</string>
+    <string name="financial_tip_11_title">Avoid Lifestyle Inflation</string>
+    <string name="financial_tip_11_body">When your income increases, resist upgrading your lifestyle immediately. Direct the raise toward assets and savings first.</string>
+    <string name="financial_tip_12_title">Opportunity Cost of Money</string>
+    <string name="financial_tip_12_body">Every dollar spent carelessly today is a dollar that cannot compound, grow, and buy your future freedom.</string>
+    <string name="financial_tip_13_title">The Three-Bucket Rule</string>
+    <string name="financial_tip_13_body">Divide your surplus: one bucket for emergency peace of mind, one for near-term milestones, and one for long-term compounding investments.</string>
+    <string name="widget_wallet_title">Wafeer: Quick Wallet</string>
+    <string name="widget_wallet_desc">Deposit extra income and track balance with one tap</string>
+    <string name="widget_coach_title">Wafeer: Financial Wisdom</string>
+    <string name="widget_coach_desc">Daily financial rules and motivation on your home screen</string>
+    <string name="financial_tip_14_title">Stop Trying to Keep Up with Others</string>
+    <string name="financial_tip_14_body">You will never know the true financial reality of others. Spending to prove you can afford their lifestyle will cost you more than you anticipate.</string>
+    <string name="financial_tip_15_title">Calculate Full Ownership Cost Before Big Decisions</string>
+    <string name="financial_tip_15_body">A car, house, project, or trip costs more than the initial price tag. Always calculate recurring maintenance, time commitments, and missed opportunities.</string>
+    <string name="financial_tip_16_title">Set a Clear Spending Ceiling</string>
+    <string name="financial_tip_16_body">Setting an unambiguous personal spending limit protects you from large impulsive decisions you might regret later.</string>
+    <string name="changelog_section_features">New Features</string>
+    <string name="changelog_section_improvements">Changes &amp; Improvements</string>
+    <string name="changelog_section_bug_fixes">Bug Fixes</string>
+    <string name="changelog_section_removed">Removed Features</string>
+    <string name="changelog_section_security">Security &amp; Reliability</string>
+    <string name="changelog_rating_title">Your Feedback Shapes Wafeer</string>
+    <string name="changelog_rating_desc">If Wafeer is helping you master your finances, a kind review on the Play Store means the world to our continuous development!</string>
+    <string name="changelog_rating_button">Rate Wafeer on the Play Store</string>
+    <string name="notification_action_view_budget">View Budget</string>
 </resources>

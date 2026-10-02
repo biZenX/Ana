@@ -10,7 +10,6 @@
     android:updatePeriodMillis="0"
     android:description="@string/widget_add_expense_description"
     android:previewLayout="@layout/widget_add_expense_preview"
-    android:previewImage="@drawable/ic_launcher_foreground"
     android:resizeMode="horizontal"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

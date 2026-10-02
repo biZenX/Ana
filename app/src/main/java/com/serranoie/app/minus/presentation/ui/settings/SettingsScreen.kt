@@ -25,6 +25,10 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pendingUpdate by viewModel.pendingUpdate.collectAsStateWithLifecycle()
+    val downloadState by viewModel.updateDownloadState.collectAsStateWithLifecycle()
+    val isCheckingUpdate by viewModel.isCheckingUpdate.collectAsStateWithLifecycle()
+    val updateCheckMessage by viewModel.updateCheckMessage.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -32,6 +36,28 @@ fun SettingsScreen(
         contract = ActivityResultContracts.OpenDocument(),
     ) { uri ->
         viewModel.onImportResult(uri)
+    }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { isGranted ->
+        viewModel.refreshNotificationPermission()
+        if (isGranted) {
+            viewModel.onNotificationPermissionGranted()
+            val sent = viewModel.onSendTestNotification()
+            val msg = if (sent) {
+                context.getString(com.serranoie.app.minus.R.string.notification_test_sent_toast)
+            } else {
+                context.getString(com.serranoie.app.minus.R.string.notification_permission_needed_toast)
+            }
+            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+        } else {
+            android.widget.Toast.makeText(
+                context,
+                context.getString(com.serranoie.app.minus.R.string.notification_permission_needed_toast),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -73,6 +99,22 @@ fun SettingsScreen(
         }
     }
 
+    LaunchedEffect(updateCheckMessage) {
+        updateCheckMessage?.let { msg ->
+            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+            viewModel.clearUpdateCheckMessage()
+        }
+    }
+
+    pendingUpdate?.let { info ->
+        com.serranoie.app.minus.presentation.ui.updater.UpdatePromptDialog(
+            updateInfo = info,
+            downloadState = downloadState,
+            onStartDownload = viewModel::startDownloadingUpdate,
+            onDismiss = viewModel::dismissUpdateDialog,
+        )
+    }
+
     Settings(
         isCensored = uiState.isCensored,
         recurrentPaymentsViewMode = uiState.recurrentPaymentsViewMode,
@@ -89,8 +131,27 @@ fun SettingsScreen(
         onRecurrentNotificationTimeChange = viewModel::onRecurrentNotificationTimeChange,
         onOpenExactAlarmSettings = viewModel::onOpenExactAlarmSettings,
         onOpenNotificationSettings = {
-            viewModel.onOpenAppSettings()
-            viewModel.refreshNotificationPermission()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU && !uiState.notificationPermissionGranted) {
+                notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                viewModel.onOpenNotificationSettings()
+                viewModel.refreshNotificationPermission()
+            }
+        },
+        onSendTestNotification = {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU && !uiState.notificationPermissionGranted) {
+                notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                val sent = viewModel.onSendTestNotification()
+                if (sent) {
+                    val msg = context.getString(com.serranoie.app.minus.R.string.notification_test_sent_toast)
+                    android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.onOpenNotificationSettings()
+                    val msg = "يرجى السماح بالإشعارات من إعدادات النظام للتطبيق"
+                    android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
         },
         periodMappingMode = uiState.periodMappingMode,
         onPeriodMappingModeChange = viewModel::onPeriodMappingModeChange,
@@ -102,6 +163,9 @@ fun SettingsScreen(
         onBugReportClick = viewModel::onBugReportClick,
         onNavigateToChangelog = onNavigateToChangelog,
         onNavigateToAppearance = onNavigateToAppearance,
+        isCheckingUpdate = isCheckingUpdate,
+        onCheckForUpdates = viewModel::checkForUpdates,
+        onTestUpdateDialog = viewModel::showDemoUpdateDialog,
         onBack = viewModel::onBack,
     )
 }

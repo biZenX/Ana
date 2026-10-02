@@ -91,23 +91,23 @@ class BudgetOverviewWidget : GlanceAppWidget() {
         daysCountFormat: (Int) -> String = { count -> "$count days" },
     ) {
         Column(
-            modifier = GlanceModifier.fillMaxSize().background(GlanceTheme.colors.surface)
+            modifier = GlanceModifier.fillMaxSize().cornerRadius(24.dp).background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
                 .padding(horizontal = 16.dp, vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = formatWidgetCurrency(currency, budgetAmount), style = TextStyle(
-                    fontSize = MaterialTheme.typography.h4.fontSize,
-                    fontWeight = FontWeight.Bold, color = GlanceTheme.colors.onSurface
-                )
+            WidgetThmanyahText(
+                text = formatWidgetCurrency(currency, budgetAmount),
+                fontSize = MaterialTheme.typography.h4.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = GlanceTheme.colors.onSurface,
+                useDisplayFont = true,
             )
 
-            Text(
-                text = totalBudgetLabel, style = TextStyle(
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                    fontSize = MaterialTheme.typography.subtitle1.fontSize
-                )
+            WidgetThmanyahText(
+                text = totalBudgetLabel,
+                color = GlanceTheme.colors.onSurfaceVariant,
+                fontSize = MaterialTheme.typography.subtitle1.fontSize
             )
 
             Spacer(modifier = GlanceModifier.height(12.dp))
@@ -126,11 +126,10 @@ class BudgetOverviewWidget : GlanceAppWidget() {
         Row(
             verticalAlignment = Alignment.CenterVertically, modifier = GlanceModifier.fillMaxWidth()
         ) {
-            Text(
-                text = startDate, style = TextStyle(
-                    fontSize = MaterialTheme.typography.subtitle2.fontSize,
-                    color = GlanceTheme.colors.onSurfaceVariant
-                ),
+            WidgetThmanyahText(
+                text = startDate,
+                fontSize = MaterialTheme.typography.subtitle2.fontSize,
+                color = GlanceTheme.colors.onSurfaceVariant,
                 modifier = GlanceModifier.padding(end = 8.dp)
             )
 
@@ -161,12 +160,11 @@ class BudgetOverviewWidget : GlanceAppWidget() {
                                 .cornerRadius(16.dp)
                                 .padding(horizontal = 12.dp, vertical = 4.dp)
                         ) {
-                            Text(
-                                text = daysCountFormat(daysCount), style = TextStyle(
-                                    color = GlanceTheme.colors.surface,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = MaterialTheme.typography.caption.fontSize
-                                )
+                            WidgetThmanyahText(
+                                text = daysCountFormat(daysCount),
+                                color = GlanceTheme.colors.surface,
+                                textAlign = TextAlign.Center,
+                                fontSize = MaterialTheme.typography.caption.fontSize
                             )
                         }
                     }
@@ -175,11 +173,10 @@ class BudgetOverviewWidget : GlanceAppWidget() {
 
             Spacer(modifier = GlanceModifier.width(8.dp))
 
-            Text(
-                text = endDate, style = TextStyle(
-                    fontSize = MaterialTheme.typography.subtitle2.fontSize,
-                    color = GlanceTheme.colors.onSurfaceVariant
-                ),
+            WidgetThmanyahText(
+                text = endDate,
+                fontSize = MaterialTheme.typography.subtitle2.fontSize,
+                color = GlanceTheme.colors.onSurfaceVariant,
                 modifier = GlanceModifier.padding(start = 8.dp)
             )
         }

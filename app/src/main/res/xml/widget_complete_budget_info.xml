@@ -10,7 +10,6 @@
     android:updatePeriodMillis="1800000"
     android:description="@string/widget_complete_budget_description"
     android:previewLayout="@layout/widget_complete_budget_preview"
-    android:previewImage="@drawable/ic_launcher_foreground"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

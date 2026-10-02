@@ -86,7 +86,75 @@ class SettingsViewModel @Inject constructor(
     private val budgetRepository: BudgetRepository,
     private val updateNotificationTimeUseCase: UpdatePeriodEndNotificationTimeUseCase,
     private val censorManager: CensorManager,
+    private val notificationHelper: com.serranoie.app.minus.presentation.notification.NotificationHelper,
+    private val appUpdateManager: com.serranoie.app.minus.data.updater.AppUpdateManager,
 ) : ViewModel() {
+
+    val updateDownloadState = appUpdateManager.downloadState
+    private val _pendingUpdate = MutableStateFlow<com.serranoie.app.minus.domain.model.updater.AppUpdateInfo?>(null)
+    val pendingUpdate: StateFlow<com.serranoie.app.minus.domain.model.updater.AppUpdateInfo?> = _pendingUpdate.asStateFlow()
+
+    private val _isCheckingUpdate = MutableStateFlow(false)
+    val isCheckingUpdate: StateFlow<Boolean> = _isCheckingUpdate.asStateFlow()
+
+    private val _updateCheckMessage = MutableStateFlow<String?>(null)
+    val updateCheckMessage: StateFlow<String?> = _updateCheckMessage.asStateFlow()
+
+    fun checkForUpdates() {
+        if (_isCheckingUpdate.value) return
+        _isCheckingUpdate.value = true
+        _updateCheckMessage.value = null
+        viewModelScope.launch {
+            appUpdateManager.checkForUpdates().fold(
+                onSuccess = { info ->
+                    _isCheckingUpdate.value = false
+                    if (info != null) {
+                        _pendingUpdate.value = info
+                    } else {
+                        _updateCheckMessage.value = "وفير محدث إلى أحدث إصدار بالفعل (v${com.serranoie.app.minus.BuildConfig.VERSION_NAME})"
+                    }
+                },
+                onFailure = { error ->
+                    _isCheckingUpdate.value = false
+                    _updateCheckMessage.value = error.message ?: "تعذر التحقق: تأكد من اتصال الإنترنت"
+                }
+            )
+        }
+    }
+
+    fun showDemoUpdateDialog() {
+        _pendingUpdate.value = com.serranoie.app.minus.domain.model.updater.AppUpdateInfo(
+            versionName = "1.3.1",
+            versionCode = 10301,
+            releaseDate = "2026-10-03",
+            mainFeatures = listOf(
+                "تصحيح رسم حرف الكاف وإزالة التبديل الزخرفي ليعود بشكله العربي الأصيل",
+                "إعادة ضبط عائلات خط ثمانية (ديسبلاي للعناوين وسانز للواجهات)",
+            ),
+            improvements = listOf(
+                "نظام إشعارات تفاعلي عالي الاستقرار مع أزرار سريعة وموثوقية تامة",
+                "توجيه مباشر لإعدادات إشعارات النظام عند الحاجة",
+            ),
+            downloadUrl = "https://github.com/biZenX/Ana/releases/download/v1.3.1/Wafeer-v1.3.1.apk",
+            fileSize = 37748736L,
+        )
+    }
+
+    fun startDownloadingUpdate() {
+        val info = _pendingUpdate.value ?: return
+        viewModelScope.launch {
+            appUpdateManager.downloadUpdate(info)
+        }
+    }
+
+    fun dismissUpdateDialog() {
+        _pendingUpdate.value = null
+        appUpdateManager.resetState()
+    }
+
+    fun clearUpdateCheckMessage() {
+        _updateCheckMessage.value = null
+    }
 
     private val _notificationPermissionGranted = MutableStateFlow(false)
 
@@ -167,6 +235,35 @@ class SettingsViewModel @Inject constructor(
         }
         logcat("SettingsViewModel") { "refreshNotificationPermission -> granted=$granted" }
         _notificationPermissionGranted.value = granted
+    }
+
+    fun onNotificationPermissionGranted() {
+        _notificationPermissionGranted.value = true
+    }
+
+    fun onSendTestNotification(): Boolean {
+        refreshNotificationPermission()
+        return notificationHelper.showTestNotification()
+    }
+
+    fun onOpenNotificationSettings() {
+        logcat("SettingsViewModel") { "onOpenNotificationSettings" }
+        val intent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Intent(AndroidSettings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(AndroidSettings.EXTRA_APP_PACKAGE, context.packageName)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        } else {
+            Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = "package:${context.packageName}".toUri()
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+        try {
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            onOpenAppSettings()
+        }
     }
 
     fun onOpenAppSettings() {

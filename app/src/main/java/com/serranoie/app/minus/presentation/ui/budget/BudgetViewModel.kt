@@ -161,6 +161,8 @@ class BudgetViewModel @Inject constructor(
                 s, periodTransactions, LocalDate.now(), paidOccurrences, transactions,
                 reserveUpcomingCharges = userSettings.reserveUpcomingChargesEnabled,
                 leftoverChoices = userSettings.leftoverChoices,
+                allowanceDaysEnabled = userSettings.allowanceDaysEnabled,
+                activeSpendingDays = userSettings.activeSpendingDays,
             )
         }
 
@@ -185,6 +187,7 @@ class BudgetViewModel @Inject constructor(
             isFirstLaunch = settings == null,
             isRecurrentEnabled = editorState.isRecurrentEnabled,
             isCreditEnabled = editorState.isCreditEnabled,
+            isWalletIncomeEnabled = editorState.isWalletIncomeEnabled,
             showRecurrentDialog = editorState.showRecurrentDialog,
             showCreditCutoffDialog = editorState.showCreditCutoffDialog,
             pendingRecurrentAmount = editorState.pendingRecurrentAmount,
@@ -206,6 +209,10 @@ class BudgetViewModel @Inject constructor(
             },
             lastLeftoverChoice = userSettings.leftoverChoices.maxByOrNull { it.key }?.value,
             selectedViewPeriod = userSettings.budgetSplitViewPeriod,
+            allowanceDaysEnabled = userSettings.allowanceDaysEnabled,
+            activeSpendingDays = userSettings.activeSpendingDays,
+            budgetAlertThresholdPercent = userSettings.budgetAlertThresholdPercent,
+            financialTipsEnabled = userSettings.financialTipsEnabled,
         )
     }.catch { error ->
         logcat(TAG) { "Error in uiState pipeline: ${error.asLog()}" }
@@ -254,6 +261,13 @@ class BudgetViewModel @Inject constructor(
                 PeriodAction.MarkOnboardingCompleted -> markFirstLaunchComplete()
                 else -> Unit
             }
+        }
+    }
+
+    fun setAllowanceDays(enabled: Boolean, days: Set<Int>) {
+        viewModelScope.launch {
+            settingsRepository.setAllowanceDaysEnabled(enabled)
+            settingsRepository.setActiveSpendingDays(days)
         }
     }
 
@@ -504,6 +518,11 @@ class BudgetViewModel @Inject constructor(
 
             is BudgetEditorIntent.CreditCutoffDayConfirmed -> handleCreditCutoffDayConfirmed(intent.cutoffDay)
             is BudgetEditorIntent.FinishBudgetEarly -> handleFinishBudgetEarly()
+            is BudgetEditorIntent.UpdateAllowanceDays -> setAllowanceDays(intent.enabled, intent.days)
+            is BudgetEditorIntent.SetWalletIncomeEnabled -> editorStateController.process(
+                EditorIntent.SetWalletIncomeEnabled(intent.enabled),
+                hasCreditCardCutoffDay = uiState.value.budgetSettings?.creditCardCutoffDay != null,
+            )
         }
     }
 
@@ -529,6 +548,7 @@ class BudgetViewModel @Inject constructor(
                 isCalculation = numpadController.isCalculation.value,
                 isRecurrentEnabled = uiState.value.isRecurrentEnabled,
                 isCreditEnabled = uiState.value.isCreditEnabled,
+                isWalletIncomeEnabled = uiState.value.isWalletIncomeEnabled,
                 comment = uiState.value.currentComment,
                 note = uiState.value.currentNote,
                 budgetSettings = uiState.value.budgetSettings,
@@ -636,6 +656,10 @@ class BudgetViewModel @Inject constructor(
                     )
                     editorStateController.process(
                         EditorIntent.SetCreditEnabled(false),
+                        hasCreditCardCutoffDay = uiState.value.budgetSettings?.creditCardCutoffDay != null
+                    )
+                    editorStateController.process(
+                        EditorIntent.SetWalletIncomeEnabled(false),
                         hasCreditCardCutoffDay = uiState.value.budgetSettings?.creditCardCutoffDay != null
                     )
                 }
@@ -767,6 +791,7 @@ private class TransactionHandlerImpl(
         isCalculation: Boolean,
         isRecurrentEnabled: Boolean,
         isCreditEnabled: Boolean,
+        isWalletIncomeEnabled: Boolean,
         comment: String,
         note: String,
         budgetSettings: BudgetSettings?,
@@ -776,6 +801,7 @@ private class TransactionHandlerImpl(
         isCalculation = isCalculation,
         isRecurrentEnabled = isRecurrentEnabled,
         isCreditEnabled = isCreditEnabled,
+        isWalletIncomeEnabled = isWalletIncomeEnabled,
         comment = comment,
         note = note,
         budgetSettings = budgetSettings,

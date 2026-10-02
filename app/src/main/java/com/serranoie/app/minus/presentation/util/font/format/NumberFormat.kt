@@ -43,9 +43,10 @@ fun formatCurrencySymbolOnly(
             this.maximumFractionDigits = resolvedMaxDigits
             this.minimumFractionDigits = minimumFractionDigits
         }
+        val separator = if (symbol.any { it.isLetter() }) " " else ""
         val formatted = numberFormatter.format(value)
         return if (supported.symbolPosition == SymbolPosition.END) {
-            "$formatted$symbol"
+            "$formatted$separator$symbol"
         } else {
             "$symbol$formatted"
         }
@@ -83,20 +84,20 @@ fun symbolOnlyCurrencyFormat(
     }
     val currencySymbol = supported?.symbol ?: "$"
     val symbolAtEnd = supported?.symbolPosition == SymbolPosition.END
+    val separator = if (currencySymbol.any { it.isLetter() }) " " else ""
     return (NumberFormat.getNumberInstance(Locale.getDefault()) as DecimalFormat).apply {
         this.maximumFractionDigits = resolvedMaxDigits
         this.minimumFractionDigits = minimumFractionDigits
         if (symbolAtEnd) {
-            positiveSuffix = currencySymbol
-            negativeSuffix = "-$currencySymbol"
+            positivePrefix = ""
+            positiveSuffix = "$separator$currencySymbol"
+            negativePrefix = "-"
+            negativeSuffix = "$separator$currencySymbol"
         } else {
             positivePrefix = currencySymbol
+            positiveSuffix = ""
             negativePrefix = "-$currencySymbol"
-        }
-        try {
-            currency = Currency.getInstance(currencyCode)
-        } catch (e: Exception) {
-            // Keep the prefix/suffix set above
+            negativeSuffix = ""
         }
     }
 }

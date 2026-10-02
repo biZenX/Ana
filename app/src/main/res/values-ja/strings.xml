@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">負</string>
+    <string name="app_name">وفير</string>
     <string name="tile_new_transaction_label">新しい取引</string>
     <string name="tutorial_numpad_title">テンキー</string>
     <string name="tutorial_numpad_description">使用した金額を入力し、緑色のチェックマークをタップして保存します。数値パッドを上にスワイプして計算します。</string>
@@ -233,7 +233,7 @@
     <string name="onboarding_step_2_title">経費を追跡</string>
     <string name="onboarding_step_2_subtitle">あなたが費やすものを記録し、毎日残されているものを参照してください。</string>
     <string name="onboarding_step_3_title">定期的な費用</string>
-    <string name="onboarding_step_3_subtitle">サブスクリプションを追加すると、Minusは自動的にそれらを追跡します。</string>
+    <string name="onboarding_step_3_subtitle">サブスクリプションを追加すると、Wafeerは自動的にそれらを追跡します。</string>
     <string name="onboarding_step_4_title">その場で計算</string>
     <string name="onboarding_step_4_subtitle">残りの予算の更新をリアルタイムで行います。</string>
     <string name="onboarding_step_5_title">アナリティクスを見る</string>
@@ -260,7 +260,7 @@
     <string name="changelog_close">閉じる</string>
     <string name="changelog_previous_versions">以前のバージョン</string>
     <string name="changelog_updated_to">更新先: %1$s</string>
-    <string name="changelog_see_changes">Minusがアップデートされました。</string>
+    <string name="changelog_see_changes">Wafeerがアップデートされました。</string>
     <!-- Finish Date Selector -->
     <string name="onboarding_finish_date_selector_title">期間を選択</string>
     <string name="onboarding_finish_date_selector_days_range">%1$d日間 · %2$s - %3$s</string>
@@ -390,7 +390,7 @@
     <string name="bug_report_submit">レポートを送信</string>
     <string name="bug_report_share_title">レポートを送信</string>
     <string name="bug_report_help_title">マイナスの改善にご協力ください</string>
-    <string name="bug_report_help_message_prefix">問題の報告や改善の提案は、Minusをより良いアプリにするために役立ちます。このガイド付きフォームを使用すると、必要な詳細情報をまとめて報告できます。また、デバイスのメタデータやアプリの診断情報が自動的に添付されるため、調査を迅速に進めることが可能になります。準備ができたら、レポートをメールで送信するか、以下から投稿してください</string>
+    <string name="bug_report_help_message_prefix">問題の報告や改善の提案は、Wafeerをより良いアプリにするために役立ちます。このガイド付きフォームを使用すると、必要な詳細情報をまとめて報告できます。また、デバイスのメタデータやアプリの診断情報が自動的に添付されるため、調査を迅速に進めることが可能になります。準備ができたら、レポートをメールで送信するか、以下から投稿してください</string>
     <string name="bug_report_help_github_issues">" GitHub Issues "</string>
     <string name="bug_report_help_message_suffix"> 私たちのリポジトリに直接。</string>
     <string name="bug_report_steps_to_reproduce_label">再現する手順</string>
@@ -406,7 +406,7 @@
     <string name="bug_report_upload_assets_selected_count">%1$d 添付ファイルが選択されています</string>
     <string name="bug_report_remove_attachment">添付ファイルを削除する</string>
     <string name="settings_backup_title">データのバックアップ</string>
-    <string name="settings_backup_subtitle">minus_export.csvにデータをバックアップ</string>
+    <string name="settings_backup_subtitle">wafeer_export.csvにデータをバックアップ</string>
     <string name="settings_import_csv_title">CSVをインポート</string>
     <string name="settings_import_csv_subtitle">CSV ファイルからデータをインポート</string>
     <string name="settings_reset_tutorial_title">チュートリアルをリセット</string>
@@ -704,7 +704,7 @@
     <string name="extra_note_label">メモ</string>
     <string name="budget_graph_view_mode_cumulative">トレンド</string>
     <string name="budget_graph_view_mode_categories">カテゴリ</string>
-    <string name="settings_widgets_pin_not_supported">お使いのデバイスはこの方法でのウィジェット追加に対応していません。ホーム画面を長押ししてMinusを探してください。</string>
+    <string name="settings_widgets_pin_not_supported">お使いのデバイスはこの方法でのウィジェット追加に対応していません。ホーム画面を長押ししてWafeerを探してください。</string>
     <string name="widget_complete_budget_title">完全な予算</string>
     <string name="widget_average_spend_title">平均支出</string>
     <string name="widget_days_countdown_title">日数のカウントダウン</string>

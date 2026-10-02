@@ -35,6 +35,7 @@ class TransactionActionsControllerTest {
             isCalculation: Boolean,
             isRecurrentEnabled: Boolean,
             isCreditEnabled: Boolean,
+            isWalletIncomeEnabled: Boolean,
             comment: String,
             note: String,
             budgetSettings: BudgetSettings?,

@@ -28,4 +28,6 @@ sealed interface BudgetEditorIntent : BudgetUiIntent {
     ) : BudgetEditorIntent
     data class CreditCutoffDayConfirmed(val cutoffDay: Int) : BudgetEditorIntent
     data object FinishBudgetEarly : BudgetEditorIntent
+    data class UpdateAllowanceDays(val enabled: Boolean, val days: Set<Int>) : BudgetEditorIntent
+    data class SetWalletIncomeEnabled(val enabled: Boolean) : BudgetEditorIntent
 }

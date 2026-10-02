@@ -26,6 +26,23 @@ import com.serranoie.app.minus.presentation.ui.changelog.components.ChangelogSec
 import com.serranoie.app.minus.presentation.ui.theme.MinusTheme
 import com.serranoie.app.minus.presentation.ui.theme.component.WavyDivider
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+
 // !INFO: Population of real data and how it's being rendered, check: [CHANGELOG_GENERATION.md]
 
 @Composable
@@ -51,12 +68,16 @@ internal fun ChangelogHistoryContent(
         return
     }
 
+    val sortedReleases = remember(releases) {
+        releases.sortedByDescending { it.versionCode }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPadding,
     ) {
         header?.invoke(this)
-        changelogReleaseItems(releases)
+        changelogReleaseItems(sortedReleases)
     }
 }
 
@@ -67,16 +88,18 @@ private fun LazyListScope.changelogReleaseItems(releases: List<VersionRelease>) 
         }
 
         listOf(
-            ReleaseType.FEATURE to "New Features",
-            ReleaseType.BUG_FIX to "Bug Fixes",
-            ReleaseType.IMPROVEMENT to "Improvements",
-        ).forEach { (type, title) ->
+            ReleaseType.FEATURE to R.string.changelog_section_features,
+            ReleaseType.IMPROVEMENT to R.string.changelog_section_improvements,
+            ReleaseType.BUG_FIX to R.string.changelog_section_bug_fixes,
+            ReleaseType.REMOVED to R.string.changelog_section_removed,
+            ReleaseType.SECURITY to R.string.changelog_section_security,
+        ).forEach { (type, stringRes) ->
             val items = release.items.filter { it.type == type }
             if (items.isEmpty()) return@forEach
 
             item(key = "header-${release.versionCode}-$type") {
                 ChangelogSectionHeader(
-                    title = title,
+                    title = stringResource(stringRes),
                     type = type,
                 )
             }
@@ -111,16 +134,32 @@ private fun LazyListScope.changelogReleaseItems(releases: List<VersionRelease>) 
 
 @Composable
 private fun ChangelogReleaseMeta(release: VersionRelease) {
-    Text(
-        text = stringResource(
-            R.string.changelog_release_header,
-            release.versionName,
-            release.releaseDate,
-        ),
-        style = MaterialTheme.typography.titleMediumEmphasized,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "وفير v${release.versionName}",
+            style = MaterialTheme.typography.titleMediumEmphasized.copy(
+                fontWeight = FontWeight.Bold,
+            ),
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+        ) {
+            Text(
+                text = release.releaseDate,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)

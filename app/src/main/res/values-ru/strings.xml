@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Minus</string>
+  <string name="app_name">وفير</string>
   <string name="tile_new_transaction_label">Новая операция</string>
   <string name="tutorial_numpad_title">Цифровая клавиатура</string>
   <string name="tutorial_numpad_description">Введите сумму расхода и нажмите зелёную галочку, чтобы сохранить. Проведите вверх по клавиатуре, чтобы открыть калькулятор.</string>
@@ -256,7 +256,7 @@
     <item quantity="other">%d месяца</item>
   </plurals>
   <string name="day_total_format">Итого: %1$s</string>
-  <string name="onboarding_welcome_title">Добро пожаловать в Minus</string>
+  <string name="onboarding_welcome_title">Добро пожаловать в Wafeer</string>
   <string name="onboarding_welcome_subtitle">Рады вас видеть — давайте копить вместе.</string>
   <string name="onboarding_welcome_intro">Простой трекер бюджета: подскажет, сколько можно тратить каждый день, неделю, две недели или месяц.</string>
   <string name="onboarding_step_1_title">Задайте бюджет</string>
@@ -264,7 +264,7 @@
   <string name="onboarding_step_2_title">Учитывайте расходы</string>
   <string name="onboarding_step_2_subtitle">Записывайте траты и сразу видьте, сколько осталось на день.</string>
   <string name="onboarding_step_3_title">Регулярные расходы</string>
-  <string name="onboarding_step_3_subtitle">Добавьте подписки — Minus будет следить за ними сам.</string>
+  <string name="onboarding_step_3_subtitle">Добавьте подписки — Wafeer будет следить за ними сам.</string>
   <string name="onboarding_step_4_title">Считайте на ходу</string>
   <string name="onboarding_step_4_subtitle">Остаток бюджета обновляется сразу, как только вы тратите.</string>
   <string name="onboarding_step_5_title">Смотрите аналитику</string>
@@ -291,7 +291,7 @@
   <string name="changelog_close">Закрыть</string>
   <string name="changelog_previous_versions">Предыдущая версия</string>
   <string name="changelog_updated_to">Обновлено до: %1$s</string>
-  <string name="changelog_see_changes">Minus обновлен.</string>
+  <string name="changelog_see_changes">Wafeer обновлен.</string>
   <!-- Finish Date Selector -->
   <string name="onboarding_finish_date_selector_title">Выберите период</string>
   <string name="onboarding_finish_date_selector_days_range">%1$d дн. · %2$s — %3$s</string>
@@ -420,8 +420,8 @@
   <string name="bug_report_attachments_label_bug">Снимки экрана или записи</string>
   <string name="bug_report_submit">Отправить</string>
   <string name="bug_report_share_title">Отправить отчёт</string>
-  <string name="bug_report_help_title">Помогите сделать Minus лучше</string>
-  <string name="bug_report_help_message_prefix">"Сообщения об ошибках и идеи улучшений помогают развивать Minus для всех.\n\nЭта форма собирает нужные детали в один отчёт и автоматически прикладывает сведения об устройстве и диагностику приложения, чтобы быстрее найти причину.\n\nГотовый отчёт можно отправить по почте или опубликовать через "</string>
+  <string name="bug_report_help_title">Помогите сделать Wafeer лучше</string>
+  <string name="bug_report_help_message_prefix">"Сообщения об ошибках и идеи улучшений помогают развивать Wafeer для всех.\n\nЭта форма собирает нужные детали в один отчёт и автоматически прикладывает сведения об устройстве и диагностику приложения, чтобы быстрее найти причину.\n\nГотовый отчёт можно отправить по почте или опубликовать через "</string>
   <string name="bug_report_help_github_issues">" GitHub Issues "</string>
   <string name="bug_report_help_message_suffix"> в репозитории проекта.</string>
   <string name="bug_report_steps_to_reproduce_label">Шаги воспроизведения</string>
@@ -437,7 +437,7 @@
   <string name="bug_report_upload_assets_selected_count">Выбрано вложений: %1$d</string>
   <string name="bug_report_remove_attachment">Удалить вложение</string>
   <string name="settings_backup_title">Сохранить данные</string>
-  <string name="settings_backup_subtitle">Экспорт в файл minus_export.csv</string>
+  <string name="settings_backup_subtitle">Экспорт в файл wafeer_export.csv</string>
   <string name="settings_import_csv_title">Импорт CSV</string>
   <string name="settings_import_csv_subtitle">Загрузить данные из CSV-файла</string>
   <string name="settings_reset_tutorial_title">Показать обучение снова</string>
@@ -734,7 +734,7 @@
   <string name="extra_note_label">Заметка</string>
   <string name="budget_graph_view_mode_cumulative">Динамика</string>
   <string name="budget_graph_view_mode_categories">Категории</string>
-  <string name="settings_widgets_pin_not_supported">Это устройство не умеет добавлять виджеты таким способом. Долго нажмите на главный экран и найдите Minus в списке виджетов.</string>
+  <string name="settings_widgets_pin_not_supported">Это устройство не умеет добавлять виджеты таким способом. Долго нажмите на главный экран и найдите Wafeer в списке виджетов.</string>
   <string name="widget_complete_budget_title">Полный бюджет</string>
   <string name="widget_average_spend_title">Средний расход</string>
   <string name="widget_days_countdown_title">Дней до конца периода</string>

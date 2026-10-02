@@ -174,14 +174,11 @@ internal fun MonthHeatmapContent(
     Column(
         modifier = modifier.fillMaxSize().padding(6.dp),
     ) {
-        Text(
+        WidgetThmanyahText(
             text = monthWidgetTitle(yearMonth),
-            style =
-                TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                ),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = GlanceTheme.colors.onSurfaceVariant,
             modifier = GlanceModifier.padding(bottom = 3.dp),
         )
 
@@ -202,14 +199,11 @@ internal fun MonthHeatmapContent(
             }
         }
 
-        Text(
+        WidgetThmanyahText(
             text = "$totalSpentLabel: ${formatWidgetCurrency(currency, totalSpent)}",
-            style =
-                TextStyle(
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                ),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            color = GlanceTheme.colors.onSurfaceVariant,
             modifier = GlanceModifier.padding(top = 2.dp),
         )
     }
@@ -251,6 +245,7 @@ class MonthHeatmapWidget : GlanceAppWidget() {
             modifier =
                 GlanceModifier
                     .fillMaxSize()
+                    .cornerRadius(24.dp)
                     .background(GlanceTheme.colors.surface)
                     .clickable(actionRunCallback<OpenAppAction>())
                     .padding(8.dp),

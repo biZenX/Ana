@@ -27,12 +27,27 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -71,6 +86,7 @@ fun TutorialBox(
     state: TutorialBoxState,
     tutorialTarget: @Composable (index: Int) -> Unit,
     onTutorialReopened: () -> Unit = {},
+    onCutoutClick: ((Int) -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     var canvasSize by remember { mutableStateOf(Size.Zero) }
@@ -104,14 +120,21 @@ fun TutorialBox(
             enter = fadeIn(tween(400)),
             exit = fadeOut(tween(400))
         ) {
+            val order = state.registrationOrder
+            val currentStepIndex = order.indexOf(currentIndex).coerceAtLeast(0)
+            val totalSteps = order.size.coerceAtLeast(1)
+
             TutorialOverlay(
                 bounds = activeBounds ?: Rect.Zero,
                 canvasSize = canvasSize,
                 index = currentIndex,
+                currentStep = currentStepIndex,
+                totalSteps = totalSteps,
                 isVirtual = isVirtual,
                 tutorialTarget = tutorialTarget,
-                onTap = { state.advance() },
-                onSkip = { state.skipAll() }
+                onNext = { state.advance() },
+                onSkipAll = { state.skipAll() },
+                onCutoutClick = onCutoutClick,
             )
         }
     }
@@ -198,10 +221,13 @@ private fun TutorialOverlay(
     bounds: Rect,
     canvasSize: Size,
     index: Int,
+    currentStep: Int,
+    totalSteps: Int,
     isVirtual: Boolean,
     tutorialTarget: @Composable (Int) -> Unit,
-    onTap: () -> Unit,
-    onSkip: () -> Unit,
+    onNext: () -> Unit,
+    onSkipAll: () -> Unit,
+    onCutoutClick: ((Int) -> Unit)? = null,
 ) {
     if (!isVirtual && bounds.isEmpty) return
 
@@ -213,7 +239,7 @@ private fun TutorialOverlay(
     val paddingPx = with(density) { 4.dp.toPx() }
     val cornerRadiusPx = with(density) { 12.dp.toPx() }
     val tooltipGapPx = with(density) { 20.dp.toPx() }
-    val tooltipMaxWidthPx = with(density) { 280.dp.toPx() }
+    val tooltipMaxWidthPx = with(density) { 320.dp.toPx() }
     val tooltipMaxWidth = with(density) { tooltipMaxWidthPx.toDp() }
     val tooltipMinHeightEstimate = with(density) { 180.dp.toPx() }
 
@@ -272,22 +298,33 @@ private fun TutorialOverlay(
 
     val contentAlpha = remember { Animatable(0f) }
     val contentScale = remember { Animatable(0.92f) }
+    val progress = remember { Animatable(0f) }
 
     LaunchedEffect(index) {
         contentAlpha.snapTo(0f)
         contentScale.snapTo(0.92f)
+        progress.snapTo(0f)
         contentAlpha.animateTo(1f, tween(300))
         contentScale.animateTo(1f, tween(400, easing = LinearOutSlowInEasing))
+        progress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 5500, easing = LinearEasing)
+        )
+        onNext()
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onTap,
-            ),
+            .pointerInput(animatedCutout, isVirtual, onCutoutClick, onNext) {
+                detectTapGestures { offset ->
+                    if (!isVirtual && animatedCutout.contains(offset) && onCutoutClick != null) {
+                        onCutoutClick(index)
+                    } else {
+                        onNext()
+                    }
+                }
+            },
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             if (isVirtual) {
@@ -338,7 +375,7 @@ private fun TutorialOverlay(
         }
 
         Surface(
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(14.dp),
             color = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 6.dp,
@@ -353,19 +390,111 @@ private fun TutorialOverlay(
                 .widthIn(max = tooltipMaxWidth)
                 .padding(horizontal = 16.dp),
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                tutorialTarget(index)
-                Spacer(Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Balanced reading timer line
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
                 ) {
-                    TextButton(onClick = onSkip) {
-                        Text(
-                            text = stringResource(R.string.skip_tutorial),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress.value)
+                            .height(3.dp)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                }
+
+                Column(modifier = Modifier.padding(16.dp)) {
+                    tutorialTarget(index)
+                    Spacer(Modifier.height(14.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Animated dots indicator with smooth transition between dots (بدون كلام)
+                        if (totalSteps > 1) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                for (i in 0 until totalSteps) {
+                                    val isActive = i == currentStep
+                                    val dotWidth by animateDpAsState(
+                                        targetValue = if (isActive) 18.dp else 6.dp,
+                                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                                        label = "DotWidth_$i"
+                                    )
+                                    val dotColor by animateColorAsState(
+                                        targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
+                                        animationSpec = tween(300),
+                                        label = "DotColor_$i"
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .height(6.dp)
+                                            .width(dotWidth)
+                                            .clip(RoundedCornerShape(3.dp))
+                                            .background(dotColor)
+                                    )
+                                }
+                            }
+                        } else {
+                            Spacer(Modifier.width(1.dp))
+                        }
+
+                        // Next and End Tour action buttons
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val isLast = currentStep >= totalSteps - 1
+                            if (!isLast) {
+                                TextButton(
+                                    onClick = onSkipAll,
+                                    modifier = Modifier.height(36.dp),
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.tutorial_end_tour),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                    )
+                                }
+                            }
+                            FilledTonalButton(
+                                onClick = {
+                                    if (index == 1 && onCutoutClick != null) {
+                                        onCutoutClick(index)
+                                    } else {
+                                        onNext()
+                                    }
+                                },
+                                modifier = Modifier
+                                    .height(36.dp)
+                                    .defaultMinSize(minWidth = 64.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                colors = ButtonDefaults.filledTonalButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            ) {
+                                Text(
+                                    text = if (isLast) {
+                                        stringResource(R.string.tutorial_understood)
+                                    } else {
+                                        stringResource(R.string.next)
+                                    },
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    maxLines = 1,
+                                    softWrap = false,
+                                )
+                            }
+                        }
                     }
                 }
             }

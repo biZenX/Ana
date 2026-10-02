@@ -127,7 +127,7 @@ class MinMaxSpentWidget : GlanceAppWidget() {
         maxChartIndex: Int,
     ) {
         Box(
-            modifier = GlanceModifier.fillMaxSize().background(GlanceTheme.colors.surface)
+            modifier = GlanceModifier.fillMaxSize().cornerRadius(24.dp).background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>()).padding(8.dp),
         ) {
             Row(
@@ -197,46 +197,39 @@ private fun MinMaxSpentStatPanel(
         Column(
             modifier = GlanceModifier.padding(horizontal = 14.dp, vertical = 12.dp)
         ) {
-            Text(
+            WidgetThmanyahText(
                 text = amount,
-                style = TextStyle(
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = GlanceTheme.colors.onSurface,
-                ),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = GlanceTheme.colors.onSurface,
+                useDisplayFont = true,
                 maxLines = 1,
             )
 
-            Text(
+            WidgetThmanyahText(
                 text = title,
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                ),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = GlanceTheme.colors.onSurfaceVariant,
                 maxLines = 1,
             )
 
             Spacer(modifier = GlanceModifier.height(6.dp))
 
-            Text(
+            WidgetThmanyahText(
                 text = date,
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    color = GlanceTheme.colors.onSurfaceVariant,
-                ),
+                fontSize = 12.sp,
+                color = GlanceTheme.colors.onSurfaceVariant,
                 maxLines = 1,
             )
 
             if (comment.isNotBlank()) {
                 Spacer(modifier = GlanceModifier.height(3.dp))
-                Text(
+                WidgetThmanyahText(
                     text = "# $comment",
-                    style = TextStyle(
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                    ),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = GlanceTheme.colors.onSurfaceVariant,
                     maxLines = 1,
                 )
             }

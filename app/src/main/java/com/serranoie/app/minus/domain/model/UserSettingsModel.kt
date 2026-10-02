@@ -18,7 +18,7 @@ data class UserSettings(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val typographyMode: TypographyMode = TypographyMode.EXPRESSIVE,
     val contrastMode: ContrastMode = ContrastMode.NORMAL,
-    val language: String = "system",
+    val language: String = "ar",
     val colorScheme: AppColorScheme = AppColorScheme.BRAND,
     val dynamicColorEnabled: Boolean = false,
     val isCreditQuickToggleEnabled: Boolean = false,
@@ -39,6 +39,10 @@ data class UserSettings(
     val budgetSplitViewPeriod: BudgetPeriod? = null,
     val savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
     val leftoverChoices: Map<LocalDate, LeftoverChoice> = emptyMap(),
+    val allowanceDaysEnabled: Boolean = false,
+    val activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
+    val budgetAlertThresholdPercent: Int = 80,
+    val financialTipsEnabled: Boolean = true,
 ) {
     companion object {
         const val DEFAULT_NOTIFICATION_HOUR = 9
