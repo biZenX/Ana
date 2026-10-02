@@ -102,7 +102,8 @@ class CompleteBudgetWidget : GlanceAppWidget() {
                 .cornerRadius(24.dp)
                 .background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             SpentInsetBlock(
                 spendAmount = spendAmount,
@@ -111,7 +112,7 @@ class CompleteBudgetWidget : GlanceAppWidget() {
                 addExpenseContentDescription = addExpenseContentDescription,
             )
 
-            Spacer(modifier = GlanceModifier.height(14.dp))
+            Spacer(modifier = GlanceModifier.height(10.dp))
 
             WidgetThmanyahText(
                 text = formatWidgetCurrency(currency, budgetAmount),
@@ -127,7 +128,7 @@ class CompleteBudgetWidget : GlanceAppWidget() {
                 fontSize = MaterialTheme.typography.subtitle1.fontSize
             )
 
-            Spacer(modifier = GlanceModifier.height(12.dp))
+            Spacer(modifier = GlanceModifier.height(10.dp))
 
             DateRangeRow(startDate, endDate, daysCount, daysCountFormat)
         }
@@ -140,37 +141,33 @@ class CompleteBudgetWidget : GlanceAppWidget() {
         totalSpentLabel: String,
         addExpenseContentDescription: String,
     ) {
-        Box(
-            modifier = GlanceModifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd,
+        Row(
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .background(GlanceTheme.colors.primaryContainer)
+                .cornerRadius(18.dp)
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .background(GlanceTheme.colors.primaryContainer)
-                    .cornerRadius(18.dp)
-                    .padding(start = 14.dp, top = 10.dp, end = 44.dp, bottom = 10.dp),
-            ) {
-                Column {
-                    WidgetThmanyahText(
-                        text = totalSpentLabel,
-                        color = GlanceTheme.colors.onPrimaryContainer,
-                        fontSize = MaterialTheme.typography.caption.fontSize,
-                    )
-                    WidgetThmanyahText(
-                        text = formatWidgetCurrency(currency, spendAmount),
-                        color = GlanceTheme.colors.onPrimaryContainer,
-                        fontSize = MaterialTheme.typography.h6.fontSize,
-                        fontWeight = FontWeight.Bold,
-                        useDisplayFont = true,
-                    )
-                }
+            Column(modifier = GlanceModifier.defaultWeight()) {
+                WidgetThmanyahText(
+                    text = totalSpentLabel,
+                    color = GlanceTheme.colors.onPrimaryContainer,
+                    fontSize = MaterialTheme.typography.caption.fontSize,
+                )
+                Spacer(modifier = GlanceModifier.height(2.dp))
+                WidgetThmanyahText(
+                    text = formatWidgetCurrency(currency, spendAmount),
+                    color = GlanceTheme.colors.onPrimaryContainer,
+                    fontSize = MaterialTheme.typography.h6.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    useDisplayFont = true,
+                )
             }
 
             AddExpenseButton(
                 contentDescription = addExpenseContentDescription,
-                size = 32.dp,
-                modifier = GlanceModifier.padding(end = 6.dp),
+                size = 34.dp,
             )
         }
     }

@@ -140,20 +140,17 @@ private fun MonthWidgetDayCell(cell: MonthWidgetCalendarCellState) {
         contentAlignment = Alignment.Center,
     ) {
         if (hasDay) {
-            Text(
+            WidgetThmanyahText(
                 text = cell.dayNumber.toString(),
-                style =
-                    TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center,
-                        color =
-                            if (cell.hasSpending) {
-                                GlanceTheme.colors.surface
-                            } else {
-                                GlanceTheme.colors.onSurfaceVariant
-                            },
-                    ),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color =
+                    if (cell.hasSpending) {
+                        GlanceTheme.colors.surface
+                    } else {
+                        GlanceTheme.colors.onSurfaceVariant
+                    },
             )
         }
     }

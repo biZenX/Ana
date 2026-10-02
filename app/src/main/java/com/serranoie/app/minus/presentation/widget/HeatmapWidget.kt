@@ -166,18 +166,16 @@ private fun DayCell(cell: CalendarCellState) {
         contentAlignment = Alignment.Center,
     ) {
         if (hasDay) {
-            Text(
+            WidgetThmanyahText(
                 text = cell.dayNumber.toString(),
-                style = TextStyle(
-                    fontSize = 6.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    color = if (cell.hasSpending) {
-                        GlanceTheme.colors.surface
-                    } else {
-                        GlanceTheme.colors.onSurfaceVariant
-                    },
-                ),
+                fontSize = 7.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color = if (cell.hasSpending) {
+                    GlanceTheme.colors.surface
+                } else {
+                    GlanceTheme.colors.onSurfaceVariant
+                },
             )
         }
     }

@@ -29,6 +29,7 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -36,8 +37,6 @@ import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
 import com.serranoie.app.minus.R
 import logcat.logcat
 import java.time.LocalDate
@@ -72,17 +71,18 @@ class FinancialCoachWidget : GlanceAppWidget() {
                 .background(GlanceTheme.colors.surface)
                 .clickable(actionRunCallback<OpenAppAction>())
                 .padding(14.dp),
-            contentAlignment = Alignment.TopStart
+            contentAlignment = Alignment.CenterStart
         ) {
             Column(
-                modifier = GlanceModifier.fillMaxSize()
+                modifier = GlanceModifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // Header
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = GlanceModifier.size(24.dp),
+                        modifier = GlanceModifier.size(22.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
@@ -93,13 +93,11 @@ class FinancialCoachWidget : GlanceAppWidget() {
                         )
                     }
                     Spacer(modifier = GlanceModifier.width(8.dp))
-                    Text(
+                    WidgetThmanyahText(
                         text = context.getString(R.string.widget_coach_title),
-                        style = TextStyle(
-                            color = GlanceTheme.colors.primary,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
+                        color = GlanceTheme.colors.primary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
                     )
                 }
 
@@ -114,18 +112,16 @@ class FinancialCoachWidget : GlanceAppWidget() {
                     useDisplayFont = true,
                 )
 
-                Spacer(modifier = GlanceModifier.height(4.dp))
+                Spacer(modifier = GlanceModifier.height(6.dp))
 
-                // Tip Body
-                Text(
+                // Tip Body (rendered with Thmanyah font and multiline wrapping)
+                WidgetThmanyahText(
                     text = context.getString(bodyRes),
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurfaceVariant,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                    ),
-                    maxLines = 3,
-                    modifier = GlanceModifier.defaultWeight()
+                    color = GlanceTheme.colors.onSurfaceVariant,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    maxWidthDp = 300.dp,
+                    maxLines = 5,
                 )
             }
         }

@@ -32,8 +32,6 @@ import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
 import com.serranoie.app.minus.R
 
 class AddExpenseWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -73,13 +71,11 @@ class AddExpenseWidget : GlanceAppWidget() {
                 modifier = GlanceModifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                WidgetThmanyahText(
                     text = if (compactMode) compactLabel else label,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = GlanceTheme.colors.onSurface,
-                        fontSize = if (compactMode) 13.sp else 15.sp,
-                    ),
+                    fontWeight = FontWeight.Bold,
+                    color = GlanceTheme.colors.onSurface,
+                    fontSize = if (compactMode) 13.sp else 15.sp,
                     modifier = GlanceModifier.defaultWeight()
                 )
 

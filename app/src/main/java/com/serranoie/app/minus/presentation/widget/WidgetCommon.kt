@@ -88,6 +88,8 @@ fun renderThmanyahTextBitmap(
     isBold: Boolean = false,
     useDisplayFont: Boolean = false,
     textAlign: TextAlign = TextAlign.Start,
+    maxWidthPx: Int? = null,
+    maxLines: Int = Int.MAX_VALUE,
 ): Bitmap {
     if (text.isEmpty()) {
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
@@ -127,11 +129,24 @@ fun renderThmanyahTextBitmap(
         else -> Layout.Alignment.ALIGN_NORMAL
     }
 
-    val textWidth = ceil(textPaint.measureText(text)).toInt().coerceAtLeast(1)
-    val layout = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, textWidth)
+    val measuredWidth = ceil(textPaint.measureText(text)).toInt().coerceAtLeast(1)
+    val targetWidth = if (maxWidthPx != null && maxWidthPx > 0) {
+        minOf(measuredWidth, maxWidthPx).coerceAtLeast(1)
+    } else {
+        measuredWidth
+    }
+
+    val layoutBuilder = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, targetWidth)
         .setAlignment(layoutAlignment)
         .setIncludePad(false)
-        .build()
+        .setLineSpacing(0f, 1.15f)
+
+    if (maxLines in 1 until Int.MAX_VALUE) {
+        layoutBuilder.setMaxLines(maxLines)
+        layoutBuilder.setEllipsize(android.text.TextUtils.TruncateAt.END)
+    }
+
+    val layout = layoutBuilder.build()
 
     val horizontalPadding = (textSizePx * 0.12f).toInt().coerceAtLeast(2)
     val verticalPadding = (textSizePx * 0.15f).toInt().coerceAtLeast(2)
@@ -161,12 +176,16 @@ fun WidgetThmanyahText(
     fontWeight: FontWeight = FontWeight.Normal,
     useDisplayFont: Boolean = false,
     textAlign: TextAlign = TextAlign.Start,
-    maxLines: Int = 1,
+    maxWidthDp: Dp? = null,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     val context = LocalContext.current
     val colorInt = color.getColor(context).toArgb()
     val isBold = fontWeight == FontWeight.Bold
-    val bitmap = remember(text, colorInt, fontSize.value, isBold, useDisplayFont, textAlign) {
+    val maxWidthPx = maxWidthDp?.let {
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, it.value, context.resources.displayMetrics).toInt()
+    }
+    val bitmap = remember(text, colorInt, fontSize.value, isBold, useDisplayFont, textAlign, maxWidthPx, maxLines) {
         renderThmanyahTextBitmap(
             context = context,
             text = text,
@@ -175,6 +194,8 @@ fun WidgetThmanyahText(
             isBold = isBold,
             useDisplayFont = useDisplayFont,
             textAlign = textAlign,
+            maxWidthPx = maxWidthPx,
+            maxLines = maxLines,
         )
     }
 
@@ -198,7 +219,8 @@ fun WidgetThmanyahText(
     fontWeight: FontWeight = FontWeight.Normal,
     useDisplayFont: Boolean = false,
     textAlign: TextAlign = TextAlign.Start,
-    maxLines: Int = 1,
+    maxWidthDp: Dp? = null,
+    maxLines: Int = Int.MAX_VALUE,
 ) = WidgetThmanyahText(
     text = text,
     modifier = modifier,
@@ -207,5 +229,6 @@ fun WidgetThmanyahText(
     fontWeight = fontWeight,
     useDisplayFont = useDisplayFont,
     textAlign = textAlign,
+    maxWidthDp = maxWidthDp,
     maxLines = maxLines,
 )

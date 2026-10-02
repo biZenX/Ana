@@ -37,8 +37,6 @@ import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
 import com.serranoie.app.minus.R
 import logcat.logcat
 
@@ -104,13 +102,11 @@ class WalletIncomeWidget : GlanceAppWidget() {
                     modifier = GlanceModifier.defaultWeight(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    WidgetThmanyahText(
                         text = context.getString(R.string.wallet_mode_title),
-                        style = TextStyle(
-                            color = GlanceTheme.colors.onSurfaceVariant,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                        )
+                        color = GlanceTheme.colors.onSurfaceVariant,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Normal,
                     )
                     Spacer(modifier = GlanceModifier.height(2.dp))
                     WidgetThmanyahText(
