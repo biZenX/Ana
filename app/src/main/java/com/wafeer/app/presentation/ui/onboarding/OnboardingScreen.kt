@@ -442,7 +442,7 @@ private fun LanguageStep(
             code = "ar",
             flag = "🌍",
             title = "العربية (الفصحى)",
-            description = "واجهة متكاملة باللغة العربية الفصحى الفخمة",
+            description = "واجهة متكاملة باللغة العربية الفصحى",
         ),
         LanguageOption(
             code = "en",
@@ -489,15 +489,26 @@ private fun LanguageStep(
                         .padding(horizontal = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    val headerTitle = when (selectedLanguage) {
+                        "ar-EG", "ar" -> "اختر لغة التطبيق"
+                        "en" -> "Choose your language"
+                        else -> stringResource(R.string.onboarding_language_title)
+                    }
+                    val headerSubtitle = when (selectedLanguage) {
+                        "ar-EG" -> "حدد اللغة المناسبة لك، وتقدر تغيرها في أي وقت من الإعدادات."
+                        "ar" -> "حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات."
+                        "en" -> "Select your preferred language. You can change this anytime in Settings."
+                        else -> stringResource(R.string.onboarding_language_subtitle)
+                    }
                     Spacer(Modifier.height(24.dp))
                     Text(
-                        text = stringResource(R.string.onboarding_language_title),
+                        text = headerTitle,
                         style = MaterialTheme.typography.headlineLargeEmphasized,
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(
-                        text = stringResource(R.string.onboarding_language_subtitle),
+                        text = headerSubtitle,
                         style = MaterialTheme.typography.bodyMediumCondensed,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
