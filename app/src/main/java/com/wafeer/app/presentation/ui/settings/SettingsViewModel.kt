@@ -1,0 +1,550 @@
+package com.wafeer.app.presentation.ui.settings
+
+import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.wafeer.app.data.repository.BudgetRepository
+import com.wafeer.app.data.repository.SettingsRepository
+import com.wafeer.app.domain.model.AppColorScheme
+import com.wafeer.app.domain.model.ContrastMode
+import com.wafeer.app.domain.model.PeriodMappingMode
+import com.wafeer.app.domain.model.SavingsPreferences
+import com.wafeer.app.domain.model.ThemeMode
+import com.wafeer.app.domain.model.TypographyMode
+import com.wafeer.app.domain.usecase.UpdatePeriodEndNotificationTimeUseCase
+import com.wafeer.app.presentation.appColorScheme
+import com.wafeer.app.presentation.appContrast
+import com.wafeer.app.presentation.appTheme
+import com.wafeer.app.presentation.appTypography
+import com.wafeer.app.presentation.dynamicColorEnabled
+import com.wafeer.app.presentation.isAmoledEnabled
+import com.wafeer.app.presentation.ui.history.RecurrentPaymentsViewMode
+import com.wafeer.app.presentation.ui.settings.csv.CsvTransferManager
+import com.wafeer.app.presentation.util.CensorManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import logcat.logcat
+import javax.inject.Inject
+import android.provider.Settings as AndroidSettings
+
+data class SettingsUiState(
+    val currentTheme: String = "System",
+    val currentTypography: String = "Expressive",
+    val currentContrast: String = "Normal",
+    val currentColorScheme: AppColorScheme = AppColorScheme.BRAND,
+    val currentLanguage: String = "English",
+    val isMaterialYouEnabled: Boolean = false,
+    val isRoundedFontEnabled: Boolean = true,
+    val isAmoledEnabled: Boolean = false,
+    val isCreditQuickToggleEnabled: Boolean = false,
+    val showPastTransactions: Boolean = true,
+    val isCategoryPickerDirectPopupEnabled: Boolean = false,
+    val isCategoryGridModeEnabled: Boolean = false,
+    val isExtraNoteEnabled: Boolean = false,
+    val isReserveUpcomingChargesEnabled: Boolean = false,
+    val isNewCategoryTagEnabled: Boolean = false,
+    val recurrentPaymentsViewMode: RecurrentPaymentsViewMode = RecurrentPaymentsViewMode.VERTICAL_LIST,
+    val notificationHour: Int = 9,
+    val notificationMinute: Int = 0,
+    val recurrentNotificationHour: Int = 8,
+    val recurrentNotificationMinute: Int = 0,
+    val exactAlarmEnabled: Boolean = true,
+    val notificationPermissionGranted: Boolean = false,
+    val isCensored: Boolean = false,
+    val periodMappingMode: PeriodMappingMode = PeriodMappingMode.ACTIVE_BUDGET,
+    val savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
+    val creditCardCutoffDay: Int? = null,
+    val financialTipsEnabled: Boolean = true,
+)
+
+sealed interface SettingsUiEffect {
+    data object NavigateToBugReport : SettingsUiEffect
+    data object NavigateBack : SettingsUiEffect
+}
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val settingsRepository: SettingsRepository,
+    private val budgetRepository: BudgetRepository,
+    private val updateNotificationTimeUseCase: UpdatePeriodEndNotificationTimeUseCase,
+    private val censorManager: CensorManager,
+    private val notificationHelper: com.wafeer.app.presentation.notification.NotificationHelper,
+    private val appUpdateManager: com.wafeer.app.data.updater.AppUpdateManager,
+) : ViewModel() {
+
+    val updateDownloadState = appUpdateManager.downloadState
+    private val _pendingUpdate = MutableStateFlow<com.wafeer.app.domain.model.updater.AppUpdateInfo?>(null)
+    val pendingUpdate: StateFlow<com.wafeer.app.domain.model.updater.AppUpdateInfo?> = _pendingUpdate.asStateFlow()
+
+    private val _isCheckingUpdate = MutableStateFlow(false)
+    val isCheckingUpdate: StateFlow<Boolean> = _isCheckingUpdate.asStateFlow()
+
+    private val _updateCheckMessage = MutableStateFlow<String?>(null)
+    val updateCheckMessage: StateFlow<String?> = _updateCheckMessage.asStateFlow()
+
+    fun checkForUpdates() {
+        if (_isCheckingUpdate.value) return
+        _isCheckingUpdate.value = true
+        _updateCheckMessage.value = null
+        viewModelScope.launch {
+            appUpdateManager.checkForUpdates().fold(
+                onSuccess = { info ->
+                    _isCheckingUpdate.value = false
+                    if (info != null) {
+                        _pendingUpdate.value = info
+                    } else {
+                        _updateCheckMessage.value = "وفير محدث إلى أحدث إصدار بالفعل (v${com.wafeer.app.BuildConfig.VERSION_NAME})"
+                    }
+                },
+                onFailure = { error ->
+                    _isCheckingUpdate.value = false
+                    _updateCheckMessage.value = error.message ?: "تعذر التحقق: تأكد من اتصال الإنترنت"
+                }
+            )
+        }
+    }
+
+    fun showDemoUpdateDialog() {
+        _pendingUpdate.value = com.wafeer.app.domain.model.updater.AppUpdateInfo(
+            versionName = "1.3.1",
+            versionCode = 10301,
+            releaseDate = "2026-10-03",
+            mainFeatures = listOf(
+                "تصحيح رسم حرف الكاف وإزالة التبديل الزخرفي ليعود بشكله العربي الأصيل",
+                "إعادة ضبط عائلات خط ثمانية (ديسبلاي للعناوين وسانز للواجهات)",
+            ),
+            improvements = listOf(
+                "نظام إشعارات تفاعلي عالي الاستقرار مع أزرار سريعة وموثوقية تامة",
+                "توجيه مباشر لإعدادات إشعارات النظام عند الحاجة",
+            ),
+            downloadUrl = "https://github.com/biZenX/Ana/releases/download/v1.3.1/Wafeer-v1.3.1.apk",
+            fileSize = 37748736L,
+        )
+    }
+
+    fun startDownloadingUpdate() {
+        val info = _pendingUpdate.value ?: return
+        viewModelScope.launch {
+            appUpdateManager.downloadUpdate(info)
+        }
+    }
+
+    fun dismissUpdateDialog() {
+        _pendingUpdate.value = null
+        appUpdateManager.resetState()
+    }
+
+    fun clearUpdateCheckMessage() {
+        _updateCheckMessage.value = null
+    }
+
+    private val _notificationPermissionGranted = MutableStateFlow(false)
+
+    val uiState: StateFlow<SettingsUiState> = combine(
+        settingsRepository.observeSettings(),
+        budgetRepository.getBudgetSettings(),
+        censorManager.isCensored,
+        _notificationPermissionGranted
+    ) { settings, budgetSettings, isCensored, permissionGranted ->
+        SettingsUiState(
+            currentTheme = when (settings.themeMode) {
+                ThemeMode.LIGHT -> "Light"
+                ThemeMode.NIGHT -> "Dark"
+                else -> "System"
+            },
+            currentTypography = when (settings.typographyMode) {
+                TypographyMode.CONDENSED -> "Condensed"
+                TypographyMode.SYSTEM -> "System"
+                else -> "Expressive"
+            },
+            currentContrast = when (settings.contrastMode) {
+                ContrastMode.MEDIUM -> "Medium"
+                ContrastMode.HIGH -> "High"
+                else -> "Normal"
+            },
+            currentColorScheme = settings.colorScheme,
+            isMaterialYouEnabled = settings.dynamicColorEnabled,
+            isRoundedFontEnabled = settings.isRoundedFontEnabled,
+            isAmoledEnabled = settings.isAmoledEnabled,
+            isCreditQuickToggleEnabled = settings.isCreditQuickToggleEnabled,
+            showPastTransactions = settings.showPastTransactions,
+            isCategoryPickerDirectPopupEnabled = settings.categoryPickerDirectPopupEnabled,
+            isCategoryGridModeEnabled = settings.categoryGridModeEnabled,
+            isExtraNoteEnabled = settings.extraNoteEnabled,
+            isReserveUpcomingChargesEnabled = settings.reserveUpcomingChargesEnabled,
+            isNewCategoryTagEnabled = settings.newCategoryTagEnabled,
+            currentLanguage = settings.language,
+            recurrentPaymentsViewMode = settings.recurrentPaymentsViewMode,
+            notificationHour = settings.notificationHour,
+            notificationMinute = settings.notificationMinute,
+            recurrentNotificationHour = settings.recurrentNotificationHour,
+            recurrentNotificationMinute = settings.recurrentNotificationMinute,
+            exactAlarmEnabled = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val alarmManager =
+                    context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager.canScheduleExactAlarms()
+            } else true,
+            notificationPermissionGranted = permissionGranted,
+            isCensored = isCensored,
+            periodMappingMode = settings.periodMappingMode,
+            savingsPreferences = settings.savingsPreferences,
+            creditCardCutoffDay = budgetSettings?.creditCardCutoffDay,
+            financialTipsEnabled = settings.financialTipsEnabled,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = SettingsUiState()
+    )
+
+    private val _effects = MutableStateFlow<SettingsUiEffect?>(null)
+    val effects: StateFlow<SettingsUiEffect?> = _effects.asStateFlow()
+
+    private var csvTransferManager: CsvTransferManager? = null
+    private var importLauncher: ActivityResultLauncher<Array<String>>? = null
+
+    init {
+        refreshNotificationPermission()
+        updateCacheSize()
+    }
+
+    fun refreshNotificationPermission() {
+        val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS,
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+        logcat("SettingsViewModel") { "refreshNotificationPermission -> granted=$granted" }
+        _notificationPermissionGranted.value = granted
+    }
+
+    fun onNotificationPermissionGranted() {
+        _notificationPermissionGranted.value = true
+    }
+
+    fun onSendTestNotification(): Boolean {
+        refreshNotificationPermission()
+        return notificationHelper.showTestNotification()
+    }
+
+    fun onOpenNotificationSettings() {
+        logcat("SettingsViewModel") { "onOpenNotificationSettings" }
+        val intent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Intent(AndroidSettings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(AndroidSettings.EXTRA_APP_PACKAGE, context.packageName)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        } else {
+            Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = "package:${context.packageName}".toUri()
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+        try {
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            onOpenAppSettings()
+        }
+    }
+
+    fun onOpenAppSettings() {
+        logcat("SettingsViewModel") { "onOpenAppSettings" }
+        val intent = Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = "package:${context.packageName}".toUri()
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    }
+
+    fun setCsvTransferManager(manager: CsvTransferManager) {
+        csvTransferManager = manager
+    }
+
+    fun setImportLauncher(launcher: ActivityResultLauncher<Array<String>>) {
+        importLauncher = launcher
+    }
+
+    fun onThemeChange(themeMode: String) {
+        val newMode = when (themeMode) {
+            "Light" -> ThemeMode.LIGHT
+            "Dark" -> ThemeMode.NIGHT
+            else -> ThemeMode.SYSTEM
+        }
+        context.appTheme = newMode
+        viewModelScope.launch {
+            settingsRepository.setThemeMode(newMode)
+        }
+    }
+
+    fun onTypographyChange(typographyMode: String) {
+        val newMode = when (typographyMode) {
+            "System" -> TypographyMode.SYSTEM
+            "Default" -> TypographyMode.DEFAULT
+            "Condensed" -> TypographyMode.CONDENSED
+            else -> TypographyMode.EXPRESSIVE
+        }
+        context.appTypography = newMode
+        viewModelScope.launch {
+            settingsRepository.setTypographyMode(newMode)
+        }
+    }
+
+    fun onContrastChange(contrastMode: String) {
+        val newMode = when (contrastMode) {
+            "Medium" -> ContrastMode.MEDIUM
+            "High" -> ContrastMode.HIGH
+            else -> ContrastMode.NORMAL
+        }
+        context.appContrast = newMode
+        viewModelScope.launch {
+            settingsRepository.setContrastMode(newMode)
+        }
+    }
+
+    fun onColorSchemeChange(colorScheme: AppColorScheme) {
+        context.appColorScheme = colorScheme
+        viewModelScope.launch {
+            settingsRepository.setAppColorScheme(colorScheme)
+        }
+    }
+
+    fun onLanguageChange(language: String) {
+        viewModelScope.launch {
+            settingsRepository.setLanguage(language)
+            val appLocale: LocaleListCompat = if (language == "system") {
+                LocaleListCompat.getEmptyLocaleList()
+            } else {
+                LocaleListCompat.forLanguageTags(language)
+            }
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        }
+    }
+
+    fun onMaterialYouToggle() {
+        val newValue = !uiState.value.isMaterialYouEnabled
+        context.dynamicColorEnabled = newValue
+        viewModelScope.launch {
+            settingsRepository.setDynamicColorEnabled(newValue)
+        }
+    }
+
+    fun onRoundedFontToggle() {
+        val newValue = !uiState.value.isRoundedFontEnabled
+        viewModelScope.launch {
+            settingsRepository.setRoundedFontEnabled(newValue)
+        }
+    }
+
+    fun onAmoledToggle() {
+        val newValue = !uiState.value.isAmoledEnabled
+        context.isAmoledEnabled = newValue
+        viewModelScope.launch {
+            settingsRepository.setAmoledEnabled(newValue)
+        }
+    }
+
+    fun onCensorModeToggle() {
+        censorManager.setCensored(!uiState.value.isCensored)
+    }
+
+    fun onCreditQuickToggleFeatureToggle() {
+        val newValue = !uiState.value.isCreditQuickToggleEnabled
+        viewModelScope.launch {
+            settingsRepository.setCreditQuickToggleEnabled(newValue)
+        }
+    }
+
+    fun onCutoffDayChange(day: Int) {
+        viewModelScope.launch {
+            val currentSettings = budgetRepository.getBudgetSettingsSync()
+            if (currentSettings != null) {
+                budgetRepository.saveBudgetSettings(currentSettings.copy(creditCardCutoffDay = day))
+            }
+        }
+    }
+
+    fun onShowPastTransactionsToggle() {
+        val newValue = !uiState.value.showPastTransactions
+        viewModelScope.launch {
+            settingsRepository.setShowPastTransactions(newValue)
+        }
+    }
+
+    fun onCategoryPickerDirectPopupFeatureToggle() {
+        val newValue = !uiState.value.isCategoryPickerDirectPopupEnabled
+        viewModelScope.launch {
+            settingsRepository.setCategoryPickerDirectPopupEnabled(newValue)
+        }
+    }
+
+    fun onCategoryGridModeToggle() {
+        val newValue = !uiState.value.isCategoryGridModeEnabled
+        viewModelScope.launch {
+            settingsRepository.setCategoryGridModeEnabled(newValue)
+        }
+    }
+
+    fun onExtraNoteToggle() {
+        val newValue = !uiState.value.isExtraNoteEnabled
+        viewModelScope.launch {
+            settingsRepository.setExtraNoteEnabled(newValue)
+        }
+    }
+
+    fun onReserveUpcomingChargesToggle() {
+        val newValue = !uiState.value.isReserveUpcomingChargesEnabled
+        viewModelScope.launch {
+            settingsRepository.setReserveUpcomingChargesEnabled(newValue)
+        }
+    }
+
+    fun onNewCategoryTagToggle() {
+        val newValue = !uiState.value.isNewCategoryTagEnabled
+        viewModelScope.launch {
+            settingsRepository.setNewCategoryTagEnabled(newValue)
+        }
+    }
+
+    fun onRecurrentPaymentsViewModeChange(mode: RecurrentPaymentsViewMode) {
+        viewModelScope.launch {
+            settingsRepository.setRecurrentPaymentsViewMode(mode)
+        }
+    }
+
+    fun onNotificationTimeChange(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            settingsRepository.setNotificationTime(hour, minute)
+            updateNotificationTimeUseCase(hour, minute)
+        }
+    }
+
+    fun onRecurrentNotificationTimeChange(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            settingsRepository.setRecurrentNotificationTime(hour, minute)
+            updateNotificationTimeUseCase.updateRecurrentNotificationTime(hour, minute)
+        }
+    }
+
+    fun onPeriodMappingModeChange(mode: PeriodMappingMode) {
+        viewModelScope.launch {
+            settingsRepository.setPeriodMappingMode(mode)
+        }
+    }
+
+    fun onSavingsPreferencesChange(prefs: SavingsPreferences) {
+        viewModelScope.launch {
+            settingsRepository.setSavingsPreferences(prefs)
+        }
+    }
+
+    fun onOpenExactAlarmSettings() {
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Intent(AndroidSettings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                data = "package:${context.packageName}".toUri()
+            }
+        } else {
+            Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = "package:${context.packageName}".toUri()
+            }
+        }
+        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    }
+
+    fun onExportCsv() {
+        viewModelScope.launch {
+            csvTransferManager?.exportAndShareCsv()
+        }
+    }
+
+    fun onImportCsv() {
+        importLauncher?.launch(arrayOf("text/*", "text/csv", "application/csv"))
+    }
+
+    fun onImportResult(uri: Uri?) {
+        uri ?: return
+        viewModelScope.launch {
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }
+            csvTransferManager?.enqueueImport(uri.toString())
+        }
+    }
+
+    fun onResetTutorial() {
+        viewModelScope.launch {
+            settingsRepository.resetTutorials()
+        }
+    }
+
+    fun setFinancialTipsEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setFinancialTipsEnabled(enabled)
+        }
+    }
+
+    fun resetDismissedFinancialTips() {
+        viewModelScope.launch {
+            settingsRepository.resetDismissedFinancialTips()
+        }
+    }
+
+    private val _cacheSize = MutableStateFlow("")
+    val cacheSize: StateFlow<String> = _cacheSize.asStateFlow()
+
+    fun updateCacheSize() {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val bytes = com.wafeer.app.data.updater.AppUpdateManager.getAppCacheSizeBytes(context)
+            _cacheSize.value = com.wafeer.app.data.updater.AppUpdateManager.formatCacheSize(bytes)
+        }
+    }
+
+    fun onClearCache() {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val freedBytes = com.wafeer.app.data.updater.AppUpdateManager.clearAppCache(context)
+            val freedFormatted = com.wafeer.app.data.updater.AppUpdateManager.formatCacheSize(freedBytes)
+            val remainingBytes = com.wafeer.app.data.updater.AppUpdateManager.getAppCacheSizeBytes(context)
+            _cacheSize.value = com.wafeer.app.data.updater.AppUpdateManager.formatCacheSize(remainingBytes)
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                val msg = context.getString(com.wafeer.app.R.string.settings_clear_cache_success, freedFormatted)
+                android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun onBugReportClick() {
+        _effects.value = SettingsUiEffect.NavigateToBugReport
+    }
+
+    fun onBack() {
+        _effects.value = SettingsUiEffect.NavigateBack
+    }
+
+    fun consumeEffect() {
+        _effects.value = null
+    }
+}

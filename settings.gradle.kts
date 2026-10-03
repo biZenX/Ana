@@ -19,9 +19,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Minus"
+rootProject.name = "Wafeer"
 include(":app")
-if (providers.gradleProperty("minus.includeWearModule").orNull != "false") {
+if (providers.gradleProperty("wafeer.includeWearModule").orNull != "false") {
 	include(":wear")
 }
 include(":sync-contract")

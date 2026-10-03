@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Minus Wear</string>
+    <string name="app_name">وفير للساعة</string>
 
     <!-- Period overview screen -->
     <string name="overview_syncing">Syncing with phone…</string>

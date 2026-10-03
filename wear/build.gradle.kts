@@ -31,7 +31,7 @@ val appVersionName = versionProps.getProperty("VERSION_NAME") ?: "0.0.0-dev"
 val appVersionCode = versionProps.getProperty("VERSION_CODE")?.toIntOrNull() ?: 1
 
 android {
-    namespace = "com.serranoie.app.wear.minus"
+    namespace = "com.wafeer.wear"
     compileSdk {
         version = release(36)
     }
@@ -54,7 +54,7 @@ android {
     ).all { v -> !v.isNullOrBlank() }
 
     defaultConfig {
-        applicationId = "com.serranoie.app.minus"
+        applicationId = "com.wafeer.app"
         minSdk = 30
         targetSdk = 36
         versionCode = appVersionCode
@@ -102,11 +102,11 @@ android {
         outputs.all {
             val output = this as? BaseVariantOutputImpl
             if (output != null) {
-                // "Minus-Watch" = the app that runs ON the watch (this module).
-                // ":app" already ships "Minus-WearOS-v<x>.apk" (phone app + Wear
+                // "Wafeer-Watch" = the app that runs ON the watch (this module).
+                // ":app" already ships "Wafeer-WearOS-v<x>.apk" (phone app + Wear
                 // OS bridge) — keep the names distinct so both can be attached
                 // to the same GitHub Release.
-                output.outputFileName = "Minus-Watch-v$appVersionName.apk"
+                output.outputFileName = "Wafeer-Watch-v$appVersionName.apk"
             }
         }
     }

@@ -313,8 +313,8 @@
     <string name="settings_contrast_normal">عادي</string>
     <string name="settings_contrast_medium">متوسط</string>
     <string name="settings_contrast_high">مرتفع</string>
-    <string name="settings_typography_condensed">خط بلكس العصري</string>
-    <string name="settings_typography_expressive">خط ثمانية (تعبيري)</string>
+    <string name="settings_typography_condensed">الخط المعاصر المنظم</string>
+    <string name="settings_typography_expressive">الخط الأصيل الرصين</string>
     <string name="settings_language_ar" translatable="false">العربية (الفصحى)</string>
     <string name="settings_language_ar_eg" translatable="false">عربي (مصري)</string>
     <string name="settings_color_scheme_title">سمة الألوان</string>
@@ -331,7 +331,7 @@
     <string name="settings_widgets_title">الودجات</string>
     <string name="settings_widgets_subtitle">استكشف الودجات المتاحة لإضافتها لشاشتك الرئيسية</string>
     <string name="settings_typography_title">الخطوط</string>
-    <string name="settings_typography_subtitle">تغيير نمط خطوط التطبيق (ثمانية، بلكس، الافتراضي)</string>
+    <string name="settings_typography_subtitle">تخصيص مظهر ورسم الخطوط في واجهة التطبيق</string>
     <string name="settings_rounded_font_title">نمط الخط المستدير الانسيابي</string>
     <string name="settings_material_you_title">ألوان النظام المتناسقة</string>
     <string name="settings_material_you_subtitle">استخراج ألوان السمة ديناميكياً من خلفية جهازك</string>
@@ -460,12 +460,15 @@
     <string name="settings_theme_system_title">حسب النظام</string>
     <string name="settings_theme_system_subtitle">مطابقة إعداد مظهر نظام التشغيل</string>
     <string name="settings_typography_dialog_title">خطوط التطبيق</string>
-    <string name="settings_typography_default_title">خط ثمانية (ثمانية الأصيل)</string>
-    <string name="settings_typography_default_subtitle">خط عربي فخم مع أحرف منسدلة للعناوين</string>
-    <string name="settings_typography_condensed_title">خط بلكس العصري</string>
+    <string name="settings_typography_default_title">الخط المتزن الهادئ</string>
+    <string name="settings_typography_default_subtitle">خط عربي فخم بتوازن مريح للعين في القراءة</string>
+    <string name="settings_typography_condensed_title">الخط المعاصر المنظم</string>
     <string name="settings_typography_condensed_subtitle">خط تقني عصري فائق الوضوح والأناقة</string>
-    <string name="settings_typography_expressive_title">خط ثمانية التعبيري</string>
-    <string name="settings_typography_expressive_subtitle">الخط التعبيري المتفاعل مع الواجهة</string>
+    <string name="settings_typography_expressive_title">الخط الأصيل الرصين</string>
+    <string name="settings_typography_expressive_subtitle">خط عربي كلاسيكي أصيل مع انحناءات فنية رصينة</string>
+    <string name="settings_clear_cache_title">تنظيف الذاكرة المؤقتة</string>
+    <string name="settings_clear_cache_subtitle">تفريغ ملفات التحديث المؤقتة وتوفير مساحة التخزين</string>
+    <string name="settings_clear_cache_success">تم تنظيف الذاكرة المؤقتة بنجاح (%1$s)</string>
     <string name="expand">توسيع</string>
     <string name="collapse">طي</string>
     <string name="budget_pill_over_budget">تجاوزت الحد المسموح</string>

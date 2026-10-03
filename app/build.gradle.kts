@@ -70,7 +70,7 @@ val appVersionName = versionProps.getProperty("VERSION_NAME") ?: "0.0.0-dev"
 val appVersionCode = versionProps.getProperty("VERSION_CODE")?.toIntOrNull() ?: 1
 
 android {
-    namespace = "com.serranoie.app.minus"
+    namespace = "com.wafeer.app"
     compileSdk {
         version = release(36)
     }
@@ -136,15 +136,10 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
 
-            postprocessing {
-                isRemoveUnusedCode = true
-                isRemoveUnusedResources = true
-                isObfuscate = false
-                isOptimizeCode = true
-            }
-
             if (hasReleaseSigningConfig) {
                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
             }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -199,7 +194,7 @@ android {
         resources.excludes += "/META-INF/LICENSE.md"
         resources.excludes += "/META-INF/LICENSE-notice.md"
     }
-    namespace = "com.serranoie.app.minus"
+    namespace = "com.wafeer.app"
 
     dependenciesInfo {
         includeInApk = false
@@ -311,7 +306,7 @@ dependencies {
 }
 
 val prepareReleaseNotes by tasks.registering {
-    group = "minus"
+    group = "wafeer"
     description =
         "Generate fastlane/metadata/android/en-US/changelogs/<versionCode>.txt from git log between tags, then regenerate the compiled-in GeneratedChangelog.kt."
 
@@ -364,7 +359,7 @@ val prepareReleaseNotes by tasks.registering {
 }
 
 val generateChangelogKotlin by tasks.registering {
-    group = "minus"
+    group = "wafeer"
     description =
         "Generate app/build/generated/source/changelog/GeneratedChangelog.kt from fastlane/metadata/android/en-US/changelogs/*.txt. The runtime reads the generated Kotlin directly — no assets/changelog.json intermediate."
 
@@ -386,9 +381,9 @@ val generateChangelogKotlin by tasks.registering {
         if (txtFiles.isEmpty()) {
             File(outDir, "GeneratedChangelog.kt").writeText(
                 """
-                package com.serranoie.app.minus.generated
+                package com.wafeer.app.generated
 
-                import com.serranoie.app.minus.domain.model.changelog.VersionRelease
+                import com.wafeer.app.domain.model.changelog.VersionRelease
 
                 object GeneratedChangelog {
                     val releases: List<VersionRelease> = emptyList()
@@ -404,11 +399,11 @@ val generateChangelogKotlin by tasks.registering {
         sb.appendLine("// Source of truth: fastlane/metadata/android/en-US/changelogs/*.txt")
         sb.appendLine("// Regenerate via: ./gradlew :app:generateChangelogKotlin")
         sb.appendLine()
-        sb.appendLine("package com.serranoie.app.minus.generated")
+        sb.appendLine("package com.wafeer.app.generated")
         sb.appendLine()
-        sb.appendLine("import com.serranoie.app.minus.domain.model.changelog.ChangelogItem")
-        sb.appendLine("import com.serranoie.app.minus.domain.model.changelog.ReleaseType")
-        sb.appendLine("import com.serranoie.app.minus.domain.model.changelog.VersionRelease")
+        sb.appendLine("import com.wafeer.app.domain.model.changelog.ChangelogItem")
+        sb.appendLine("import com.wafeer.app.domain.model.changelog.ReleaseType")
+        sb.appendLine("import com.wafeer.app.domain.model.changelog.VersionRelease")
         sb.appendLine()
         sb.appendLine("object GeneratedChangelog {")
         sb.appendLine("    val releases: List<VersionRelease> = listOf(")

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Minus Wear</string>
+    <string name="app_name">وفير للساعة</string>
 
     <!-- Экран обзора периода -->
     <string name="overview_syncing">Синхронизация с телефоном…</string>

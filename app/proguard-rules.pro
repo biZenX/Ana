@@ -27,3 +27,18 @@
 # other receivers, rendering one widget inside another widget's slot. Keep them distinct.
 -keep class * extends androidx.glance.appwidget.GlanceAppWidget
 -keep class * extends androidx.glance.appwidget.GlanceAppWidgetReceiver
+
+# Hardening & Obfuscation
+# Repackage all internal classes into a single flat obfuscated root
+-repackageclasses ''
+-allowaccessmodification
+
+# Strip all source file names, line numbers, variable tables to prevent reverse engineering
+-renamesourcefileattribute ''
+-keepattributes !SourceFile,!LineNumberTable,!LocalVariableTable,!LocalVariableTypeTable
+
+# Strip kotlin runtime parameter checks
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    public static void checkNotNullParameter(java.lang.Object, java.lang.String);
+}
+

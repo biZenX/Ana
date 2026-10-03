@@ -181,7 +181,7 @@ platform :android do
     # Standalone Wear OS APK from the :wear module — the app that runs ON the
     # watch (com.google.android.wearable.standalone=true). Signed with the same
     # release key as :app (shared applicationId). Its Gradle output is
-    # Minus-Watch-v<x>.apk, distinct from :app's wear-flavor Minus-WearOS-v<x>.apk,
+    # Wafeer-Watch-v<x>.apk, distinct from :app's wear-flavor Wafeer-WearOS-v<x>.apk,
     # so both attach to the same Release without a filename collision.
     gradle(task: ":wear:assembleRelease")
 
@@ -199,7 +199,7 @@ platform :android do
     # leaves the tagged release carrying all three signed APKs, and CI re-runs
     # stay idempotent.
     header_url = "https://raw.githubusercontent.com/#{repo}/#{version_tag}/assets/minus-header-update.png"
-    notes_file = File.join(Dir.tmpdir, "minus-release-notes-#{version_tag}.md")
+    notes_file = File.join(Dir.tmpdir, "wafeer-release-notes-#{version_tag}.md")
     File.write(notes_file, <<~MD)
       <img src="#{header_url}" width="240">
 
@@ -213,7 +213,7 @@ platform :android do
       sh(
         "gh", "release", "create", version_tag, *apk_paths,
         "--repo", repo,
-        "--title", "Minus #{version_tag}",
+        "--title", "Wafeer #{version_tag}",
         "--notes-file", notes_file,
         "--generate-notes"
       )

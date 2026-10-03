@@ -1,0 +1,457 @@
+package com.wafeer.app.presentation.ui.theme.component
+
+import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.wafeer.app.R
+import com.wafeer.app.domain.model.SavingsPreferences
+import com.wafeer.app.domain.model.Transaction
+import com.wafeer.app.presentation.ui.theme.WafeerTheme
+import com.wafeer.app.presentation.ui.theme.bodyMediumCondensed
+import com.wafeer.app.presentation.ui.theme.bodySmallCondensed
+import com.wafeer.app.presentation.ui.theme.labelSmallCondensed
+import com.wafeer.app.presentation.util.censor
+import com.wafeer.app.presentation.util.font.format.formatCurrencySymbolOnly
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.LocalDateTime
+
+internal data class SavingsCardMetrics(
+    val recurrentSpent: BigDecimal,
+    val variableSpent: BigDecimal,
+    val savings: BigDecimal,
+    val savingsPct: Int,
+    val recurrentPct: Int,
+    val variablePct: Int,
+    val idealSavingsPerPeriod: BigDecimal,
+    val projectedSavingsSixMonths: BigDecimal,
+    val goalPerPeriod: BigDecimal?,
+)
+
+internal fun savingsCardMetrics(
+    budget: BigDecimal,
+    recurringInPeriod: List<Transaction>,
+    oneTimeSpends: List<Transaction>,
+    preferences: SavingsPreferences,
+): SavingsCardMetrics? {
+    if (budget <= BigDecimal.ZERO) return null
+
+    val recurrentSpent = recurringInPeriod.filter { it.amount > BigDecimal.ZERO }.sumOf { it.amount }
+    val variableSpent = oneTimeSpends.filter { it.amount > BigDecimal.ZERO }.sumOf { it.amount }
+    val savings = budget.subtract(recurrentSpent).subtract(variableSpent).max(BigDecimal.ZERO)
+    val idealSavingsPerPeriod = budget.multiply(BigDecimal(preferences.savingsPct))
+        .divide(BigDecimal(100), 2, RoundingMode.HALF_UP)
+
+    fun pctOfBudget(amount: BigDecimal): Int =
+        amount.divide(budget, 4, RoundingMode.HALF_UP).multiply(BigDecimal(100)).toInt()
+
+    return SavingsCardMetrics(
+        recurrentSpent = recurrentSpent,
+        variableSpent = variableSpent,
+        savings = savings,
+        savingsPct = pctOfBudget(savings),
+        recurrentPct = pctOfBudget(recurrentSpent),
+        variablePct = pctOfBudget(variableSpent),
+        idealSavingsPerPeriod = idealSavingsPerPeriod,
+        projectedSavingsSixMonths = idealSavingsPerPeriod.multiply(BigDecimal(6)),
+        goalPerPeriod = preferences.projectedPerPeriod(),
+    )
+}
+
+/**
+ * Recommendation card based on the 50/30/20 rule (or any custom needs/wants/
+ * savings split the user configured in Settings).
+ *
+ * The split percentages, the bar's "safe zone" threshold, and the per-period
+ * savings target all come from [preferences]. Defaults to the classic
+ * 50/30/20 rule.
+ *
+ * [recurringInPeriod] should contain every recurring charge that falls inside
+ * the current budget period — both already-paid ones and upcoming ones still
+ * scheduled. [oneTimeSpends] are the discretionary (non-recurring) transactions
+ * already paid in the period.
+ */
+@Composable
+fun SavingsRecommendationCard(
+    modifier: Modifier = Modifier,
+    budget: BigDecimal,
+    recurringInPeriod: List<Transaction> = emptyList(),
+    oneTimeSpends: List<Transaction> = emptyList(),
+    currency: String = "MXN",
+    preferences: SavingsPreferences = SavingsPreferences.DEFAULT,
+) {
+    val metrics = savingsCardMetrics(budget, recurringInPeriod, oneTimeSpends, preferences)
+        ?: return
+
+    val savings = metrics.savings
+    val savingsPct = metrics.savingsPct
+    val recurrentPct = metrics.recurrentPct
+    val variablePct = metrics.variablePct
+    val idealSavingsPerPeriod = metrics.idealSavingsPerPeriod
+    val projectedSavingsSixMonths = metrics.projectedSavingsSixMonths
+    val spendingCeiling = preferences.spendingCeilingPct
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 4.dp)) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.savings_recommendation_title),
+                    style = MaterialTheme.typography.bodySmallCondensed,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+            Text(
+                text = stringResource(
+                    R.string.savings_recommendation_method_brief,
+                    preferences.needsPct,
+                    preferences.wantsPct,
+                    preferences.savingsPct,
+                ),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.85f)
+            )
+
+            val goalAmount = preferences.savingsGoalAmount
+            val goalMonths = preferences.savingsGoalMonths
+            if (metrics.goalPerPeriod != null && goalAmount != null && goalMonths != null) {
+                Text(
+                    text = stringResource(
+                        R.string.savings_recommendation_goal_format,
+                        formatCurrencySymbolOnly(goalAmount, currency),
+                        goalMonths,
+                        formatCurrencySymbolOnly(metrics.goalPerPeriod, currency),
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f)
+                )
+            } else {
+                Text(
+                    text = stringResource(
+                        R.string.savings_recommendation_six_month_example_intro,
+                        preferences.savingsPct,
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = stringResource(
+                        R.string.savings_recommendation_six_month_example_equation,
+                        formatCurrencySymbolOnly(idealSavingsPerPeriod, currency),
+                        formatCurrencySymbolOnly(projectedSavingsSixMonths, currency)
+                    ),
+                    style = MaterialTheme.typography.labelSmallCondensed,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(R.string.savings_recommendation_current_savings_label),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "$savingsPct%",
+                        style = MaterialTheme.typography.headlineSmallEmphasized,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (savingsPct >= preferences.savingsPct) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            LinearSavingsBar(
+                recurrentPct = recurrentPct,
+                variablePct = variablePct,
+                spendingCeilingPct = spendingCeiling,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(16.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    modifier = Modifier.censor(),
+                    text = stringResource(
+                        R.string.savings_recommendation_available_format,
+                        formatCurrencySymbolOnly(savings, currency)
+                    ),
+                    style = MaterialTheme.typography.labelSmallCondensed.copy(fontWeight = FontWeight.Light),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Column(horizontalAlignment = Alignment.End) {
+                    val idealLabel = metrics.goalPerPeriod ?: idealSavingsPerPeriod
+                    Text(
+                        modifier = Modifier.censor(),
+                        text = stringResource(
+                            R.string.savings_recommendation_ideal_savings_format,
+                            formatCurrencySymbolOnly(idealLabel, currency)
+                        ), style = MaterialTheme.typography.labelSmallCondensed.copy(
+                            fontWeight = FontWeight.Light,
+                            textDecoration = if (savingsPct < preferences.savingsPct) TextDecoration.LineThrough
+                            else TextDecoration.None
+                        ), color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (savingsPct < preferences.savingsPct) {
+                        Text(
+                            text = stringResource(
+                                R.string.savings_recommendation_current_savings_format,
+                                formatCurrencySymbolOnly(savings, currency)
+                            ),
+                            style = MaterialTheme.typography.labelSmallCondensed.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            RecommendationItem(
+                label = stringResource(R.string.savings_recommendation_recurrent_expenses_label),
+                value = formatCurrencySymbolOnly(metrics.recurrentSpent, currency),
+                percentage = recurrentPct,
+                target = preferences.needsPct,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+
+            RecommendationItem(
+                label = stringResource(R.string.savings_recommendation_one_time_expenses_label),
+                value = formatCurrencySymbolOnly(metrics.variableSpent, currency),
+                percentage = variablePct,
+                target = preferences.wantsPct,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+fun LinearSavingsBar(
+    recurrentPct: Int,
+    variablePct: Int,
+    spendingCeilingPct: Int,
+    modifier: Modifier = Modifier,
+) {
+    val totalSpentPct = recurrentPct + variablePct
+    val ceiling = spendingCeilingPct.coerceIn(0, 100)
+
+    val recSafe = recurrentPct.coerceAtMost(ceiling).toFloat()
+    val varSafe = if (recurrentPct < ceiling) {
+        variablePct.coerceAtMost(ceiling - recurrentPct).toFloat()
+    } else 0f
+    val gapSafe = (ceiling - (recSafe + varSafe)).coerceAtLeast(0f)
+
+    val invasionBudget = (100 - ceiling).coerceAtLeast(0)
+    val totalInvasion = (totalSpentPct - ceiling).coerceIn(0, invasionBudget).toFloat()
+    val safeSavings = (invasionBudget - totalInvasion).coerceAtLeast(0f)
+
+    val recurringColor = MaterialTheme.colorScheme.outlineVariant
+    val variableColor = MaterialTheme.colorScheme.primary
+    val errorColor = MaterialTheme.colorScheme.error
+
+    val mainSegments = remember(recSafe, varSafe, gapSafe, recurringColor, variableColor) {
+        buildList {
+            if (recSafe > 0) add(BarSegment(recSafe, recurringColor))
+            if (varSafe > 0) add(BarSegment(varSafe, variableColor))
+            if (gapSafe > 0) add(BarSegment(gapSafe, Color.Transparent))
+        }
+    }
+
+    val secondarySegments = remember(totalInvasion, safeSavings, errorColor) {
+        buildList {
+            if (totalInvasion > 0) add(BarSegment(totalInvasion, errorColor))
+            if (safeSavings > 0) add(BarSegment(safeSavings, errorColor.copy(alpha = 0.15f)))
+        }
+    }
+
+    LinearSavingBar(
+        segments = mainSegments,
+        secondarySegments = secondarySegments,
+        modifier = modifier,
+        separatorWeight = 1f
+    )
+}
+
+@Composable
+private fun RecommendationItem(
+    label: String, value: String, percentage: Int, target: Int, color: Color
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(color)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Medium
+            )
+        }
+        Text(
+            modifier = Modifier.censor(),
+            text = "$value ($percentage%)",
+            style = MaterialTheme.typography.bodyMediumCondensed,
+            fontWeight = FontWeight.Bold,
+            color = if (percentage > target) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SavingsRecommendationPreview() {
+    WafeerTheme {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            SavingsRecommendationCard(
+                budget = BigDecimal("20000"),
+                recurringInPeriod = listOf(
+                    Transaction(
+                        amount = BigDecimal("6000"),
+                        isRecurrent = true,
+                        comment = "Renta",
+                        date = LocalDateTime.now()
+                    ),
+                ),
+                oneTimeSpends = listOf(
+                    Transaction(
+                        amount = BigDecimal("4000"),
+                        isRecurrent = false,
+                        comment = "Súper",
+                        date = LocalDateTime.now()
+                    ),
+                ),
+            )
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun SavingsRecommendationNoRecurrentPreview() {
+    WafeerTheme {
+        Surface {
+
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                SavingsRecommendationCard(
+                    budget = BigDecimal("12000"),
+                    recurringInPeriod = emptyList(),
+                    oneTimeSpends = listOf(
+                        Transaction(
+                            amount = BigDecimal("6000"),
+                            isRecurrent = false,
+                            comment = "Salidas",
+                            date = LocalDateTime.now()
+                        ),
+                        Transaction(
+                            amount = BigDecimal("4000"),
+                            isRecurrent = false,
+                            comment = "Súper",
+                            date = LocalDateTime.now()
+                        ),
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Custom split + goal")
+@Composable
+private fun SavingsRecommendationCustomSplitPreview() {
+    WafeerTheme {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            SavingsRecommendationCard(
+                budget = BigDecimal("20000"),
+                recurringInPeriod = listOf(
+                    Transaction(
+                        amount = BigDecimal("8000"),
+                        isRecurrent = true,
+                        comment = "Renta",
+                        date = LocalDateTime.now()
+                    ),
+                ),
+                oneTimeSpends = listOf(
+                    Transaction(
+                        amount = BigDecimal("4000"),
+                        isRecurrent = false,
+                        comment = "Súper",
+                        date = LocalDateTime.now()
+                    ),
+                ),
+                preferences = SavingsPreferences(
+                    needsPct = 40,
+                    wantsPct = 30,
+                    savingsPct = 30,
+                    savingsGoalAmount = BigDecimal("60000"),
+                    savingsGoalMonths = 12,
+                ),
+            )
+        }
+    }
+}

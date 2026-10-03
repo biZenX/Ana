@@ -14,11 +14,14 @@
 /.kotlin
 /.minimax
 /sync-contract/build
+/.tools
+/.android
 
 # Release signing artifacts
 *.jks
 *.keystore
 *.apk
+photo_*.jpg
 
 .externalNativeBuild
 .cxx
