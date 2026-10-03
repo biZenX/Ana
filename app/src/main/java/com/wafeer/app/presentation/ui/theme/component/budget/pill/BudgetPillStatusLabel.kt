@@ -37,10 +37,8 @@ import androidx.compose.ui.unit.sp
 import com.wafeer.app.R
 import com.wafeer.app.domain.model.BudgetPeriod
 import com.wafeer.app.domain.model.BudgetState
-import com.wafeer.app.presentation.isRoundedFontEnabled
 import com.wafeer.app.presentation.ui.onboarding.periodLabel
 import com.wafeer.app.presentation.ui.theme.WafeerTheme
-import com.wafeer.app.presentation.ui.theme.googleSansFlex
 import com.wafeer.app.presentation.ui.theme.titleMediumCondensed
 import com.wafeer.app.presentation.util.censor
 
@@ -68,16 +66,7 @@ internal fun StatusLabel(
     val hasProjection = projectionAmount != null
     val secondaryVisible = hasProjection || exhaustedMessage != null
 
-    val context = LocalContext.current
-    val isRounded = remember(context) { context.isRoundedFontEnabled }
-    val secondaryStyle = remember(isRounded) {
-        TextStyle(
-            fontFamily = googleSansFlex(weight = 600, width = 125f, isRounded = isRounded),
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            letterSpacing = 0.sp,
-        )
-    }
+    val secondaryStyle = MaterialTheme.typography.labelSmall
 
     val label = when {
         isOverBudget -> stringResource(R.string.budget_pill_over_budget)
