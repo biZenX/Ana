@@ -203,7 +203,7 @@ platform :android do
     File.write(notes_file, <<~MD)
       <img src="#{header_url}" width="240">
 
-      ## What's new
+      ## الجديد في هذا الإصدار:
 
       #{File.read(expected_txt).strip}
 
@@ -213,9 +213,8 @@ platform :android do
       sh(
         "gh", "release", "create", version_tag, *apk_paths,
         "--repo", repo,
-        "--title", "Wafeer #{version_tag}",
-        "--notes-file", notes_file,
-        "--generate-notes"
+        "--title", "وفير #{version_tag}",
+        "--notes-file", notes_file
       )
     rescue => e
       raise e unless e.to_s.include?("already exists")

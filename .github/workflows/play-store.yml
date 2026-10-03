@@ -1,8 +1,6 @@
 name: Deploy to Google Play
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
     inputs:
       version_tag:
