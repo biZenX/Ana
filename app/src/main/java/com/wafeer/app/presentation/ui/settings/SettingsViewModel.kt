@@ -123,24 +123,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun showDemoUpdateDialog() {
-        _pendingUpdate.value = com.wafeer.app.domain.model.updater.AppUpdateInfo(
-            versionName = "1.3.1",
-            versionCode = 10301,
-            releaseDate = "2026-10-03",
-            mainFeatures = listOf(
-                "تصحيح رسم حرف الكاف وإزالة التبديل الزخرفي ليعود بشكله العربي الأصيل",
-                "إعادة ضبط عائلات خط ثمانية (ديسبلاي للعناوين وسانز للواجهات)",
-            ),
-            improvements = listOf(
-                "نظام إشعارات تفاعلي عالي الاستقرار مع أزرار سريعة وموثوقية تامة",
-                "توجيه مباشر لإعدادات إشعارات النظام عند الحاجة",
-            ),
-            downloadUrl = "https://github.com/biZenX/Ana/releases/download/v1.3.1/Wafeer-v1.3.1.apk",
-            fileSize = 37748736L,
-        )
-    }
-
     fun startDownloadingUpdate() {
         val info = _pendingUpdate.value ?: return
         viewModelScope.launch {
@@ -242,11 +224,6 @@ class SettingsViewModel @Inject constructor(
 
     fun onNotificationPermissionGranted() {
         _notificationPermissionGranted.value = true
-    }
-
-    fun onSendTestNotification(): Boolean {
-        refreshNotificationPermission()
-        return notificationHelper.showTestNotification()
     }
 
     fun onOpenNotificationSettings() {

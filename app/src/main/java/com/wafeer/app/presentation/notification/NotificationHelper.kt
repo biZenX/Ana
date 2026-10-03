@@ -186,18 +186,6 @@ class NotificationHelper @Inject constructor(
         return true
     }
 
-    fun showTestNotification(): Boolean {
-        val title = "تنبيه وفير الذكي • تجربة الإشعار"
-        val message = "انقضى 75% من يومك دون تسجيل أي مصروف. بلمسة واحدة دوّن مصاريفك وحافظ على انضباطك المالي."
-        return showRichCustomNotification(
-            notificationId = NOTIFICATION_ID_PERIOD_END + 99,
-            channelId = CHANNEL_PERIOD_END,
-            title = title,
-            message = message,
-            tag = "وفير • الرقيب المالي الذكي",
-        )
-    }
-
     fun showPeriodEndNotification(remainingBudget: String, currency: String) {
         val hasPermission = checkNotificationPermission()
         if (!hasPermission) {

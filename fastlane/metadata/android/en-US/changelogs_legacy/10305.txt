@@ -3,7 +3,7 @@
 - chore: rounded typography styles
 - feat: implement dynamic budget split mode (#105)
 - deploy: keystore secrets and fastlane updated info
-- add privacy policy for Minus
+- add privacy policy for Wafeer
 - deploy: play store signing configs hidden
 - fix: update category ID when editing transaction category (#104)
 - feat: implement gregorian lari currency (#103)

@@ -793,6 +793,8 @@
     <string name="day_thursday_short">خميس</string>
     <string name="day_friday_short">جمعة</string>
     <string name="day_saturday_short">سبت</string>
+    <string name="budget_allowance_day_off">يوم راحة</string>
+    <string name="budget_allowance_day_off_desc">خارج أيام الميزانية المحددة</string>
     <string name="budget_alert_title">تنبيه المصروف اليومي</string>
     <string name="budget_alert_warning">أنت تقترب من حد المصروف المخصص لليوم (%1$d%%)</string>
     <string name="budget_alert_exceeded">تجاوزت الحد اليومي المحدد لمصروفك</string>

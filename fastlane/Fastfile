@@ -137,7 +137,7 @@ platform :android do
       "  2. git add version.properties fastlane/metadata\n" \
       "  3. git commit -m \"docs(changelog): preparar #{version_tag}\"\n" \
       "  4. git tag -a #{version_tag} -m \"Release #{version_tag.gsub(/^v/, '')}\"\n" \
-      "  5. git push origin #{version_tag}   # dispara el workflow Release Minus\n" \
+      "  5. git push origin #{version_tag}   # dispara el workflow Release Wafeer\n" \
       "\n" \
       "El CI sólo construye APKs desde el .txt ya comiteado, sin regenerarlo.\n" \
       "Así IzzyOnDroid (RB checker), F-Droid y un checkout limpio obtienen el mismo APK."
@@ -198,7 +198,7 @@ platform :android do
     # Create the Release if missing; otherwise refresh its assets. Either path
     # leaves the tagged release carrying all three signed APKs, and CI re-runs
     # stay idempotent.
-    header_url = "https://raw.githubusercontent.com/#{repo}/#{version_tag}/assets/minus-header-update.png"
+    header_url = "https://raw.githubusercontent.com/#{repo}/#{version_tag}/assets/banner.png"
     notes_file = File.join(Dir.tmpdir, "wafeer-release-notes-#{version_tag}.md")
     File.write(notes_file, <<~MD)
       <img src="#{header_url}" width="240">

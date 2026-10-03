@@ -15,7 +15,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class MinusCsvRoundTripTest {
+class WafeerCsvRoundTripTest {
 
     private val exporter = WafeerCsvExporter()
     private val parser = WafeerCsvParser()

@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AppDatabaseMigrationTest {
 
-    private val testDb = "minus-migration-test.db"
+    private val testDb = "wafeer-migration-test.db"
 
     @get:Rule
     val helper = MigrationTestHelper(

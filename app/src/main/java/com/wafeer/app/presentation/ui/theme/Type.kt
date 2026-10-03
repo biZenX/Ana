@@ -74,18 +74,13 @@ fun isArabicLocale(): Boolean {
     if (!appLocales.isEmpty) {
         val lang = appLocales[0]?.language
         if (!lang.isNullOrEmpty()) {
-            return !lang.equals("en", ignoreCase = true) &&
-                    !lang.equals("de", ignoreCase = true) &&
-                    !lang.equals("es", ignoreCase = true) &&
-                    !lang.equals("fr", ignoreCase = true) &&
-                    !lang.equals("ru", ignoreCase = true) &&
-                    !lang.equals("zh", ignoreCase = true) &&
-                    !lang.equals("ja", ignoreCase = true)
+            return lang.equals("ar", ignoreCase = true)
         }
     }
-    // Default is always Arabic in Wafeer
-    return true
+    return java.util.Locale.getDefault().language.equals("ar", ignoreCase = true)
 }
+
+const val THMANYAH_DESCENT_FEATURES = "\"ss01\" 1, \"dlig\" 1, \"swsh\" 1"
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
@@ -98,6 +93,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 62.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displayMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -106,6 +102,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 52.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displaySmall = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -114,6 +111,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -122,6 +120,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -130,6 +129,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineSmall = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -138,6 +138,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -146,6 +147,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 28.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -154,6 +156,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 24.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleSmall = TextStyle(
             fontFamily = ThmanyahSerifTextFamily,
@@ -221,6 +224,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 68.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displayMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -229,6 +233,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 56.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displaySmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -237,6 +242,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 48.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -245,6 +251,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -253,6 +260,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineSmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -261,6 +269,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -269,6 +278,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -277,6 +287,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleSmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifTextFamily,
@@ -901,14 +912,20 @@ private fun isThmanyah(family: FontFamily?): Boolean {
     return family == ThmanyahSerifTextFamily || family == ThmanyahSansFamily || family == ThmanyahSerifDisplayFamily
 }
 
-private fun ibmNumeralCondensed(
+private fun latinNumeralCondensed(
     weight: FontWeight,
     fontSize: androidx.compose.ui.unit.TextUnit,
     lineHeight: androidx.compose.ui.unit.TextUnit,
     letterSpacing: androidx.compose.ui.unit.TextUnit = 0.sp
 ): TextStyle {
+    val numericWeight = when (weight) {
+        FontWeight.Bold, FontWeight.ExtraBold, FontWeight.Black -> 700
+        FontWeight.SemiBold -> 600
+        FontWeight.Medium -> 500
+        else -> 400
+    }
     return TextStyle(
-        fontFamily = IbmPlexSansArabicFamily,
+        fontFamily = googleSansFlex(numericWeight, 85f, true),
         fontWeight = weight,
         fontSize = fontSize,
         lineHeight = lineHeight,
@@ -926,7 +943,7 @@ val Typography.displayLargeCondensed: TextStyle
                 lineHeight = 72.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 64.sp, 72.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Bold, 64.sp, 72.sp)
         else -> displayLarge
     }
 
@@ -939,7 +956,7 @@ val Typography.displayMediumCondensed: TextStyle
                 lineHeight = 60.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 52.sp, 60.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Bold, 52.sp, 60.sp)
         else -> displayMedium
     }
 
@@ -952,7 +969,7 @@ val Typography.displaySmallCondensed: TextStyle
                 lineHeight = 52.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 44.sp, 52.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.SemiBold, 44.sp, 52.sp)
         else -> displaySmall
     }
 
@@ -965,7 +982,7 @@ val Typography.headlineLargeCondensed: TextStyle
                 lineHeight = 44.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 36.sp, 44.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Bold, 36.sp, 44.sp)
         else -> headlineLarge
     }
 
@@ -978,7 +995,7 @@ val Typography.headlineMediumCondensed: TextStyle
                 lineHeight = 40.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 32.sp, 40.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Bold, 32.sp, 40.sp)
         else -> headlineMedium
     }
 
@@ -991,7 +1008,7 @@ val Typography.headlineSmallCondensed: TextStyle
                 lineHeight = 36.sp,
                 letterSpacing = 0.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 28.sp, 36.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.SemiBold, 28.sp, 36.sp)
         else -> headlineSmall
     }
 
@@ -1004,7 +1021,7 @@ val Typography.titleLargeCondensed: TextStyle
                 lineHeight = 32.sp,
                 letterSpacing = 0.15.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Bold, 24.sp, 32.sp, 0.15.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Bold, 24.sp, 32.sp, 0.15.sp)
         else -> titleLarge
     }
 
@@ -1017,7 +1034,7 @@ val Typography.titleMediumCondensed: TextStyle
                 lineHeight = 26.sp,
                 letterSpacing = 0.2.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.SemiBold, 18.sp, 26.sp, 0.2.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.SemiBold, 18.sp, 26.sp, 0.2.sp)
         else -> titleMedium
     }
 
@@ -1030,7 +1047,7 @@ val Typography.titleSmallCondensed: TextStyle
                 lineHeight = 24.sp,
                 letterSpacing = 0.15.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
         else -> titleSmall
     }
 
@@ -1043,7 +1060,7 @@ val Typography.bodyLargeCondensed: TextStyle
                 lineHeight = 28.sp,
                 letterSpacing = 0.6.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 18.sp, 28.sp, 0.6.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Normal, 18.sp, 28.sp, 0.6.sp)
         else -> bodyLarge
     }
 
@@ -1056,7 +1073,7 @@ val Typography.bodyMediumCondensed: TextStyle
                 lineHeight = 24.sp,
                 letterSpacing = 0.4.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 16.sp, 24.sp, 0.4.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Normal, 16.sp, 24.sp, 0.4.sp)
         else -> bodyMedium
     }
 
@@ -1069,7 +1086,7 @@ val Typography.bodySmallCondensed: TextStyle
                 lineHeight = 20.sp,
                 letterSpacing = 0.5.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Normal, 14.sp, 20.sp, 0.5.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Normal, 14.sp, 20.sp, 0.5.sp)
         else -> bodySmall
     }
 
@@ -1082,7 +1099,7 @@ val Typography.labelLargeCondensed: TextStyle
                 lineHeight = 24.sp,
                 letterSpacing = 0.15.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Medium, 16.sp, 24.sp, 0.15.sp)
         else -> labelLarge
     }
 
@@ -1095,7 +1112,7 @@ val Typography.labelMediumCondensed: TextStyle
                 lineHeight = 20.sp,
                 letterSpacing = 0.6.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 14.sp, 20.sp, 0.6.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Medium, 14.sp, 20.sp, 0.6.sp)
         else -> labelMedium
     }
 
@@ -1108,7 +1125,7 @@ val Typography.labelSmallCondensed: TextStyle
                 lineHeight = 16.sp,
                 letterSpacing = 0.6.sp
             )
-        isThmanyah(bodyLarge.fontFamily) -> ibmNumeralCondensed(FontWeight.Medium, 12.sp, 16.sp, 0.6.sp)
+        isThmanyah(bodyLarge.fontFamily) -> latinNumeralCondensed(FontWeight.Medium, 12.sp, 16.sp, 0.6.sp)
         else -> labelSmall
     }
 

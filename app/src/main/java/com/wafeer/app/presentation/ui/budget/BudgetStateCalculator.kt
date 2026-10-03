@@ -100,6 +100,7 @@ class BudgetStateCalculator @Inject constructor() {
             replayLeftovers(
                 settings, splitBudget, carry, originalTotalDays, currentDate,
                 activeTransactions + unpaidRecurringCharges, leftoverChoices,
+                allowanceDaysEnabled, activeSpendingDays,
             )
         } else {
             null
@@ -208,6 +209,7 @@ class BudgetStateCalculator @Inject constructor() {
                 ?.setScale(2, RoundingMode.HALF_UP)
                 ?: splitBudget,
             pendingLeftover = leftovers?.pending ?: BigDecimal.ZERO,
+            isAllowanceDayOff = allowanceDaysEnabled && !isTodayAllowanceDay,
         )
     }
 
@@ -221,6 +223,8 @@ class BudgetStateCalculator @Inject constructor() {
         currentDate: LocalDate,
         flows: List<Transaction>,
         choices: Map<LocalDate, LeftoverChoice>,
+        allowanceDaysEnabled: Boolean = false,
+        activeSpendingDays: Set<Int> = setOf(7, 1, 2, 3, 4),
     ): LeftoverReplay {
         val start = settings.startDate
         val end = settings.getPeriodEndDate()
@@ -243,18 +247,29 @@ class BudgetStateCalculator @Inject constructor() {
         var allowance = BigDecimal.ZERO
         var day = start
         while (!day.isAfter(lastDay)) {
+            val isActive = !allowanceDaysEnabled || (day.dayOfWeek.value in activeSpendingDays)
             if (day != start) {
                 pending += allowance.subtract(outflow[day.minusDays(1)] ?: BigDecimal.ZERO)
             }
-            allowance = rate
-            if (pending.signum() < 0 || choices[day] == LeftoverChoice.CARRY) {
-                allowance += pending
-                pending = BigDecimal.ZERO
-            } else if (choices[day] == LeftoverChoice.SPREAD) {
-                val daysLeft = totalDays - ChronoUnit.DAYS.between(start, day).toInt()
-                rate += pending.divide(BigDecimal(daysLeft), MathContext.DECIMAL64)
+            if (isActive) {
                 allowance = rate
-                pending = BigDecimal.ZERO
+                if (pending.signum() < 0 || choices[day] == LeftoverChoice.CARRY) {
+                    allowance += pending
+                    pending = BigDecimal.ZERO
+                } else if (choices[day] == LeftoverChoice.SPREAD) {
+                    val daysLeft = if (allowanceDaysEnabled) {
+                        countActiveDays(day, end, activeSpendingDays)
+                    } else {
+                        totalDays - ChronoUnit.DAYS.between(start, day).toInt()
+                    }
+                    if (daysLeft > 0) {
+                        rate += pending.divide(BigDecimal(daysLeft), MathContext.DECIMAL64)
+                    }
+                    allowance = rate
+                    pending = BigDecimal.ZERO
+                }
+            } else {
+                allowance = BigDecimal.ZERO
             }
             if (day == surplusDay) allowance += carry
             day = day.plusDays(1)

@@ -158,7 +158,6 @@ fun Settings(
     onRecurrentNotificationTimeChange: (Int, Int) -> Unit,
     onOpenExactAlarmSettings: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
-    onSendTestNotification: () -> Unit = {},
     periodMappingMode: PeriodMappingMode,
     onPeriodMappingModeChange: (PeriodMappingMode) -> Unit,
     savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
@@ -176,7 +175,6 @@ fun Settings(
     onNavigateToAppearance: () -> Unit = {},
     isCheckingUpdate: Boolean = false,
     onCheckForUpdates: () -> Unit = {},
-    onTestUpdateDialog: () -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     var showRecurrentPaymentsViewModeDialog by remember { mutableStateOf(false) }
@@ -535,37 +533,6 @@ fun Settings(
 
                     CustomPaddedListItem(
                         onClick = {
-                            onSendTestNotification()
-                            view.weakHapticFeedback()
-                        },
-                        position = PaddedListItemPosition.Middle,
-                    ) {
-                        SettingsLeadingIcon(
-                            icon = Icons.Rounded.NotificationsActive,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = stringResource(R.string.settings_test_notification_title),
-                                style = MaterialTheme.typography.bodyMediumEmphasized,
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                            Text(
-                                text = stringResource(R.string.settings_test_notification_subtitle),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                        Icon(
-                            imageVector = Icons.Rounded.Send,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-
-                    CustomPaddedListItem(
-                        onClick = {
                             showNotificationTimePicker = true
                             view.weakHapticFeedback()
                         },
@@ -865,10 +832,6 @@ fun Settings(
                             view.weakHapticFeedback()
                             onCheckForUpdates()
                         },
-                        onLongClick = {
-                            view.weakHapticFeedback()
-                            onTestUpdateDialog()
-                        },
                         position = PaddedListItemPosition.Last,
                     ) {
                         SettingsLeadingIcon(icon = Icons.Rounded.SystemUpdate)
@@ -880,7 +843,7 @@ fun Settings(
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "تنزيل وتثبيت أحدث إصدار تلقائياً (مطولاً للتجربة)",
+                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "التحقق من توفر إصدارات أحدث وتثبيتها",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

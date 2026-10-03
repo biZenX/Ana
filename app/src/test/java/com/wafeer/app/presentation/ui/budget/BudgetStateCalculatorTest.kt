@@ -538,4 +538,105 @@ class BudgetStateCalculatorTest {
         assertThat(debt.remainingToday).isEqualTo(BigDecimal("90.00"))
         assertThat(debt.pendingLeftover).isEqualTo(BigDecimal("0.00"))
     }
+
+    @Test
+    fun `allowance days - Sun to Thu active days allocate budget only on active days and zero on Fri and Sat`() {
+        // July 5, 2026 is Sunday, July 11 is Saturday (7 days total: 5 active Sun-Thu, 2 inactive Fri-Sat)
+        val start = LocalDate.of(2026, 7, 5) // Sunday
+        val end = LocalDate.of(2026, 7, 11)   // Saturday
+        val budgetSettings = settings(
+            totalBudget = BigDecimal("500"),
+            start = start,
+            end = end,
+            splitMode = BudgetSplitMode.CARRY_OVER,
+        )
+        val activeDays = setOf(7, 1, 2, 3, 4) // Sun, Mon, Tue, Wed, Thu
+
+        // Sunday (active day 1 of 5)
+        val sunday = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = emptyList(),
+            currentDate = start,
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(sunday.dailyBudget).isEqualTo(BigDecimal("100.00"))
+        assertThat(sunday.remainingToday).isEqualTo(BigDecimal("100.00"))
+        assertThat(sunday.isAllowanceDayOff).isFalse()
+
+        // Friday (inactive day off)
+        val friday = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = emptyList(),
+            currentDate = LocalDate.of(2026, 7, 10), // Friday
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(friday.dailyBudget).isEqualTo(BigDecimal.ZERO)
+        assertThat(friday.remainingToday).isEqualTo(BigDecimal.ZERO)
+        assertThat(friday.isAllowanceDayOff).isTrue()
+
+        // Saturday (inactive day off)
+        val saturday = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = emptyList(),
+            currentDate = LocalDate.of(2026, 7, 11), // Saturday
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(saturday.dailyBudget).isEqualTo(BigDecimal.ZERO)
+        assertThat(saturday.remainingToday).isEqualTo(BigDecimal.ZERO)
+        assertThat(saturday.isAllowanceDayOff).isTrue()
+    }
+
+    @Test
+    fun `allowance days - 1 active day per week rolls over strictly to the next active day`() {
+        // 2-week period: July 3, 2026 (Fri) to July 16, 2026 (Thu)
+        // Only Friday (dayOfWeek 5) is active (total 2 active days: July 3 and July 10)
+        val start = LocalDate.of(2026, 7, 3) // Friday 1
+        val end = LocalDate.of(2026, 7, 16)  // Thursday week 2
+        val budgetSettings = settings(
+            totalBudget = BigDecimal("200"),
+            start = start,
+            end = end,
+            splitMode = BudgetSplitMode.CARRY_OVER,
+        )
+        val activeDays = setOf(5) // Friday only
+
+        // Friday 1: earned 100
+        val fri1 = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = listOf(transaction(BigDecimal("30"), start)), // spent 30 out of 100
+            currentDate = start,
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(fri1.dailyBudget).isEqualTo(BigDecimal("100.00"))
+        assertThat(fri1.remainingToday).isEqualTo(BigDecimal("70.00"))
+        assertThat(fri1.isAllowanceDayOff).isFalse()
+
+        // Saturday (Day off): 0 daily budget
+        val sat = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = listOf(transaction(BigDecimal("30"), start)),
+            currentDate = start.plusDays(1),
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(sat.dailyBudget).isEqualTo(BigDecimal.ZERO)
+        assertThat(sat.remainingToday).isEqualTo(BigDecimal.ZERO)
+        assertThat(sat.isAllowanceDayOff).isTrue()
+
+        // Friday 2 (Next active day): earned 200 total - 30 spent = 170 remaining!
+        val fri2 = calculator.calculateBudgetState(
+            settings = budgetSettings,
+            transactions = listOf(transaction(BigDecimal("30"), start)),
+            currentDate = start.plusDays(7), // July 10 (Friday 2)
+            allowanceDaysEnabled = true,
+            activeSpendingDays = activeDays,
+        )
+        assertThat(fri2.dailyBudget).isEqualTo(BigDecimal("100.00"))
+        assertThat(fri2.remainingToday).isEqualTo(BigDecimal("170.00"))
+        assertThat(fri2.isAllowanceDayOff).isFalse()
+    }
 }

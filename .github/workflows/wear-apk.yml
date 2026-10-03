@@ -1,13 +1,13 @@
-name: Build Minus Watch APK (manual)
+name: Build Wafeer Watch APK (manual)
 
 # Manual builder for the STANDALONE Wear OS APK (:wear module — the app that
-# runs ON the watch). Produces Minus-Watch-v<x>.apk, signed with the same
+# runs ON the watch). Produces Wafeer-Watch-v<x>.apk, signed with the same
 # release key as :app.
 #
 # The normal path is release.yml: every `v*` tag builds and attaches all three
-# APKs (Minus, Minus-WearOS, Minus-Watch) via the Fastfile. This workflow is the
+# APKs (Wafeer, Wafeer-WearOS, Wafeer-Watch) via the Fastfile. This workflow is the
 # out-of-band tool for:
-#   - Backfilling Minus-Watch onto a version that shipped before this existed.
+#   - Backfilling Wafeer-Watch onto a version that shipped before this existed.
 #   - Re-running just the wear build for a tag without re-running the full release.
 #
 # Run modes ("Run workflow"):
@@ -97,33 +97,33 @@ jobs:
 
       - name: Validate release signing secrets
         env:
-          MINUS_RELEASE_KEYSTORE_BASE64: ${{ secrets.MINUS_RELEASE_KEYSTORE_BASE64 }}
-          MINUS_RELEASE_STORE_PASSWORD: ${{ secrets.MINUS_RELEASE_STORE_PASSWORD }}
-          MINUS_RELEASE_KEY_ALIAS: ${{ secrets.MINUS_RELEASE_KEY_ALIAS }}
-          MINUS_RELEASE_KEY_PASSWORD: ${{ secrets.MINUS_RELEASE_KEY_PASSWORD }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.WAFEER_RELEASE_KEYSTORE_BASE64 || secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.WAFEER_RELEASE_STORE_PASSWORD || secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.WAFEER_RELEASE_KEY_ALIAS || secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.WAFEER_RELEASE_KEY_PASSWORD || secrets.RELEASE_KEY_PASSWORD }}
         run: |
-          test -n "$MINUS_RELEASE_KEYSTORE_BASE64"
-          test -n "$MINUS_RELEASE_STORE_PASSWORD"
-          test -n "$MINUS_RELEASE_KEY_ALIAS"
-          test -n "$MINUS_RELEASE_KEY_PASSWORD"
+          test -n "$RELEASE_KEYSTORE_BASE64"
+          test -n "$RELEASE_STORE_PASSWORD"
+          test -n "$RELEASE_KEY_ALIAS"
+          test -n "$RELEASE_KEY_PASSWORD"
 
       - name: Decode release keystore
         env:
-          MINUS_RELEASE_KEYSTORE_BASE64: ${{ secrets.MINUS_RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.WAFEER_RELEASE_KEYSTORE_BASE64 || secrets.RELEASE_KEYSTORE_BASE64 }}
         run: |
-          echo "$MINUS_RELEASE_KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
 
       - name: Write keystore.properties for CI build
         env:
-          MINUS_RELEASE_STORE_PASSWORD: ${{ secrets.MINUS_RELEASE_STORE_PASSWORD }}
-          MINUS_RELEASE_KEY_ALIAS: ${{ secrets.MINUS_RELEASE_KEY_ALIAS }}
-          MINUS_RELEASE_KEY_PASSWORD: ${{ secrets.MINUS_RELEASE_KEY_PASSWORD }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.WAFEER_RELEASE_STORE_PASSWORD || secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.WAFEER_RELEASE_KEY_ALIAS || secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.WAFEER_RELEASE_KEY_PASSWORD || secrets.RELEASE_KEY_PASSWORD }}
         run: |
           cat > keystore.properties << EOF
           storeFile=${{ github.workspace }}/release-keystore.jks
-          storePassword=${MINUS_RELEASE_STORE_PASSWORD}
-          keyAlias=${MINUS_RELEASE_KEY_ALIAS}
-          keyPassword=${MINUS_RELEASE_KEY_PASSWORD}
+          storePassword=${RELEASE_STORE_PASSWORD}
+          keyAlias=${RELEASE_KEY_ALIAS}
+          keyPassword=${RELEASE_KEY_PASSWORD}
           EOF
 
       - name: Run Detekt (wear)

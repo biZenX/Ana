@@ -82,6 +82,7 @@ internal fun StatusLabel(
     val label = when {
         isOverBudget -> stringResource(R.string.budget_pill_over_budget)
         budgetState == null -> stringResource(R.string.budget_pill_no_budget)
+        budgetState.isAllowanceDayOff && budgetPeriod == BudgetPeriod.DAILY -> stringResource(R.string.budget_allowance_day_off)
         isOverSubPeriodAllocation -> stringResource(
             when (budgetPeriod) {
                 BudgetPeriod.DAILY -> R.string.budget_pill_label_daily_exceeded

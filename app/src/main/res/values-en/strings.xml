@@ -576,4 +576,6 @@
     <string name="changelog_rating_desc">If Wafeer is helping you master your finances, a kind review on the Play Store means the world to our continuous development!</string>
     <string name="changelog_rating_button">Rate Wafeer on the Play Store</string>
     <string name="notification_action_view_budget">View Budget</string>
+    <string name="budget_allowance_day_off">Day Off</string>
+    <string name="budget_allowance_day_off_desc">Outside active budget days</string>
 </resources>

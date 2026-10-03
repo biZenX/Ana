@@ -19,6 +19,7 @@ data class BudgetState(
     val reservedCharges: List<Transaction> = emptyList(),
     val splitBudget: BigDecimal = BigDecimal.ZERO,
     val pendingLeftover: BigDecimal = BigDecimal.ZERO,
+    val isAllowanceDayOff: Boolean = false,
 ) {
     companion object {
         val EMPTY = BudgetState(
