@@ -45,6 +45,7 @@ import com.serranoie.app.minus.domain.model.TypographyMode
 import com.serranoie.app.minus.domain.time.MidnightTransitionManager
 import com.serranoie.app.minus.navigation.AppNavGraph
 import com.serranoie.app.minus.navigation.Screen
+import com.serranoie.app.minus.presentation.notification.NotificationHelper
 import com.serranoie.app.minus.presentation.notification.NotificationScheduler
 import com.serranoie.app.minus.presentation.permission.PermissionHandler
 import com.serranoie.app.minus.presentation.ui.theme.MinusTheme
@@ -87,6 +88,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var notificationScheduler: NotificationScheduler
+
+    @Inject
+    lateinit var notificationHelper: NotificationHelper
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
@@ -172,9 +176,17 @@ class MainActivity : AppCompatActivity() {
 
             launch(kotlinx.coroutines.Dispatchers.IO) {
                 try {
+                    com.serranoie.app.minus.data.updater.AppUpdateCheckWorker.schedule(applicationContext)
                     appUpdateManager.checkForUpdates().onSuccess { info ->
                         if (info != null) {
                             autoUpdateInfo.value = info
+
+                            val prefs = applicationContext.getSharedPreferences("wafeer_update_check_prefs", android.content.Context.MODE_PRIVATE)
+                            val lastNotified = prefs.getInt("last_notified_update_version_code", 0)
+                            if (info.versionCode > lastNotified) {
+                                notificationHelper.showUpdateNotification(info)
+                                prefs.edit().putInt("last_notified_update_version_code", info.versionCode).apply()
+                            }
                         }
                     }
                 } catch (_: Exception) {

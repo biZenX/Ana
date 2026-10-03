@@ -244,38 +244,70 @@ class AppUpdateManager @Inject constructor(
         val features = mutableListOf<String>()
         val improvements = mutableListOf<String>()
 
-        val lines = body.lines().map { it.trim().removePrefix("-").removePrefix("*").trim() }.filter { it.isNotBlank() }
+        val rawLines = body.lines().map { it.trim() }.filter { it.isNotBlank() }
 
-        for (line in lines) {
+        // Filter out headers, markdown dividers, and intro titles
+        val candidateLines = rawLines.filterNot { line ->
+            line.startsWith("#") ||
+            line.startsWith("---") ||
+            line.startsWith("***") ||
+            line.startsWith("===") ||
+            line.contains("ما الجديد في الإصدار", ignoreCase = true) ||
+            line.contains("سجل التغييرات", ignoreCase = true) ||
+            line.equals("changelog", ignoreCase = true)
+        }.map { cleanBulletText(it) }.filter { it.isNotBlank() }
+
+        for (line in candidateLines) {
             val lower = line.lowercase()
+            val isFeatureKeyword = lower.startsWith("feat") ||
+                lower.startsWith("new") ||
+                line.contains("ميزة") ||
+                line.contains("إضافة") ||
+                line.contains("جديد") ||
+                line.contains("إعدادات") ||
+                line.contains("خاصية")
+
+            val isImprovementKeyword = lower.startsWith("improve") ||
+                lower.startsWith("fix") ||
+                lower.startsWith("refactor") ||
+                line.contains("تحسين") ||
+                line.contains("إصلاح") ||
+                line.contains("لوجيك") ||
+                line.contains("حفظ") ||
+                line.contains("معالجة") ||
+                line.contains("تحديث")
+
             when {
-                lower.startsWith("feat") || lower.startsWith("new") || line.contains("⭐") || line.contains("ميزة") -> {
-                    if (features.size < 2) features.add(cleanBulletText(line))
-                }
-                lower.startsWith("improve") || lower.startsWith("fix") || lower.startsWith("refactor") || line.contains("تحسين") || line.contains("إصلاح") -> {
-                    if (improvements.size < 2) improvements.add(cleanBulletText(line))
-                }
+                isFeatureKeyword && features.size < 2 -> features.add(line)
+                isImprovementKeyword && improvements.size < 2 -> improvements.add(line)
                 else -> {
                     if (features.size < 2) {
-                        features.add(cleanBulletText(line))
+                        features.add(line)
                     } else if (improvements.size < 2) {
-                        improvements.add(cleanBulletText(line))
+                        improvements.add(line)
                     }
                 }
             }
         }
 
         if (features.isEmpty()) {
-            features.add("تحسينات ذكية في إدارة الميزانية ومتابعة المصروف اليومي")
+            features.add("**إدارة مالية متجددة**: تحسينات ذكية في متابعة المصروف اليومي والميزانية")
         }
         if (improvements.isEmpty()) {
-            improvements.add("تعزيز استقرار التطبيق وسرعة استجابة الواجهات")
+            improvements.add("**استقرار وسرعة**: تعزيز استقرار التطبيق ودقة معالجة البيانات محلياً")
         }
 
         return Pair(features.take(2), improvements.take(2))
     }
 
     private fun cleanBulletText(text: String): String {
-        return text.replace(Regex("^(feat|fix|improve|refactor)(\\(.*?\\))?:?\\s*", RegexOption.IGNORE_CASE), "").trim()
+        return text
+            .replace(Regex("^#{1,6}\\s*"), "") // strip any remaining markdown headers
+            .replace(Regex("^[\\-*•+]\\s*"), "") // strip bullet markers
+            .replace(Regex("^\\d+\\.\\s*"), "") // strip numbering
+            .replace(Regex("^(feat|fix|improve|refactor)(\\(.*?\\))?:?\\s*", RegexOption.IGNORE_CASE), "")
+            // Remove excessive emojis at line start (e.g. 🧠, 💾, ⚙️, 🚀, ⭐) to maintain a sleek fintech aesthetic
+            .replace(Regex("^[\\p{So}\\p{Sk}\\p{Cs}\\p{Cn}]+\\s*"), "")
+            .trim()
     }
 }

@@ -30,10 +30,12 @@ class NotificationHelper @Inject constructor(
         const val CHANNEL_PERIOD_END = "budget_period_end_v131"
         const val CHANNEL_RECURRENT = "recurrent_expenses_v131"
         const val CHANNEL_CREDIT = "credit_expenses_v131"
+        const val CHANNEL_APP_UPDATES = "app_updates_v133"
 
         const val NOTIFICATION_ID_PERIOD_END = 1001
         const val NOTIFICATION_ID_RECURRENT = 1002
         const val NOTIFICATION_ID_CREDIT = 1003
+        const val NOTIFICATION_ID_APP_UPDATE = 1004
     }
 
     init {
@@ -77,10 +79,22 @@ class NotificationHelper @Inject constructor(
             setShowBadge(true)
         }
 
+        val updatesChannel = NotificationChannel(
+            CHANNEL_APP_UPDATES,
+            "تحديثات وفير",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "إشعارات توفر إصدارات وتحديثات جديدة لتطبيق وفير"
+            enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
+        }
+
         notificationManager.createNotificationChannel(periodEndChannel)
         notificationManager.createNotificationChannel(recurrentChannel)
         notificationManager.createNotificationChannel(creditChannel)
-        logcat { "Notification channels created (v131)" }
+        notificationManager.createNotificationChannel(updatesChannel)
+        logcat { "Notification channels created (v133)" }
     }
 
     private fun checkNotificationPermission(): Boolean {
@@ -450,6 +464,52 @@ class NotificationHelper @Inject constructor(
             .build()
 
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_CREDIT, notification)
+    }
+
+    fun showUpdateNotification(info: com.serranoie.app.minus.domain.model.updater.AppUpdateInfo) {
+        val hasPermission = checkNotificationPermission()
+        if (!hasPermission) {
+            logcat { "Cannot show update notification - permission not granted" }
+            return
+        }
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("EXTRA_TRIGGER_UPDATE", true)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            NOTIFICATION_ID_APP_UPDATE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val title = "تحديث جديد لوفير: v${info.versionName}"
+        val firstHighlight = info.mainFeatures.firstOrNull() ?: info.improvements.firstOrNull() ?: ""
+        val cleanSummary = com.serranoie.app.minus.presentation.util.MarkdownParser.stripMarkdown(firstHighlight)
+        val message = if (cleanSummary.isNotBlank()) {
+            "$cleanSummary\nاضغط للتحميل والتثبيت المباشر."
+        } else {
+            "يتوفر إصدار جديد بتحسينات ومميزات ذكية. اضغط للتحميل والتثبيت."
+        }
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_APP_UPDATES)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setColor(0xFF749F27.toInt())
+            .setSubText(context.getString(R.string.app_name))
+            .setContentTitle(title)
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_APP_UPDATE, notification)
+        logcat { "Update notification shown for version ${info.versionName}" }
     }
 
     fun cancelAllNotifications() {

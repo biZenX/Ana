@@ -294,6 +294,13 @@ private fun SectionHeader(title: String, icon: androidx.compose.ui.graphics.vect
 
 @Composable
 private fun HighlightCard(text: String, isFeature: Boolean) {
+    val annotatedText = androidx.compose.runtime.remember(text) {
+        com.serranoie.app.minus.presentation.util.MarkdownParser.parseToAnnotatedString(
+            rawText = text,
+            boldWeight = FontWeight.Bold,
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(14.dp),
@@ -321,7 +328,7 @@ private fun HighlightCard(text: String, isFeature: Boolean) {
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = text,
+                text = annotatedText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp,
