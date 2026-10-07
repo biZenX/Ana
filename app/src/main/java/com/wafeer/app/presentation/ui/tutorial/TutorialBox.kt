@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.animation.animateColorAsState
@@ -44,6 +45,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -306,11 +312,6 @@ private fun TutorialOverlay(
         progress.snapTo(0f)
         contentAlpha.animateTo(1f, tween(300))
         contentScale.animateTo(1f, tween(400, easing = LinearOutSlowInEasing))
-        progress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 5500, easing = LinearEasing)
-        )
-        onNext()
     }
 
     Box(
@@ -318,10 +319,12 @@ private fun TutorialOverlay(
             .fillMaxSize()
             .pointerInput(animatedCutout, isVirtual, onCutoutClick, onNext) {
                 detectTapGestures { offset ->
-                    if (!isVirtual && animatedCutout.contains(offset) && onCutoutClick != null) {
-                        onCutoutClick(index)
-                    } else {
-                        onNext()
+                    if (!isVirtual && animatedCutout.contains(offset)) {
+                        if (onCutoutClick != null) {
+                            onCutoutClick(index)
+                        } else {
+                            onNext()
+                        }
                     }
                 }
             },
@@ -372,6 +375,10 @@ private fun TutorialOverlay(
                     style = Stroke(width = 5f),
                 )
             }
+        }
+
+        if (!isVirtual && !animatedCutout.isEmpty) {
+            PulsingTapPointer(targetBounds = animatedCutout)
         }
 
         Surface(
@@ -606,6 +613,85 @@ fun TutorialTooltip(
                 style = MaterialTheme.typography.bodyMediumCondensed,
                 color = MaterialTheme.colorScheme.onSurface,
             )
+        }
+    }
+}
+
+@Composable
+private fun PulsingTapPointer(
+    targetBounds: Rect,
+    modifier: Modifier = Modifier,
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "TapPointerTransition")
+
+    val bounceOffset by infiniteTransition.animateFloat(
+        initialValue = -10f,
+        targetValue = 8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(650, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "PointerBounce"
+    )
+
+    val rippleScale by infiniteTransition.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1300, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "RippleScale"
+    )
+    val rippleAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.85f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1300, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "RippleAlpha"
+    )
+
+    val density = LocalDensity.current
+    val centerX = targetBounds.center.x
+    val centerY = targetBounds.center.y
+
+    Box(
+        modifier = modifier
+            .offset {
+                IntOffset(
+                    x = (centerX - with(density) { 26.dp.toPx() }).toInt(),
+                    y = (centerY - with(density) { 26.dp.toPx() } + bounceOffset).toInt()
+                )
+            }
+    ) {
+        Box(
+            modifier = Modifier
+                .size(52.dp)
+                .graphicsLayer {
+                    scaleX = rippleScale
+                    scaleY = rippleScale
+                    alpha = rippleAlpha
+                }
+                .border(2.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+        )
+
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            shadowElevation = 8.dp,
+            modifier = Modifier.size(52.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = Icons.Rounded.TouchApp,
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
         }
     }
 }

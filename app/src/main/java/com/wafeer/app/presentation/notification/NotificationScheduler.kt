@@ -1,6 +1,7 @@
 package com.wafeer.app.presentation.notification
 
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -106,6 +107,16 @@ class NotificationScheduler @Inject constructor(
                     pendingIntent
                 )
             }
+        }
+    }
+
+    fun cancelDaily75PercentAlert() {
+        try {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(NotificationHelper.NOTIFICATION_ID_DAILY_75_PERCENT)
+        } catch (e: Exception) {
+            logcat { "cancelDaily75PercentAlert error: ${e.message}" }
         }
     }
 

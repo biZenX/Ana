@@ -33,11 +33,16 @@ class DailyFinancialCheckReceiver : BroadcastReceiver() {
             try {
                 val today = LocalDate.now()
                 val spent = budgetRepository.getSpentForDate(today).first()
-                if (spent <= BigDecimal.ZERO) {
+                val todayTransactions = budgetRepository.getTransactionsForPeriod(today, today).first()
+                val hasTransactionToday = todayTransactions.any {
+                    !it.isDeleted && !it.isRecurrent
+                }
+                if (spent <= BigDecimal.ZERO && !hasTransactionToday) {
                     logcat("DailyFinancialCheckReceiver") { "Zero spend today ($spent) -> Showing 75% day rich alert" }
                     notificationHelper.showDaily75PercentAlert()
                 } else {
-                    logcat("DailyFinancialCheckReceiver") { "User recorded spend today ($spent) -> skipping reminder" }
+                    logcat("DailyFinancialCheckReceiver") { "User recorded spend today ($spent, hasTx=$hasTransactionToday) -> skipping reminder" }
+                    notificationHelper.cancelDaily75PercentAlert()
                 }
                 notificationScheduler.scheduleDaily75PercentCheck()
             } catch (e: Exception) {

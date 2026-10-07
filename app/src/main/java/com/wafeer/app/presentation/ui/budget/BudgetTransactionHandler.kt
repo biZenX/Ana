@@ -126,6 +126,7 @@ class BudgetTransactionHandler @Inject constructor(
                 isAdjustment = isAdjustment
             )
             addTransactionUseCase(transaction)
+            notificationScheduler.cancelDaily75PercentAlert()
             ApplyTransactionResult.Added(normalizedInput = normalizedInput)
         } catch (e: CancellationException) {
             throw e

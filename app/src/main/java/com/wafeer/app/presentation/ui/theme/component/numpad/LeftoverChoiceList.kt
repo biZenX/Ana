@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Redo
 import androidx.compose.material.icons.rounded.CalendarViewWeek
+import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -97,15 +98,26 @@ fun LeftoverChoiceList(
     ) {
         LeftoverChoice.entries.forEachIndexed { index, option ->
             val isSelected = option == selected
-            val position =
-                if (index == 0) PaddedListItemPosition.First else PaddedListItemPosition.Last
+            val position = when (index) {
+                0 -> PaddedListItemPosition.First
+                LeftoverChoice.entries.size - 1 -> PaddedListItemPosition.Last
+                else -> PaddedListItemPosition.Middle
+            }
             val selection by animateFloatAsState(
                 if (isSelected) 1f else 0f,
                 label = "leftoverChoice"
             )
             val colors = MaterialTheme.colorScheme
-            val today = remainingToday + if (option == LeftoverChoice.SPREAD) share else amount
-            val perDay = if (option == LeftoverChoice.SPREAD) dailyBudget + share else dailyBudget
+            val today = when (option) {
+                LeftoverChoice.SPREAD -> remainingToday + share
+                LeftoverChoice.CARRY -> remainingToday + amount
+                LeftoverChoice.SAVE -> remainingToday
+            }
+            val perDay = when (option) {
+                LeftoverChoice.SPREAD -> dailyBudget + share
+                LeftoverChoice.CARRY -> dailyBudget
+                LeftoverChoice.SAVE -> dailyBudget
+            }
             CustomPaddedListItem(
                 onClick = {
                     view.confirmFeedback()
@@ -151,6 +163,7 @@ fun LeftoverChoiceList(
                                 imageVector = when (option) {
                                     LeftoverChoice.SPREAD -> Icons.Rounded.CalendarViewWeek
                                     LeftoverChoice.CARRY -> Icons.AutoMirrored.Rounded.Redo
+                                    LeftoverChoice.SAVE -> Icons.Rounded.Savings
                                 },
                                 contentDescription = null,
                                 tint = lerp(
@@ -167,6 +180,7 @@ fun LeftoverChoiceList(
                                 when (option) {
                                     LeftoverChoice.SPREAD -> R.string.split_mode_dynamic
                                     LeftoverChoice.CARRY -> R.string.split_mode_carry_over
+                                    LeftoverChoice.SAVE -> R.string.leftover_choice_save
                                 }
                             ),
                             style = MaterialTheme.typography.titleSmallEmphasized,
@@ -180,6 +194,7 @@ fun LeftoverChoiceList(
                             when (option) {
                                 LeftoverChoice.SPREAD -> R.string.leftover_choice_spread_desc
                                 LeftoverChoice.CARRY -> R.string.leftover_choice_carry_desc
+                                LeftoverChoice.SAVE -> R.string.leftover_choice_save_desc
                             }
                         ),
                         style = MaterialTheme.typography.bodyMedium,
@@ -230,6 +245,10 @@ fun LeftoverChoiceList(
                                         LeftoverChoice.CARRY -> stringResource(
                                             R.string.leftover_choice_carry_outcome,
                                             currencyFormat.format(perDay),
+                                        )
+
+                                        LeftoverChoice.SAVE -> stringResource(
+                                            R.string.leftover_choice_save_outcome,
                                         )
                                     }
                                 )

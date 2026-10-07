@@ -630,7 +630,7 @@
     <string name="budget_formula_caption_per_period">%1$s budget</string>
     <string name="budget_formula_caption_remaining_budget">Remaining total budget</string>
     <string name="budget_formula_caption_spread_over_left">Distributed over remaining days of the period</string>
-    <string name="budget_formula_caption_left">Minus what you spent</string>
+    <string name="budget_formula_caption_left">Deducting what you spent</string>
     <string name="budget_formula_caption_reserved">Reserved for upcoming charges this period</string>
     <string name="budget_formula_caption_carried">Rolled over from previous days</string>
     <string name="budget_formula_caption_spread_leftover">Surplus chosen to be distributed</string>
@@ -852,4 +852,48 @@
         <item quantity="one">%d bill scheduled this week</item>
         <item quantity="other">%d bills scheduled this week</item>
     </plurals>
+
+    <!-- Leftover Choice Save -->
+    <string name="leftover_choice_save">Save Surplus</string>
+    <string name="leftover_choice_save_desc">Keep surplus as savings and do not add it to future daily spending.</string>
+    <string name="leftover_choice_save_outcome">Saved to piggy bank</string>
+
+    <!-- Onboarding Customization Survey -->
+    <string name="survey_title">Customize Your Budget</string>
+    <string name="survey_subtitle">Select your lifestyle preferences to tailor the app</string>
+    <string name="survey_budget_type_title">What kind of budget do you want to manage?</string>
+    <string name="survey_type_home">Household &amp; Family</string>
+    <string name="survey_type_home_desc">Groceries, family needs, kitchen supplies, and home living expenses.</string>
+    <string name="survey_type_salary">Salary &amp; Fixed Income</string>
+    <string name="survey_type_salary_desc">Regular income allocated evenly across the period.</string>
+    <string name="survey_type_allowance">Variable Daily Allowance</string>
+    <string name="survey_type_allowance_desc">Pocket money taken daily with variable amounts and rest day support.</string>
+    <string name="survey_role_title">What is your financial role?</string>
+    <string name="survey_role_head">Head of Household</string>
+    <string name="survey_role_head_desc">Responsible for meat, fruits, bills, utilities, and major household purchases.</string>
+    <string name="survey_role_homemaker">Homemaker</string>
+    <string name="survey_role_homemaker_desc">Responsible for kitchen, dairy, vegetables, detergents, and daily living needs.</string>
+    <string name="survey_role_individual">Individual / Student</string>
+    <string name="survey_role_individual_desc">Personal pocket money, transit, study, and daily outings.</string>
+    <string name="survey_varieties_title">Suggested Expense Varieties</string>
+    <string name="survey_varieties_subtitle">Pick items you regularly buy to seed them as quick categories in Wafeer</string>
+    <string name="survey_category_dairy">Dairy &amp; Cheese</string>
+    <string name="survey_category_meat">Meat, Poultry &amp; Fish</string>
+    <string name="survey_category_legumes">Legumes &amp; Pantry</string>
+    <string name="survey_category_vegetables">Vegetables &amp; Cooking</string>
+    <string name="survey_category_fruits">Fresh Fruits</string>
+    <string name="survey_category_spices">Spices &amp; Herbs</string>
+    <string name="survey_category_cleaning">Cleaning &amp; Kitchen Supplies</string>
+    <string name="survey_category_transport">Transportation &amp; Gas</string>
+    <string name="survey_category_bills">Bills &amp; Utilities</string>
+    <string name="survey_category_personal">Pocket Money &amp; Daily Cash</string>
+    <string name="survey_btn_continue">Continue</string>
+    <string name="survey_btn_finish">Confirm &amp; Start</string>
+    <string name="survey_step_counter">Step %1$d of %2$d</string>
+
+    <!-- Interactive Tutorial -->
+    <string name="tutorial_hand_hint_numpad">Tap any number to enter an expense amount</string>
+    <string name="tutorial_hand_hint_apply">Tap the checkmark button to save this expense</string>
+    <string name="tutorial_hand_hint_pill">Tap here to view your remaining daily budget</string>
+    <string name="tutorial_hand_hint_analytics">Tap here to view analytics and charts</string>
 </resources>

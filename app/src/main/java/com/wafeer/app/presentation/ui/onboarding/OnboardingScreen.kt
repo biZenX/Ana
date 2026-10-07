@@ -73,6 +73,9 @@ private const val TAG = "OnboardingScreen"
 enum class OnboardingStep {
     LANGUAGE,
     WELCOME,
+    SURVEY_BUDGET_TYPE,
+    SURVEY_ROLE,
+    SURVEY_VARIETIES,
 }
 
 @Composable
@@ -80,6 +83,7 @@ fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
     onOnboardingCompleted: () -> Unit = {},
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     logcat(TAG) { "OnboardingScreen composed" }
     LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
@@ -90,8 +94,7 @@ fun OnboardingScreen(
                     onOnboardingCompleted()
                 }
                 is OnboardingUiEffect.OnboardingFailed -> {
-                    // Failures are also reflected in [OnboardingUiState.error];
-                    // the parent screen (or activity) may surface them.
+                    // Failures are also reflected in [OnboardingUiState.error]
                 }
             }
         }
@@ -101,9 +104,17 @@ fun OnboardingScreen(
         onLanguageSelected = { lang ->
             viewModel.setLanguage(lang)
         },
-        onContinue = {
-            logcat(TAG) { "Set Budget tapped -> dispatching OnWelcomeDismissed" }
-            viewModel.processIntent(OnboardingUiIntent.OnWelcomeDismissed)
+        onSurveyCompleted = { budgetType, role, categoryIds ->
+            val categoryTitles = categoryIds.mapNotNull { id ->
+                EgyptianHouseholdVarieties.find { it.id == id }?.let { context.getString(it.titleRes) }
+            }
+            viewModel.processIntent(
+                OnboardingUiIntent.OnSurveyCompleted(
+                    budgetType = budgetType,
+                    role = role,
+                    selectedCategoryTitles = categoryTitles,
+                )
+            )
         },
     )
 }
@@ -111,10 +122,16 @@ fun OnboardingScreen(
 @Composable
 internal fun OnboardingScreenContent(
     onLanguageSelected: (String) -> Unit = {},
-    onContinue: () -> Unit = {},
+    onSurveyCompleted: (SurveyBudgetType, SurveyRole, Set<String>) -> Unit = { _, _, _ -> },
 ) {
     var currentStep by androidx.compose.runtime.saveable.rememberSaveable {
         mutableStateOf(OnboardingStep.LANGUAGE)
+    }
+    var selectedBudgetType by androidx.compose.runtime.saveable.rememberSaveable {
+        mutableStateOf(SurveyBudgetType.HOUSEHOLD)
+    }
+    var selectedRole by androidx.compose.runtime.saveable.rememberSaveable {
+        mutableStateOf(SurveyRole.HEAD_OF_HOUSEHOLD)
     }
 
     AnimatedContent(
@@ -135,7 +152,35 @@ internal fun OnboardingScreenContent(
             }
             OnboardingStep.WELCOME -> {
                 WelcomeStep(
-                    onContinue = onContinue,
+                    onContinue = {
+                        currentStep = OnboardingStep.SURVEY_BUDGET_TYPE
+                    },
+                )
+            }
+            OnboardingStep.SURVEY_BUDGET_TYPE -> {
+                SurveyBudgetTypeStep(
+                    initialType = selectedBudgetType,
+                    onContinue = { chosenType ->
+                        selectedBudgetType = chosenType
+                        currentStep = OnboardingStep.SURVEY_ROLE
+                    }
+                )
+            }
+            OnboardingStep.SURVEY_ROLE -> {
+                SurveyRoleStep(
+                    initialRole = selectedRole,
+                    onContinue = { chosenRole ->
+                        selectedRole = chosenRole
+                        currentStep = OnboardingStep.SURVEY_VARIETIES
+                    }
+                )
+            }
+            OnboardingStep.SURVEY_VARIETIES -> {
+                SurveyVarietiesStep(
+                    selectedRole = selectedRole,
+                    onFinish = { chosenCategoryIds ->
+                        onSurveyCompleted(selectedBudgetType, selectedRole, chosenCategoryIds)
+                    }
                 )
             }
         }

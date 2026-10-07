@@ -860,4 +860,48 @@
     <string name="settings_reset_tips_title">إعادة إظهار النصائح المستبعدة</string>
     <string name="settings_reset_tips_subtitle">إعادة تفعيل كافة النصائح التي تم إلغاؤها مسبقاً</string>
     <string name="settings_reset_tips_toast">تمت إعادة تفعيل جميع النصائح بنجاح</string>
+
+    <!-- Leftover Choice Save -->
+    <string name="leftover_choice_save">ادخار وحفظ الفائض</string>
+    <string name="leftover_choice_save_desc">حفظ الفائض كمدخرات وعدم إضافته لمصروف الأيام القادمة.</string>
+    <string name="leftover_choice_save_outcome">حفظ كمدخرات</string>
+
+    <!-- Onboarding Customization Survey -->
+    <string name="survey_title">تخصيص ميزانيتك</string>
+    <string name="survey_subtitle">اختر ما يناسب نمط حياتك لتهيئة التطبيق بدقة</string>
+    <string name="survey_budget_type_title">ما نوع الميزانية التي تود إدارتها؟</string>
+    <string name="survey_type_home">ميزانية منزل وطلبات</string>
+    <string name="survey_type_home_desc">إدارة مشتريات البيت، طلبات الأسرة، ومصاريف المطبخ والخزين.</string>
+    <string name="survey_type_salary">مرتب شهري أو أسبوعي</string>
+    <string name="survey_type_salary_desc">دخل ثابت منتظم يتم توزيعه وضبط وتيرة الإنفاق طوال الفترة.</string>
+    <string name="survey_type_allowance">مصروف يومي متغيّر</string>
+    <string name="survey_type_allowance_desc">مصروف يؤخذ يومياً بمبالغ متغيرة مع مرونة لأيام العطلات والدراسة.</string>
+    <string name="survey_role_title">ما هو دورك المالي؟</string>
+    <string name="survey_role_head">رب منزل (المسؤول الأول)</string>
+    <string name="survey_role_head_desc">مسؤول عن اللحوم، الفاكهة، الفواتير، المصاريف العامة ومشتريات الأسرة الكبرى.</string>
+    <string name="survey_role_homemaker">ربة منزل (تدبير البيت)</string>
+    <string name="survey_role_homemaker_desc">مسؤولة عن المطبخ، الألبان، الخضار، المنظفات ومستلزمات الطهي اليومية.</string>
+    <string name="survey_role_individual">فرد مستقل / طالب</string>
+    <string name="survey_role_individual_desc">مصروف شخصي، مواصلات، دراسة، وخروجات يومية.</string>
+    <string name="survey_varieties_title">بنود وأصناف المشتريات المقترحة</string>
+    <string name="survey_varieties_subtitle">اختر البنود التي تشتريها لإضافتها تلقائياً كتصنيفات سريعة في وفير</string>
+    <string name="survey_category_dairy">منتجات ألبان وأجبان</string>
+    <string name="survey_category_meat">لحوم ودواجن وأسماك</string>
+    <string name="survey_category_legumes">بقوليات وخزين</string>
+    <string name="survey_category_vegetables">خضار وطبيخ</string>
+    <string name="survey_category_fruits">فاكهة طازجة</string>
+    <string name="survey_category_spices">توابل وعطارة</string>
+    <string name="survey_category_cleaning">منظفات ومستلزمات مطبخ</string>
+    <string name="survey_category_transport">مواصلات وبنزين</string>
+    <string name="survey_category_bills">فواتير والتزامات</string>
+    <string name="survey_category_personal">مصروف شخصي وفكة</string>
+    <string name="survey_btn_continue">متابعة</string>
+    <string name="survey_btn_finish">تأكيد وبدء الاستخدام</string>
+    <string name="survey_step_counter">خطوة %1$d من %2$d</string>
+
+    <!-- Interactive Tutorial -->
+    <string name="tutorial_hand_hint_numpad">اضغط على أي رقم للبدء في تدوين المصروف</string>
+    <string name="tutorial_hand_hint_apply">اضغط على زر الصح لحفظ وتأكيد العملية</string>
+    <string name="tutorial_hand_hint_pill">اضغط هنا لمتابعة متبقي ميزانيتك اليومية</string>
+    <string name="tutorial_hand_hint_analytics">اضغط هنا للاطلاع على الإحصائيات والرسوم البيانية</string>
 </resources>

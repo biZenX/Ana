@@ -256,6 +256,8 @@ class BudgetStateCalculator @Inject constructor() {
                 if (pending.signum() < 0 || choices[day] == LeftoverChoice.CARRY) {
                     allowance += pending
                     pending = BigDecimal.ZERO
+                } else if (choices[day] == LeftoverChoice.SAVE) {
+                    pending = BigDecimal.ZERO
                 } else if (choices[day] == LeftoverChoice.SPREAD) {
                     val daysLeft = if (allowanceDaysEnabled) {
                         countActiveDays(day, end, activeSpendingDays)

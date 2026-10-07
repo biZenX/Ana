@@ -36,6 +36,7 @@ class NotificationHelper @Inject constructor(
         const val NOTIFICATION_ID_RECURRENT = 1002
         const val NOTIFICATION_ID_CREDIT = 1003
         const val NOTIFICATION_ID_APP_UPDATE = 1004
+        const val NOTIFICATION_ID_DAILY_75_PERCENT = 1005
     }
 
     init {
@@ -208,12 +209,22 @@ class NotificationHelper @Inject constructor(
 
     fun showDaily75PercentAlert(): Boolean {
         return showRichCustomNotification(
-            notificationId = 1005,
+            notificationId = NOTIFICATION_ID_DAILY_75_PERCENT,
             channelId = CHANNEL_PERIOD_END,
             title = "يوم هادئ وموفر، أم نسيت تدوين مصاريفك؟",
             message = "انقضى 75% من يومك دون تسجيل أي حركة مالية. بلمسة واحدة دوّن مصاريفك وحافظ على انضباط ميزانيتك اليومية.",
             tag = "وفير • نشاط اليوم",
         )
+    }
+
+    fun cancelDaily75PercentAlert() {
+        try {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(NOTIFICATION_ID_DAILY_75_PERCENT)
+        } catch (e: Exception) {
+            logcat { "Failed to cancel daily 75% alert: ${e.message}" }
+        }
     }
 
     private fun buildPeriodEndMessage(remainingBudget: String, formattedAmount: String): String {
