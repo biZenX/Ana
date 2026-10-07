@@ -822,7 +822,7 @@
     <string name="wallet_total_income_label">إجمالي الدخل الإضافي</string>
     <string name="onboarding_language_title">اختر لغة التطبيق</string>
     <string name="onboarding_language_subtitle">حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات.</string>
-    <string name="tutorial_end_tour">إنهاء</string>
+    <string name="tutorial_end_tour">تخطي الشرح</string>
     <string name="tutorial_understood">فهمت</string>
     <string name="financial_tip_8_title">فخ العروض والتخفيضات</string>
     <string name="financial_tip_8_body" formatted="false">خصم 50% على سلعة لا تحتاجها فعلياً هو خسارة كاملة لمالك وليس توفيراً. لا تشترِ لمجرد وجود تخفيض.</string>
@@ -904,5 +904,5 @@
     <string name="tutorial_hand_hint_apply">اضغط على زر الصح لحفظ وتأكيد العملية</string>
     <string name="tutorial_hand_hint_pill">اضغط هنا لمتابعة متبقي ميزانيتك اليومية</string>
     <string name="tutorial_hand_hint_analytics">اضغط هنا للاطلاع على الإحصائيات والرسوم البيانية</string>
-    <string name="tutorial_hand_hint_tap_here">دوس هنا 👇</string>
+    <string name="tutorial_hand_hint_tap_here">اضغط هنا</string>
 </resources>

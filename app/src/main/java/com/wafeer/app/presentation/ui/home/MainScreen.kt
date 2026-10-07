@@ -17,6 +17,17 @@ import com.wafeer.app.presentation.ui.budget.mvi.intent.BudgetNumpadIntent
 import com.wafeer.app.presentation.ui.budget.mvi.intent.BudgetTransactionIntent
 import com.wafeer.app.presentation.ui.changelog.ChangelogGate
 import com.wafeer.app.presentation.ui.theme.component.budget.formula.BudgetFormulaHost
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Label
+import androidx.compose.material.icons.rounded.AccountBalanceWallet
+import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.Calculate
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.Dialpad
+import androidx.compose.material.icons.rounded.EventRepeat
+import androidx.compose.material.icons.rounded.Label
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.VisibilityOff
 import com.wafeer.app.presentation.ui.tutorial.TutorialBox
 import com.wafeer.app.presentation.ui.tutorial.TutorialTooltip
 import com.wafeer.app.presentation.ui.tutorial.rememberTutorialBoxState
@@ -147,12 +158,14 @@ fun MainScreen(
             tutorialTarget = { index ->
                 when (index) {
                     0 -> TutorialTooltip(
-                        title = null,
+                        title = stringResource(R.string.tutorial_numpad_title),
                         description = stringResource(R.string.tutorial_numpad_description),
+                        icon = Icons.Rounded.Dialpad,
                     )
                     2 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_settings_title),
                         description = stringResource(R.string.tutorial_settings_description),
+                        icon = Icons.Rounded.Tune,
                     )
                     1 -> TutorialTooltip(
                         title = if (hasNoBudget) {
@@ -165,30 +178,37 @@ fun MainScreen(
                         } else {
                             stringResource(R.string.tutorial_budget_pill_description)
                         },
+                        icon = Icons.Rounded.AccountBalanceWallet,
                     )
                     3 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_comment_title),
                         description = stringResource(R.string.tutorial_comment_description),
+                        icon = Icons.AutoMirrored.Rounded.Label,
                     )
                     4 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_recurrent_title),
                         description = stringResource(R.string.tutorial_recurrent_description),
+                        icon = Icons.Rounded.EventRepeat,
                     )
                     5 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_analytics_title),
                         description = stringResource(R.string.tutorial_analytics_description),
+                        icon = Icons.Rounded.BarChart,
                     )
                     6 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_privacy_title),
                         description = stringResource(R.string.tutorial_privacy_description),
+                        icon = Icons.Rounded.VisibilityOff,
                     )
                     7 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_calc_title),
                         description = stringResource(R.string.tutorial_calc_description),
+                        icon = Icons.Rounded.Calculate,
                     )
                     8 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_credit_toggle_title),
                         description = stringResource(R.string.tutorial_credit_toggle_description),
+                        icon = Icons.Rounded.CreditCard,
                     )
                     else -> Text(text = "")
                 }
