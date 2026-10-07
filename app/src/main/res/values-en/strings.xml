@@ -896,4 +896,5 @@
     <string name="tutorial_hand_hint_apply">Tap the checkmark button to save this expense</string>
     <string name="tutorial_hand_hint_pill">Tap here to view your remaining daily budget</string>
     <string name="tutorial_hand_hint_analytics">Tap here to view analytics and charts</string>
+    <string name="tutorial_hand_hint_tap_here">Tap here 👇</string>
 </resources>

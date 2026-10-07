@@ -140,8 +140,8 @@ fun MainScreen(
                         MainScreenUiIntent.ShowBudgetPeriodSheet(forceSetup = hasNoBudget),
                         tutorialStage,
                     )
-                    tutorialBoxState.advance()
                 }
+                tutorialBoxState.advance()
             },
             state = tutorialBoxState,
             tutorialTarget = { index ->

@@ -904,4 +904,5 @@
     <string name="tutorial_hand_hint_apply">اضغط على زر الصح لحفظ وتأكيد العملية</string>
     <string name="tutorial_hand_hint_pill">اضغط هنا لمتابعة متبقي ميزانيتك اليومية</string>
     <string name="tutorial_hand_hint_analytics">اضغط هنا للاطلاع على الإحصائيات والرسوم البيانية</string>
+    <string name="tutorial_hand_hint_tap_here">دوس هنا 👇</string>
 </resources>

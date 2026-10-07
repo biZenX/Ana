@@ -73,6 +73,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -473,33 +476,49 @@ private fun TutorialOverlay(
                                     )
                                 }
                             }
-                            FilledTonalButton(
-                                onClick = {
-                                    if (index == 1 && onCutoutClick != null) {
-                                        onCutoutClick(index)
-                                    } else {
-                                        onNext()
+                            if (isLast || isVirtual) {
+                                FilledTonalButton(
+                                    onClick = onNext,
+                                    modifier = Modifier
+                                        .height(36.dp)
+                                        .defaultMinSize(minWidth = 64.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                    colors = ButtonDefaults.filledTonalButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.tutorial_understood),
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                    )
+                                }
+                            } else {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.height(32.dp),
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.TouchApp,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(15.dp),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.tutorial_hand_hint_tap_here),
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                        )
                                     }
-                                },
-                                modifier = Modifier
-                                    .height(36.dp)
-                                    .defaultMinSize(minWidth = 64.dp),
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-                                colors = ButtonDefaults.filledTonalButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            ) {
-                                Text(
-                                    text = if (isLast) {
-                                        stringResource(R.string.tutorial_understood)
-                                    } else {
-                                        stringResource(R.string.next)
-                                    },
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                    maxLines = 1,
-                                    softWrap = false,
-                                )
+                                }
                             }
                         }
                     }
@@ -625,10 +644,10 @@ private fun PulsingTapPointer(
     val infiniteTransition = rememberInfiniteTransition(label = "TapPointerTransition")
 
     val bounceOffset by infiniteTransition.animateFloat(
-        initialValue = -10f,
-        targetValue = 8f,
+        initialValue = 0f,
+        targetValue = 9f,
         animationSpec = infiniteRepeatable(
-            animation = tween(650, easing = LinearOutSlowInEasing),
+            animation = tween(600, easing = LinearOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "PointerBounce"
@@ -638,7 +657,7 @@ private fun PulsingTapPointer(
         initialValue = 0.6f,
         targetValue = 1.7f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1300, easing = LinearOutSlowInEasing),
+            animation = tween(1200, easing = LinearOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "RippleScale"
@@ -647,7 +666,7 @@ private fun PulsingTapPointer(
         initialValue = 0.85f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1300, easing = LinearOutSlowInEasing),
+            animation = tween(1200, easing = LinearOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "RippleAlpha"
@@ -656,40 +675,35 @@ private fun PulsingTapPointer(
     val density = LocalDensity.current
     val centerX = targetBounds.center.x
     val centerY = targetBounds.center.y
+    val primaryColor = MaterialTheme.colorScheme.primary
 
-    Box(
-        modifier = modifier
-            .offset {
-                IntOffset(
-                    x = (centerX - with(density) { 26.dp.toPx() }).toInt(),
-                    y = (centerY - with(density) { 26.dp.toPx() } + bounceOffset).toInt()
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Box(modifier = modifier.fillMaxSize()) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                drawCircle(
+                    color = primaryColor.copy(alpha = rippleAlpha),
+                    radius = 12.dp.toPx() + (22.dp.toPx() * (rippleScale - 0.6f)),
+                    center = Offset(centerX, centerY),
+                    style = Stroke(width = 2.5.dp.toPx()),
                 )
             }
-    ) {
-        Box(
-            modifier = Modifier
-                .size(52.dp)
-                .graphicsLayer {
-                    scaleX = rippleScale
-                    scaleY = rippleScale
-                    alpha = rippleAlpha
-                }
-                .border(2.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
 
-        Surface(
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            shadowElevation = 8.dp,
-            modifier = Modifier.size(52.dp)
-        ) {
-            Box(contentAlignment = Alignment.Center) {
+            val handSizePx = with(density) { 36.dp.toPx() }
+            val handX = (centerX - handSizePx / 2f).toInt()
+            val handY = (targetBounds.bottom - with(density) { 6.dp.toPx() } + bounceOffset).toInt()
+
+            Box(
+                modifier = Modifier.offset { IntOffset(handX, handY) }
+            ) {
                 Icon(
                     imageVector = Icons.Rounded.TouchApp,
                     contentDescription = null,
-                    modifier = Modifier.size(30.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .graphicsLayer {
+                            shadowElevation = 10f
+                        },
+                    tint = primaryColor,
                 )
             }
         }
