@@ -17,6 +17,9 @@
     <string name="tutorial_analytics_description">استعرض تحليلاتك المالية لترى كيف يتوزع إنفاقك بمرور الوقت، حسب التصنيف ومقارنة بأهداف ميزانيتك.</string>
     <string name="tutorial_privacy_title">وضع الخصوصية</string>
     <string name="tutorial_privacy_description">غطِ الجزء العلوي من الهاتف (مكان الكاميرا الأمامية) بيدك لثانية واحدة لتشويش وحجب جميع الأرقام المالية على الشاشة. كرر الحركة لإلغاء القفل.</string>
+    <string name="tutorial_practice_mode">وضع تجربة</string>
+    <string name="tutorial_interactive_test_mode">وضع تجربة تفاعلي</string>
+    <string name="tutorial_test_censor_action">جرّب تشويش الأرقام الآن</string>
     <string name="tutorial_calc_title">تعديل الميزانية الجارية</string>
     <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
     <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>

@@ -140,15 +140,16 @@ fun SurveyBudgetTypeStep(
     onContinue: (SurveyBudgetType) -> Unit,
 ) {
     var selectedType by remember { mutableStateOf(initialType) }
+    val statusBarHeight = LocalWindowInsets.current.calculateTopPadding()
     val navigationBarHeight = LocalWindowInsets.current.calculateBottomPadding().coerceAtLeast(16.dp)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top = statusBarHeight + 12.dp)
             .padding(horizontal = 20.dp)
             .padding(bottom = navigationBarHeight),
     ) {
-        Spacer(Modifier.height(16.dp))
         SurveyStepHeader(
             currentStep = 1,
             totalSteps = 3,
@@ -202,15 +203,16 @@ fun SurveyRoleStep(
     onContinue: (SurveyRole) -> Unit,
 ) {
     var selectedRole by remember { mutableStateOf(initialRole) }
+    val statusBarHeight = LocalWindowInsets.current.calculateTopPadding()
     val navigationBarHeight = LocalWindowInsets.current.calculateBottomPadding().coerceAtLeast(16.dp)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top = statusBarHeight + 12.dp)
             .padding(horizontal = 20.dp)
             .padding(bottom = navigationBarHeight),
     ) {
-        Spacer(Modifier.height(16.dp))
         SurveyStepHeader(
             currentStep = 2,
             totalSteps = 3,
@@ -270,15 +272,16 @@ fun SurveyVarietiesStep(
             .toSet()
     }
     var selectedIds by remember(selectedRole) { mutableStateOf(initialSelection) }
+    val statusBarHeight = LocalWindowInsets.current.calculateTopPadding()
     val navigationBarHeight = LocalWindowInsets.current.calculateBottomPadding().coerceAtLeast(16.dp)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top = statusBarHeight + 12.dp)
             .padding(horizontal = 20.dp)
             .padding(bottom = navigationBarHeight),
     ) {
-        Spacer(Modifier.height(16.dp))
         SurveyStepHeader(
             currentStep = 3,
             totalSteps = 3,

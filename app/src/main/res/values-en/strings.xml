@@ -17,6 +17,9 @@
     <string name="tutorial_analytics_description">Open Analytics to see how your spending breaks down over time, by category, and against your budget goals.</string>
     <string name="tutorial_privacy_title">Privacy mode</string>
     <string name="tutorial_privacy_description">Cover the top of the phone (where the front camera sits) with your hand for about a second to blur every amount on screen. Cover it again to turn it off.</string>
+    <string name="tutorial_practice_mode">Practice Mode</string>
+    <string name="tutorial_interactive_test_mode">Interactive Trial</string>
+    <string name="tutorial_test_censor_action">Try blurring numbers now</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>

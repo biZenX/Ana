@@ -27,7 +27,21 @@ import androidx.compose.material.icons.rounded.Dialpad
 import androidx.compose.material.icons.rounded.EventRepeat
 import androidx.compose.material.icons.rounded.Label
 import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
 import com.wafeer.app.presentation.ui.tutorial.TutorialBox
 import com.wafeer.app.presentation.ui.tutorial.TutorialTooltip
 import com.wafeer.app.presentation.ui.tutorial.rememberTutorialBoxState
@@ -156,16 +170,19 @@ fun MainScreen(
             },
             state = tutorialBoxState,
             tutorialTarget = { index ->
+                val practiceBadge = stringResource(R.string.tutorial_practice_mode)
                 when (index) {
                     0 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_numpad_title),
                         description = stringResource(R.string.tutorial_numpad_description),
                         icon = Icons.Rounded.Dialpad,
+                        badgeText = practiceBadge,
                     )
                     2 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_settings_title),
                         description = stringResource(R.string.tutorial_settings_description),
                         icon = Icons.Rounded.Tune,
+                        badgeText = practiceBadge,
                     )
                     1 -> TutorialTooltip(
                         title = if (hasNoBudget) {
@@ -179,36 +196,67 @@ fun MainScreen(
                             stringResource(R.string.tutorial_budget_pill_description)
                         },
                         icon = Icons.Rounded.AccountBalanceWallet,
+                        badgeText = practiceBadge,
                     )
                     3 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_comment_title),
                         description = stringResource(R.string.tutorial_comment_description),
                         icon = Icons.AutoMirrored.Rounded.Label,
+                        badgeText = practiceBadge,
                     )
                     4 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_recurrent_title),
                         description = stringResource(R.string.tutorial_recurrent_description),
                         icon = Icons.Rounded.EventRepeat,
+                        badgeText = practiceBadge,
                     )
                     5 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_analytics_title),
                         description = stringResource(R.string.tutorial_analytics_description),
                         icon = Icons.Rounded.BarChart,
+                        badgeText = practiceBadge,
                     )
                     6 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_privacy_title),
                         description = stringResource(R.string.tutorial_privacy_description),
                         icon = Icons.Rounded.VisibilityOff,
+                        badgeText = stringResource(R.string.tutorial_interactive_test_mode),
+                        actionContent = {
+                            Button(
+                                onClick = { mainScreenViewModel.toggleCensor() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(36.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Visibility,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(Modifier.width(6.dp))
+                                Text(
+                                    text = stringResource(R.string.tutorial_test_censor_action),
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
+                        }
                     )
                     7 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_calc_title),
                         description = stringResource(R.string.tutorial_calc_description),
                         icon = Icons.Rounded.Calculate,
+                        badgeText = practiceBadge,
                     )
                     8 -> TutorialTooltip(
                         title = stringResource(R.string.tutorial_credit_toggle_title),
                         description = stringResource(R.string.tutorial_credit_toggle_description),
                         icon = Icons.Rounded.CreditCard,
+                        badgeText = practiceBadge,
                     )
                     else -> Text(text = "")
                 }

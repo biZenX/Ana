@@ -246,13 +246,26 @@ private fun TutorialOverlay(
     onSkipAll: () -> Unit,
     onCutoutClick: ((Int) -> Unit)? = null,
 ) {
-    if (!isVirtual && bounds.isEmpty) return
+    val density = LocalDensity.current
+    val isPrivacyStep = index == 6
+    val effectiveBounds = if (isPrivacyStep) {
+        val sensorWidthPx = with(density) { 150.dp.toPx() }
+        val sensorHeightPx = with(density) { 52.dp.toPx() }
+        val sensorLeft = (canvasSize.width - sensorWidthPx) / 2f
+        Rect(
+            left = sensorLeft,
+            top = 0f,
+            right = sensorLeft + sensorWidthPx,
+            bottom = sensorHeightPx,
+        )
+    } else bounds
+
+    if (!isPrivacyStep && !isVirtual && bounds.isEmpty) return
 
     val scrimColor = Color.Black.copy(alpha = 0.6f)
     val highlightStrokeColor = MaterialTheme.colorScheme.inversePrimary
     val pulseStrokeColor = MaterialTheme.colorScheme.inversePrimary
     val interactionSource = remember { MutableInteractionSource() }
-    val density = LocalDensity.current
     val paddingPx = with(density) { 4.dp.toPx() }
     val cornerRadiusPx = with(density) { 12.dp.toPx() }
     val tooltipGapPx = with(density) { 20.dp.toPx() }
@@ -280,13 +293,13 @@ private fun TutorialOverlay(
         label = "PulseAlpha"
     )
 
-    val (tooltipX, tooltipY) = if (isVirtual) {
+    val (tooltipX, tooltipY) = if (isVirtual && !isPrivacyStep) {
         val centredX = (canvasSize.width - tooltipMaxWidthPx) / 2f
         val centredY = (canvasSize.height - tooltipMinHeightEstimate) / 2f
         centredX.toInt() to centredY.toInt()
     } else {
         computeTooltipPosition(
-            targetBounds = bounds,
+            targetBounds = effectiveBounds,
             canvasSize = canvasSize,
             gapPx = tooltipGapPx,
             tooltipWidthPx = tooltipMaxWidthPx,
@@ -295,7 +308,7 @@ private fun TutorialOverlay(
     }
 
     val animatedBounds by animateRectAsState(
-        targetValue = bounds,
+        targetValue = effectiveBounds,
         animationSpec = tween(400, easing = LinearOutSlowInEasing),
         label = "TargetBounds"
     )
@@ -327,12 +340,14 @@ private fun TutorialOverlay(
         contentScale.animateTo(1f, tween(400, easing = LinearOutSlowInEasing))
     }
 
+    val hasHole = !animatedCutout.isEmpty && (!isVirtual || isPrivacyStep)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(animatedCutout, isVirtual, onCutoutClick, onNext) {
+            .pointerInput(animatedCutout, isVirtual, isPrivacyStep, onCutoutClick, onNext) {
                 detectTapGestures { offset ->
-                    if (!isVirtual && animatedCutout.contains(offset)) {
+                    if (hasHole && animatedCutout.contains(offset)) {
                         if (onCutoutClick != null) {
                             onCutoutClick(index)
                         } else {
@@ -343,9 +358,10 @@ private fun TutorialOverlay(
             },
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            if (isVirtual) {
+            if (!hasHole) {
                 drawRect(color = scrimColor)
             } else {
+                val holeRadius = if (isPrivacyStep) 24.dp.toPx() else cornerRadiusPx
                 val outer = Path().apply {
                     addRect(Rect(offset = Offset.Zero, size = this@Canvas.size))
                 }
@@ -353,7 +369,7 @@ private fun TutorialOverlay(
                     addRoundRect(
                         RoundRect(
                             rect = animatedCutout,
-                            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                            cornerRadius = CornerRadius(holeRadius, holeRadius),
                         ),
                     )
                 }
@@ -374,8 +390,8 @@ private fun TutorialOverlay(
                     topLeft = pulseTopLeft,
                     size = Size(pulseWidth, pulseHeight),
                     cornerRadius = CornerRadius(
-                        cornerRadiusPx * pulseScale,
-                        cornerRadiusPx * pulseScale
+                        holeRadius * pulseScale,
+                        holeRadius * pulseScale
                     ),
                     style = Stroke(width = 8f),
                 )
@@ -384,12 +400,12 @@ private fun TutorialOverlay(
                     color = highlightStrokeColor,
                     topLeft = Offset(animatedCutout.left, animatedCutout.top),
                     size = Size(animatedCutout.width, animatedCutout.height),
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                    cornerRadius = CornerRadius(holeRadius, holeRadius),
                     style = Stroke(width = 5f),
                 )
 
                 // Dynamic Curved Directional Arrow
-                if (!animatedCutout.isEmpty && tooltipSize.width > 0 && tooltipSize.height > 0) {
+                if (hasHole && tooltipSize.width > 0 && tooltipSize.height > 0) {
                     val tooltipRect = Rect(
                         left = animatedOffset.x.toFloat(),
                         top = animatedOffset.y.toFloat(),
@@ -505,127 +521,132 @@ private fun TutorialOverlay(
             }
         }
 
-        if (!isVirtual && !animatedCutout.isEmpty) {
+        if (hasHole) {
             PulsingTapPointer(targetBounds = animatedCutout)
         }
 
-        Surface(
-            shape = RoundedCornerShape(14.dp),
-            color = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            tonalElevation = 6.dp,
-            shadowElevation = 8.dp,
-            modifier = Modifier
-                .offset { animatedOffset }
-                .onGloballyPositioned { coords ->
-                    tooltipSize = coords.size
-                }
-                .graphicsLayer {
-                    alpha = contentAlpha.value
-                    scaleX = contentScale.value
-                    scaleY = contentScale.value
-                }
-                .widthIn(max = tooltipMaxWidth)
-                .padding(horizontal = 16.dp),
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Balanced reading timer line
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progress.value)
-                            .height(3.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                }
-
-                Column(modifier = Modifier.padding(16.dp)) {
-                    tutorialTarget(index)
-                    Spacer(Modifier.height(14.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Animated dots indicator with smooth transition between dots (بدون كلام)
-                        if (totalSteps > 1) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                for (i in 0 until totalSteps) {
-                                    val isActive = i == currentStep
-                                    val dotWidth by animateDpAsState(
-                                        targetValue = if (isActive) 18.dp else 6.dp,
-                                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                        label = "DotWidth_$i"
-                                    )
-                                    val dotColor by animateColorAsState(
-                                        targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
-                                        animationSpec = tween(300),
-                                        label = "DotColor_$i"
-                                    )
-                                    Box(
-                                        modifier = Modifier
-                                            .height(6.dp)
-                                            .width(dotWidth)
-                                            .clip(RoundedCornerShape(3.dp))
-                                            .background(dotColor)
-                                    )
-                                }
-                            }
-                        } else {
-                            Spacer(Modifier.width(1.dp))
+        val currentLayoutDir = LocalLayoutDirection.current
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                tonalElevation = 6.dp,
+                shadowElevation = 8.dp,
+                modifier = Modifier
+                    .offset { animatedOffset }
+                    .onGloballyPositioned { coords ->
+                        tooltipSize = coords.size
+                    }
+                    .graphicsLayer {
+                        alpha = contentAlpha.value
+                        scaleX = contentScale.value
+                        scaleY = contentScale.value
+                    }
+                    .widthIn(max = tooltipMaxWidth)
+                    .padding(horizontal = 16.dp),
+            ) {
+                CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDir) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        // Balanced reading timer line
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(3.dp)
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(progress.value)
+                                    .height(3.dp)
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
                         }
 
-                        // Next and Skip Tour action buttons
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val isLast = currentStep >= totalSteps - 1
-                            if (!isLast) {
-                                TextButton(
-                                    onClick = onSkipAll,
-                                    modifier = Modifier.height(36.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.tutorial_end_tour),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                                        maxLines = 1,
-                                        softWrap = false,
-                                    )
-                                }
-                            }
-
-                            FilledTonalButton(
-                                onClick = onNext,
-                                modifier = Modifier
-                                    .height(36.dp)
-                                    .defaultMinSize(minWidth = 68.dp),
-                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
-                                colors = ButtonDefaults.filledTonalButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            tutorialTarget(index)
+                            Spacer(Modifier.height(14.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = if (isLast || isVirtual) {
-                                        stringResource(R.string.tutorial_understood)
-                                    } else {
-                                        stringResource(R.string.next)
-                                    },
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                    maxLines = 1,
-                                    softWrap = false,
-                                )
+                                // Animated dots indicator with smooth transition between dots (بدون كلام)
+                                if (totalSteps > 1) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        for (i in 0 until totalSteps) {
+                                            val isActive = i == currentStep
+                                            val dotWidth by animateDpAsState(
+                                                targetValue = if (isActive) 18.dp else 6.dp,
+                                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                                                label = "DotWidth_$i"
+                                            )
+                                            val dotColor by animateColorAsState(
+                                                targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
+                                                animationSpec = tween(300),
+                                                label = "DotColor_$i"
+                                            )
+                                            Box(
+                                                modifier = Modifier
+                                                    .height(6.dp)
+                                                    .width(dotWidth)
+                                                    .clip(RoundedCornerShape(3.dp))
+                                                    .background(dotColor)
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    Spacer(Modifier.width(1.dp))
+                                }
+
+                                // Next and Skip Tour action buttons
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    val isLast = currentStep >= totalSteps - 1
+                                    if (!isLast) {
+                                        TextButton(
+                                            onClick = onSkipAll,
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.tutorial_end_tour),
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                                                maxLines = 1,
+                                                softWrap = false,
+                                            )
+                                        }
+                                    }
+
+                                    FilledTonalButton(
+                                        onClick = onNext,
+                                        modifier = Modifier
+                                            .height(36.dp)
+                                            .defaultMinSize(minWidth = 68.dp),
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                                        colors = ButtonDefaults.filledTonalButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    ) {
+                                        Text(
+                                            text = if (isLast || isVirtual) {
+                                                stringResource(R.string.tutorial_understood)
+                                            } else {
+                                                stringResource(R.string.next)
+                                            },
+                                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -720,12 +741,29 @@ fun TutorialTooltip(
     title: String?,
     description: String,
     icon: ImageVector? = null,
+    badgeText: String? = null,
+    actionContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
     ) {
+        if (badgeText != null) {
+            Surface(
+                shape = RoundedCornerShape(6.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = badgeText,
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                )
+            }
+        }
+
         if (icon != null || title != null) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -772,6 +810,11 @@ fun TutorialTooltip(
                 style = MaterialTheme.typography.bodyMediumCondensed,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+
+        if (actionContent != null) {
+            Spacer(Modifier.height(10.dp))
+            actionContent()
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿package com.wafeer.app.presentation.ui.home
+package com.wafeer.app.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +9,7 @@ import com.wafeer.app.domain.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,14 +19,19 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import com.wafeer.app.presentation.util.CensorManager
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
+    private val censorManager: CensorManager? = null,
 ) : ViewModel() {
+
+    fun toggleCensor() {
+        censorManager?.toggleCensor()
+    }
 
     private val _localState = MutableStateFlow(MainScreenLocalState())
 
