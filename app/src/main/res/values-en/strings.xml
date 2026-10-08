@@ -25,6 +25,15 @@
     <string name="tutorial_sandbox_banner_desc">Freely test numpad, gestures, and sensor without saving real data.</string>
     <string name="tutorial_sandbox_resume_guide">Guide</string>
     <string name="tutorial_sandbox_finish">Finish &amp; Start App</string>
+    <string name="demo_banner_badge">Interactive Simulation Mode</string>
+    <string name="demo_banner_skip">Skip to Real Budget</string>
+    <string name="demo_mission_title">Quick Interactive Step</string>
+    <string name="demo_mission_desc">Suppose you just bought a coffee for 50 EGP; type 50 on the numpad and press the green checkmark to watch your budget update instantly.</string>
+    <string name="demo_success_title">Great job! 👏</string>
+    <string name="demo_success_desc">Notice how your balance deducted and the charts updated instantly! Feel free to explore analytics and when ready, tap below to start your real budget cleanly.</string>
+    <string name="demo_action_start_real">I\'m ready, start my real budget 🚀</string>
+    <string name="demo_action_keep_exploring">Keep exploring</string>
+    <string name="demo_minimized_badge">Simulation Mode Active (Sample Data)</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
@@ -321,6 +330,8 @@
     <string name="settings_import_csv_subtitle">Import data from a CSV file</string>
     <string name="settings_reset_tutorial_title">Reset tutorial</string>
     <string name="settings_reset_tutorial_subtitle">You will see gesture hints, info, and actions across the app again.</string>
+    <string name="settings_simulation_demo_title">Start Simulation Demo Mode</string>
+    <string name="settings_simulation_demo_subtitle">Populate the app with sample transactions to test spending and analytics hands-on.</string>
     <string name="settings_theme_dialog_title">App theme</string>
     <string name="settings_theme_light_title">Light</string>
     <string name="settings_theme_light_subtitle">Always use light theme</string>

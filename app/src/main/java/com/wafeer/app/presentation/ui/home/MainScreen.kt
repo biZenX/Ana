@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import com.wafeer.app.presentation.LocalWindowInsets
+import com.wafeer.app.presentation.ui.demo.SimulationDemoBanner
 import com.wafeer.app.presentation.ui.tutorial.SensorDiagnosticDialog
 import com.wafeer.app.presentation.ui.tutorial.TutorialBox
 import com.wafeer.app.presentation.ui.tutorial.TutorialTooltip
@@ -163,7 +164,7 @@ fun MainScreen(
         },
     ) {
         TutorialBox(
-            showTutorial = showNumpadTutorial && !isFreePracticeActive,
+            showTutorial = showNumpadTutorial && !isFreePracticeActive && !mainScreenState.demoModeActive,
             onFreePractice = { isFreePracticeActive = true },
             onTutorialCompleted = {
                 logcat(TAG) { "TutorialBox completed → persisting tutorialBoxCompleted=true" }
@@ -352,7 +353,24 @@ fun MainScreen(
                         tutorialBoxState = tutorialBoxState,
                     )
 
-                    if (!tutorialBoxCompleted && isFreePracticeActive) {
+                    if (mainScreenState.demoModeActive) {
+                        SimulationDemoBanner(
+                            demoMissionCompleted = mainScreenState.demoMissionCompleted,
+                            onStartRealBudget = {
+                                mainScreenViewModel.processIntent(
+                                    MainScreenUiIntent.ExitDemoModeAndStartRealBudget,
+                                    tutorialStage,
+                                )
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(
+                                    top = LocalWindowInsets.current.calculateTopPadding() + 12.dp,
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                ),
+                        )
+                    } else if (!tutorialBoxCompleted && isFreePracticeActive) {
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)

@@ -478,6 +478,15 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun onStartSimulationDemo() {
+        viewModelScope.launch {
+            budgetRepository.seedDemoData()
+            settingsRepository.setDemoModeActive(true)
+            settingsRepository.setDemoMissionCompleted(false)
+            _effects.value = SettingsUiEffect.NavigateBack
+        }
+    }
+
     fun setFinancialTipsEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setFinancialTipsEnabled(enabled)

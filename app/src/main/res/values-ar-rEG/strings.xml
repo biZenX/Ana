@@ -25,6 +25,15 @@
     <string name="tutorial_sandbox_banner_desc">جرّب الأرقام والحركات وحسّاس الخصوصية براحتك من غير ما تسجل أي مصاريف حقيقية.</string>
     <string name="tutorial_sandbox_resume_guide">الدليل</string>
     <string name="tutorial_sandbox_finish">إنهاء وبدء الاستخدام</string>
+    <string name="demo_banner_badge">وضع المحاكاة والتجربة الحية 🧪</string>
+    <string name="demo_banner_skip">تخطي للبدء الفعلي</string>
+    <string name="demo_mission_title">خطوة تجريبية سريعة</string>
+    <string name="demo_mission_desc">افترض إنك نزلت دلوقتي واشتريت قهوة بـ 50 جنيه؛ اكتب 50 في لوحة الأرقام واضغط على علامة الصح الخضراء عشان تشوف الميزانية وهي بتتخصم فوراً في ثانية!</string>
+    <string name="demo_success_title">الله ينور عليك! 👏</string>
+    <string name="demo_success_desc">شوفت إزاي الرصيد اتخصم والإحصائيات والرسوم البيانية اتحدثت في نفس اللحظة؟ تقدر تفتح الإحصائيات وتجرب كل حاجة براحتك، ولما تخلص اضغط هنا عشان تبدأ ميزانيتك الحقيقية بكل نظافة.</string>
+    <string name="demo_action_start_real">أنا جاهز، ابدأ ميزانيتي الحقيقية 🚀</string>
+    <string name="demo_action_keep_exploring">استمرار التجربة والاستكشاف</string>
+    <string name="demo_minimized_badge">وضع المحاكاة شغّال (بيانات تجريبية)</string>
     <string name="tutorial_calc_title">تعديل الميزانية الجارية</string>
     <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
     <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>
@@ -411,6 +420,8 @@
     <string name="settings_import_csv_subtitle">استيراد بياناتك السابقة من ملف CSV</string>
     <string name="settings_reset_tutorial_title">إعادة تشغيل الدليل الترحيبي</string>
     <string name="settings_reset_tutorial_subtitle">ستظهر لك تلميحات الإيماءات والإرشادات التفاعلية مجدداً.</string>
+    <string name="settings_simulation_demo_title">شغّل وضع المحاكاة والتجربة الحية</string>
+    <string name="settings_simulation_demo_subtitle">يملالك البرنامج بحركات ومصاريف تجريبية عشان تجرب تسجيل المصروف والإحصائيات بنفسك.</string>
     <string name="settings_theme_dialog_title">مظهر التطبيق</string>
     <string name="settings_theme_light_title">فاتح</string>
     <string name="settings_theme_light_subtitle">استخدام المظهر الفاتح دائماً</string>

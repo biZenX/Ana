@@ -2,6 +2,7 @@ package com.wafeer.app.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wafeer.app.data.repository.BudgetRepository
 import com.wafeer.app.data.repository.SettingsRepository
 import com.wafeer.app.domain.model.BudgetPeriod
 import com.wafeer.app.domain.model.FirstLaunchTutorialStage
@@ -21,13 +22,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import com.wafeer.app.presentation.util.CensorManager
+import logcat.logcat
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+
+private const val TAG = "MainScreenViewModel"
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val censorManager: CensorManager? = null,
+    private val budgetRepository: BudgetRepository? = null,
 ) : ViewModel() {
 
     val censorDiagnosticState: StateFlow<com.wafeer.app.presentation.util.ProximityDiagnosticState> = censorManager?.diagnosticState
@@ -67,6 +72,8 @@ class MainScreenViewModel @Inject constructor(
             showBudgetPeriodSheet = local.showBudgetPeriodSheet,
             forceBudgetPeriodSheetSetup = local.forceBudgetPeriodSheetSetup,
             walletSheetOpened = local.walletSheetOpened,
+            demoModeActive = settings.demoModeActive,
+            demoMissionCompleted = settings.demoMissionCompleted,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -88,10 +95,25 @@ class MainScreenViewModel @Inject constructor(
             is MainScreenUiIntent.SetSelectedPeriod -> setSelectedPeriod(intent.period)
             is MainScreenUiIntent.MarkWalletSheetOpened -> markWalletSheetOpened()
             is MainScreenUiIntent.SetTutorialBoxCompleted -> setTutorialBoxCompleted(intent.completed)
+            is MainScreenUiIntent.ExitDemoModeAndStartRealBudget -> exitDemoModeAndStartRealBudget()
 
             is MainScreenUiIntent.ProcessBudgetTransactionIntent -> { /* caller */ }
             is MainScreenUiIntent.ProcessBudgetEditorIntent -> { /* caller */ }
             is MainScreenUiIntent.ProcessBudgetNumpadIntent -> { /* caller */ }
+        }
+    }
+
+    fun exitDemoModeAndStartRealBudget() {
+        viewModelScope.launch {
+            try {
+                budgetRepository?.deleteDemoTransactions()
+                settingsRepository.setDemoModeActive(false)
+                settingsRepository.setDemoMissionCompleted(false)
+                settingsRepository.setTutorialBoxCompleted(true)
+                showBudgetPeriodSheet(forceSetup = true)
+            } catch (e: Exception) {
+                logcat(TAG) { "exitDemoModeAndStartRealBudget failed: ${e.message}" }
+            }
         }
     }
 

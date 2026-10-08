@@ -143,6 +143,7 @@ fun SettingsScreen(
         cacheSize = cacheSize,
         onClearCache = viewModel::onClearCache,
         onResetTutorial = viewModel::onResetTutorial,
+        onStartSimulationDemo = viewModel::onStartSimulationDemo,
         financialTipsEnabled = uiState.financialTipsEnabled,
         onFinancialTipsToggle = viewModel::setFinancialTipsEnabled,
         onResetDismissedTips = viewModel::resetDismissedFinancialTips,

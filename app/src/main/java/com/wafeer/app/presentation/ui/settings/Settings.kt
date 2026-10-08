@@ -167,6 +167,7 @@ fun Settings(
     cacheSize: String = "",
     onClearCache: () -> Unit = {},
     onResetTutorial: () -> Unit = {},
+    onStartSimulationDemo: () -> Unit = {},
     financialTipsEnabled: Boolean = true,
     onFinancialTipsToggle: (Boolean) -> Unit = {},
     onResetDismissedTips: () -> Unit = {},
@@ -420,6 +421,30 @@ fun Settings(
                             )
                             Text(
                                 text = stringResource(R.string.settings_reset_tutorial_subtitle),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    CustomPaddedListItem(
+                        onClick = {
+                            view.toggleFeedback()
+                            onStartSimulationDemo()
+                        },
+                        position = PaddedListItemPosition.Middle,
+                        modifier = Modifier.testTag("SettingsStartSimulationDemoItem")
+                    ) {
+                        SettingsLeadingIcon(icon = Icons.Rounded.AutoAwesome)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.settings_simulation_demo_title),
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.settings_simulation_demo_subtitle),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

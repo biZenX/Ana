@@ -32,6 +32,8 @@ sealed interface MainScreenUiIntent {
 
     data class SetTutorialBoxCompleted(val completed: Boolean) : MainScreenUiIntent
 
+    data object ExitDemoModeAndStartRealBudget : MainScreenUiIntent
+
     data class ProcessBudgetTransactionIntent(val intent: BudgetTransactionIntent) : MainScreenUiIntent
     data class ProcessBudgetEditorIntent(val intent: BudgetEditorIntent) : MainScreenUiIntent
     data class ProcessBudgetNumpadIntent(val intent: BudgetNumpadIntent) : MainScreenUiIntent
@@ -73,6 +75,8 @@ data class MainScreenUiState(
     val categoryGridModeEnabled: Boolean = false,
     val extraNoteEnabled: Boolean = false,
     val newCategoryTagEnabled: Boolean = false,
+    val demoModeActive: Boolean = false,
+    val demoMissionCompleted: Boolean = false,
 )
 
 data class MainScreenActions(

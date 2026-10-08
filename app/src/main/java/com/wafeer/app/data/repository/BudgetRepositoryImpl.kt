@@ -456,4 +456,56 @@ class BudgetRepositoryImpl @Inject constructor(
             archivedBudgetDao.deleteById(periodId)
         }
     }
+
+    override suspend fun deleteDemoTransactions() {
+        appDatabase.withTransaction {
+            transactionDao.deleteDemoTransactions()
+            queuedTransactionDao.clearAll()
+        }
+    }
+
+    override suspend fun seedDemoData(
+        currencyCode: String,
+        sampleBudget: BigDecimal,
+    ) {
+        appDatabase.withTransaction {
+            transactionDao.deleteDemoTransactions()
+
+            val groceryCat = findOrCreateCategory("سوبرماركت وطلبات")
+            val transportCat = findOrCreateCategory("مواصلات وبنزين")
+            val billsCat = findOrCreateCategory("فواتير وخدمات")
+
+            val now = LocalDateTime.now()
+            val sampleTransactions = listOf(
+                TransactionEntity(
+                    amount = "420.00",
+                    comment = "سوبرماركت وطلبات",
+                    note = "مشتريات خضار ومستلزمات",
+                    date = now.minusDays(2).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_grocery",
+                    categoryId = groceryCat.id,
+                ),
+                TransactionEntity(
+                    amount = "120.00",
+                    comment = "مواصلات وبنزين",
+                    note = "تفويلة بنزين",
+                    date = now.minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_transport",
+                    categoryId = transportCat.id,
+                ),
+                TransactionEntity(
+                    amount = "350.00",
+                    comment = "فواتير وخدمات",
+                    note = "فاتورة الإنترنت",
+                    date = now.minusDays(3).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_bills",
+                    categoryId = billsCat.id,
+                ),
+            )
+
+            for (tx in sampleTransactions) {
+                transactionDao.insertOrReplace(tx)
+            }
+        }
+    }
 }

@@ -12,7 +12,9 @@ import kotlinx.coroutines.CancellationException
 import logcat.logcat
 import java.math.BigDecimal
 import java.time.LocalDate
+import com.wafeer.app.data.repository.SettingsRepository
 import java.time.LocalDateTime
+import java.util.UUID
 import javax.inject.Inject
 
 sealed interface ApplyTransactionResult {
@@ -40,6 +42,7 @@ class BudgetTransactionHandler @Inject constructor(
     private val budgetExpressionEvaluator: BudgetExpressionEvaluator,
     private val notificationScheduler: NotificationScheduler,
     private val errorLogRecorder: ErrorLogRecorder,
+    private val settingsRepository: SettingsRepository? = null,
 ) {
     companion object {
         private const val TAG = "BudgetTransactionHandler"
@@ -98,19 +101,29 @@ class BudgetTransactionHandler @Inject constructor(
                 null
             }
 
-            if (budgetSettings != null && today.isAfter(budgetSettings.getPeriodEndDate())) {
+            val isDemo = settingsRepository?.getSettings()?.demoModeActive == true
+            val clientGeneratedId = if (isDemo) {
+                "demo_user_${UUID.randomUUID()}"
+            } else {
+                UUID.randomUUID().toString()
+            }
 
+            if (budgetSettings != null && today.isAfter(budgetSettings.getPeriodEndDate())) {
                 val pendingTransaction = Transaction.create(
                     amount = amount,
                     comment = effectiveComment,
                     note = note.trim(),
                     date = LocalDateTime.now(),
                     periodId = 0L,
+                    clientGeneratedId = clientGeneratedId,
                     categoryId = categoryId,
                     isCredit = isCreditEnabled,
                     isAdjustment = isAdjustment
                 )
                 budgetRepository.addQueuedTransaction(pendingTransaction)
+                if (isDemo) {
+                    settingsRepository?.setDemoMissionCompleted(true)
+                }
                 return ApplyTransactionResult.QueuedForNextPeriod(normalizedInput = normalizedInput)
             }
 
@@ -121,11 +134,15 @@ class BudgetTransactionHandler @Inject constructor(
                 note = note.trim(),
                 date = LocalDateTime.now(),
                 periodId = activePeriodId,
+                clientGeneratedId = clientGeneratedId,
                 categoryId = categoryId,
                 isCredit = isCreditEnabled,
                 isAdjustment = isAdjustment
             )
             addTransactionUseCase(transaction)
+            if (isDemo) {
+                settingsRepository?.setDemoMissionCompleted(true)
+            }
             notificationScheduler.cancelDaily75PercentAlert()
             ApplyTransactionResult.Added(normalizedInput = normalizedInput)
         } catch (e: CancellationException) {

@@ -90,4 +90,11 @@ interface BudgetRepository {
     )
 
     suspend fun deleteArchivedBudget(periodId: Long)
+
+    suspend fun deleteDemoTransactions()
+
+    suspend fun seedDemoData(
+        currencyCode: String = "EGP",
+        sampleBudget: BigDecimal = BigDecimal("5000.00"),
+    )
 }

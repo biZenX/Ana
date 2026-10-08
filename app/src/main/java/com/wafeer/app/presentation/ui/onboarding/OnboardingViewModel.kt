@@ -78,15 +78,21 @@ class OnboardingViewModel @Inject constructor(
                     )
                 }
 
-                val currentTotal = existing?.totalBudget ?: java.math.BigDecimal("3000.00")
+                val sampleBudget = when (intent.budgetType) {
+                    SurveyBudgetType.ALLOWANCE -> java.math.BigDecimal("1200.00")
+                    SurveyBudgetType.SALARY, SurveyBudgetType.HOUSEHOLD -> java.math.BigDecimal("5000.00")
+                }
+
+                val currentTotal = existing?.totalBudget ?: sampleBudget
                 val currency = existing?.currencyCode ?: "EGP"
 
                 val updatedSettings = (existing ?: com.wafeer.app.domain.model.BudgetSettings(
-                    totalBudget = currentTotal,
+                    totalBudget = sampleBudget,
                     period = period,
-                    startDate = java.time.LocalDate.now(),
+                    startDate = java.time.LocalDate.now().withDayOfMonth(1),
                     currencyCode = currency,
                 )).copy(
+                    totalBudget = sampleBudget,
                     period = period,
                     splitMode = splitMode,
                 )
@@ -95,6 +101,11 @@ class OnboardingViewModel @Inject constructor(
                 if (allowanceEnabled) {
                     settingsRepository.setAllowanceDaysEnabled(true)
                 }
+
+                // Seed interactive simulation mock transactions
+                budgetRepository.seedDemoData(currencyCode = currency, sampleBudget = sampleBudget)
+                settingsRepository.setDemoModeActive(true)
+                settingsRepository.setDemoMissionCompleted(false)
 
                 settingsRepository.setOnboardingCompleted(true)
                 _localState.update { it.copy(isCompleted = true) }
