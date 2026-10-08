@@ -34,6 +34,8 @@ data class ProximityDiagnosticState(
     val currentDistance: Float = -1f,
     val isNear: Boolean = false,
     val triggerCount: Int = 0,
+    val lightLux: Float = -1f,
+    val isLightCovered: Boolean = false,
 )
 
 @Singleton
@@ -51,6 +53,9 @@ class CensorManager @Inject constructor(
         (listOfNotNull(wakeUp, defaultSensor) + list).distinct()
     }
 
+    // Ambient light sensor for modern devices with virtual/ultrasonic proximity sensors (e.g. Redmi / Xiaomi)
+    private val lightSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+
     private val primarySensor = proximitySensors.firstOrNull()
 
     private val _isCensored = MutableStateFlow(false)
@@ -58,9 +63,9 @@ class CensorManager @Inject constructor(
 
     private val _diagnosticState = MutableStateFlow(
         ProximityDiagnosticState(
-            hasSensor = primarySensor != null,
-            sensorName = primarySensor?.name ?: "",
-            vendor = primarySensor?.vendor ?: "",
+            hasSensor = primarySensor != null || lightSensor != null,
+            sensorName = primarySensor?.name ?: (lightSensor?.name ?: ""),
+            vendor = primarySensor?.vendor ?: (lightSensor?.vendor ?: ""),
             maxRange = primarySensor?.maximumRange ?: 0f,
             isVirtual = primarySensor?.name?.contains("virtual", ignoreCase = true) == true ||
                 primarySensor?.name?.contains("elliptic", ignoreCase = true) == true ||
@@ -70,6 +75,9 @@ class CensorManager @Inject constructor(
     val diagnosticState: StateFlow<ProximityDiagnosticState> = _diagnosticState.asStateFlow()
 
     private var wasNear = false
+    private var isProximityNear = false
+    private var isLightCovered = false
+    private var lastAmbientLux = -1f
     private var censorToggleJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -77,42 +85,78 @@ class CensorManager @Inject constructor(
         for (sensor in proximitySensors) {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
         }
+        lightSensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        }
     }
 
     fun stop() {
         sensorManager.unregisterListener(this)
         censorToggleJob?.cancel()
         censorToggleJob = null
+        wasNear = false
+        isProximityNear = false
+        isLightCovered = false
+        lastAmbientLux = -1f
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
-            val distance = event.values.firstOrNull() ?: return
-            val maxRange = event.sensor.maximumRange.takeIf { it > 0f } ?: 5f
-            // Universal proximity detection:
-            // 1. If distance is 0, it's always near (standard across hardware & virtual sensors).
-            // 2. If maxRange > 1 and distance < maxRange, it's near.
-            // 3. If maxRange <= 1 and distance < 1, it's near.
-            val isNear = distance == 0f || (distance < maxRange && maxRange > 1f) || (maxRange <= 1f && distance < 1f)
+        if (event == null) return
 
-            _diagnosticState.update { current ->
-                current.copy(
-                    sensorName = event.sensor.name,
-                    vendor = event.sensor.vendor,
-                    maxRange = event.sensor.maximumRange,
-                    currentDistance = distance,
-                    isNear = isNear,
-                    triggerCount = if (isNear && !current.isNear) current.triggerCount + 1 else current.triggerCount,
-                )
-            }
+        when (event.sensor.type) {
+            Sensor.TYPE_PROXIMITY -> {
+                val distance = event.values.firstOrNull() ?: return
+                val maxRange = event.sensor.maximumRange.takeIf { it > 0f } ?: 5f
+                val near = distance == 0f || (distance < maxRange && maxRange > 1f) || (maxRange <= 1f && distance < 1f)
+                isProximityNear = near
 
-            if (isNear && !wasNear) {
-                startCensorTimer()
-            } else if (!isNear && wasNear) {
-                cancelCensorTimer()
+                _diagnosticState.update { current ->
+                    current.copy(
+                        sensorName = event.sensor.name,
+                        vendor = event.sensor.vendor,
+                        maxRange = event.sensor.maximumRange,
+                        currentDistance = distance,
+                    )
+                }
+                evaluateCombinedNearState()
             }
-            wasNear = isNear
+            Sensor.TYPE_LIGHT -> {
+                val lux = event.values.firstOrNull() ?: return
+                if (lux >= 5f) {
+                    lastAmbientLux = lux
+                }
+                // When palm covers the top edge/earpiece, ambient light drops to near 0
+                val covered = (lastAmbientLux >= 8f && lux <= 1.0f)
+                isLightCovered = covered
+
+                _diagnosticState.update { current ->
+                    current.copy(
+                        lightLux = lux,
+                        isLightCovered = covered,
+                    )
+                }
+                evaluateCombinedNearState()
+            }
         }
+    }
+
+    private fun evaluateCombinedNearState() {
+        val effectiveNear = isProximityNear || isLightCovered
+
+        _diagnosticState.update { current ->
+            val justBecameNear = effectiveNear && !current.isNear
+            current.copy(
+                isNear = effectiveNear,
+                triggerCount = if (justBecameNear) current.triggerCount + 1 else current.triggerCount,
+            )
+        }
+
+        if (effectiveNear && !wasNear) {
+            startCensorTimer()
+        } else if (!effectiveNear && wasNear) {
+            cancelCensorTimer()
+        }
+        wasNear = effectiveNear
     }
 
     private fun startCensorTimer() {

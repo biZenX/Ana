@@ -22,7 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Sensors
+import androidx.compose.material.icons.rounded.PanTool
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -32,21 +32,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.wafeer.app.R
 import com.wafeer.app.presentation.util.LocalCensorMode
 import com.wafeer.app.presentation.util.ProximityDiagnosticState
 
@@ -60,18 +58,18 @@ fun SensorDiagnosticDialog(
     val infiniteTransition = rememberInfiniteTransition(label = "RadarTransition")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.25f,
+        targetValue = 1.18f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000),
+            animation = tween(900),
             repeatMode = RepeatMode.Reverse,
         ),
-        label = "RadarScale"
+        label = "TargetPulseScale"
     )
 
-    val radarColor by animateColorAsState(
+    val activeColor by animateColorAsState(
         targetValue = if (diagnosticState.isNear) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary,
         animationSpec = tween(200),
-        label = "RadarColor"
+        label = "ActiveColor"
     )
 
     AlertDialog(
@@ -88,15 +86,15 @@ fun SensorDiagnosticDialog(
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
-                            imageVector = Icons.Rounded.Sensors,
+                            imageVector = Icons.Rounded.VisibilityOff,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
                 Text(
-                    text = "فاحص مستشعر الخصوصية",
+                    text = "إخفاء الأرقام للخصوصية",
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -105,67 +103,122 @@ fun SensorDiagnosticDialog(
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Interactive Radar Meter
+                // Interactive Phone Diagram showing exact sensor placement at top bezel
                 Box(
                     modifier = Modifier
-                        .size(110.dp)
-                        .scale(if (diagnosticState.isNear) 1.05f else pulseScale)
-                        .background(radarColor.copy(alpha = 0.12f), CircleShape)
-                        .border(2.dp, radarColor.copy(alpha = 0.45f), CircleShape),
-                    contentAlignment = Alignment.Center
+                        .width(130.dp)
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .border(2.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(20.dp))
+                        .padding(8.dp),
+                    contentAlignment = Alignment.TopCenter
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(75.dp)
-                            .background(radarColor.copy(alpha = 0.25f), CircleShape)
-                            .border(2.5.dp, radarColor, CircleShape),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = if (diagnosticState.isNear) Icons.Rounded.CheckCircle else Icons.Rounded.Sensors,
-                            contentDescription = null,
-                            tint = radarColor,
-                            modifier = Modifier.size(36.dp)
-                        )
+                        // Top bezel with speaker and camera indicator
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            // Target zone pulse around top earpiece
+                            Box(
+                                modifier = Modifier
+                                    .size(width = 64.dp, height = 22.dp)
+                                    .scale(if (diagnosticState.isNear) 1.05f else pulseScale)
+                                    .background(activeColor.copy(alpha = 0.2f), RoundedCornerShape(11.dp))
+                                    .border(1.5.dp, activeColor, RoundedCornerShape(11.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    // Camera dot
+                                    Box(
+                                        modifier = Modifier
+                                            .size(5.dp)
+                                            .background(activeColor, CircleShape)
+                                    )
+                                    // Earpiece slit
+                                    Box(
+                                        modifier = Modifier
+                                            .size(width = 18.dp, height = 4.dp)
+                                            .background(activeColor, RoundedCornerShape(2.dp))
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(18.dp))
+
+                        // Simulated phone screen preview
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (diagnosticState.isNear) Color(0xFF2E7D32).copy(alpha = 0.12f) else MaterialTheme.colorScheme.surface,
+                            modifier = Modifier.fillMaxWidth().height(60.dp),
+                            border = androidx.compose.foundation.BorderStroke(
+                                1.dp,
+                                if (diagnosticState.isNear) Color(0xFF2E7D32).copy(alpha = 0.4f) else MaterialTheme.colorScheme.outlineVariant
+                            )
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Icon(
+                                        imageVector = if (diagnosticState.isNear) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                                        contentDescription = null,
+                                        tint = if (diagnosticState.isNear) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = if (diagnosticState.isNear) "•••••• ج.م" else "2,450 ج.م",
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = if (diagnosticState.isNear) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
                 // Status banner
                 Surface(
                     shape = RoundedCornerShape(10.dp),
-                    color = if (diagnosticState.isNear) Color(0xFFE8F5E9) else MaterialTheme.colorScheme.surfaceVariant,
+                    color = if (diagnosticState.isNear) Color(0xFF2E7D32).copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
+                        Icon(
+                            imageVector = if (diagnosticState.isNear) Icons.Rounded.CheckCircle else Icons.Rounded.PanTool,
+                            contentDescription = null,
+                            tint = if (diagnosticState.isNear) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
                         Text(
                             text = if (diagnosticState.isNear) {
-                                "🟢 تم رصد اليد! المستشعر في هذا الموضع"
+                                "تم استشعار اليد، الأرقام محجوبة الآن"
                             } else {
-                                "⚪ حرّك يدك ببطء حول الحافة العلوية أو سماعة الأذن"
+                                "ضع باطن يدك ملاصقاً لأعلى الهاتف عند السماعة"
                             },
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                             color = if (diagnosticState.isNear) Color(0xFF1B5E20) else MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = if (diagnosticState.currentDistance >= 0f) {
-                                "المسافة المقروءة: ${if (diagnosticState.isNear) "0" else String.format("%.1f", diagnosticState.currentDistance)} سم"
-                            } else {
-                                "بانتظار حركة اليد بالقرب من الهاتف..."
-                            },
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (diagnosticState.isNear) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                            modifier = Modifier.weight(1f)
                         )
                     }
                 }
 
-                // Dynamic Hardware Diagnostic Card
+                // Helpful natural explanation
                 Card(
                     shape = RoundedCornerShape(10.dp),
                     colors = CardDefaults.cardColors(
@@ -178,38 +231,19 @@ fun SensorDiagnosticDialog(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "بيانات المستشعر المكتشفة في جهازك:",
+                            text = "كيف تعمل الميزة؟",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "• الاسم: ${diagnosticState.sensorName.ifBlank { "مستشعر القرب" }}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        if (diagnosticState.vendor.isNotBlank()) {
-                            Text(
-                                text = "• الجهة المصنعة: ${diagnosticState.vendor}",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Text(
-                            text = "• النوع: ${if (diagnosticState.isVirtual) "افتراضي بالموجات / شاشة (Virtual)" else "عتادي بصري (Hardware)"}",
-                            style = MaterialTheme.typography.labelSmall,
+                            text = "في معظم الهواتف الحديثة، الحساس مدمج عند سماعة المكالمات في أعلى الهاتف. لتفعيله بسهولة، غطِّ فتحة السماعة العلوية مباشرة بباطن يدك لثانية واحدة.",
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 17.sp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                Text(
-                    text = "ملاحظة: تختلف الهواتف في موضع المستشعر؛ فبعضها يضعه بجوار الكاميرا، وبعضها داخل فتحة سماعة المكالمات العلوية، والبعض أسفل الشاشة. بتحريك يدك وملاحظة إشارة الرادار بالأعلى، ستكتشف مكانه الدقيق فوراً.",
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 16.sp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                    textAlign = TextAlign.Center
-                )
-
-                // Quick Blur Test Button
+                // Direct Toggle Button
                 Button(
                     onClick = onToggleCensor,
                     modifier = Modifier.fillMaxWidth(),
@@ -224,7 +258,7 @@ fun SensorDiagnosticDialog(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = if (isCensored) "الأرقام مشوشة حالياً (اضغط لإلغاء التعتيم)" else "جرّب تشويش الأرقام الآن",
+                        text = if (isCensored) "الأرقام مشوشة حالياً (إلغاء الإخفاء)" else "إخفاء الأرقام الآن بضغطة زر",
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -239,7 +273,7 @@ fun SensorDiagnosticDialog(
                 )
             ) {
                 Text(
-                    text = "حسناً، عرفت الموضع",
+                    text = "فهمت الطريقة",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }

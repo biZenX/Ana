@@ -25,15 +25,15 @@
     <string name="tutorial_sandbox_banner_desc">Freely test numpad, gestures, and sensor without saving real data.</string>
     <string name="tutorial_sandbox_resume_guide">Guide</string>
     <string name="tutorial_sandbox_finish">Finish &amp; Start App</string>
-    <string name="demo_banner_badge">Interactive Simulation Mode</string>
-    <string name="demo_banner_skip">Skip to Real Budget</string>
-    <string name="demo_mission_title">Quick Interactive Step</string>
-    <string name="demo_mission_desc">Suppose you just bought a coffee for 50 EGP; type 50 on the numpad and press the green checkmark to watch your budget update instantly.</string>
-    <string name="demo_success_title">Great job! 👏</string>
-    <string name="demo_success_desc">Notice how your balance deducted and the charts updated instantly! Feel free to explore analytics and when ready, tap below to start your real budget cleanly.</string>
-    <string name="demo_action_start_real">I\'m ready, start my real budget 🚀</string>
-    <string name="demo_action_keep_exploring">Keep exploring</string>
-    <string name="demo_minimized_badge">Simulation Mode Active (Sample Data)</string>
+    <string name="demo_banner_badge">Demo Mode</string>
+    <string name="demo_banner_skip">Skip Demo</string>
+    <string name="demo_mission_title">Quick Tryout</string>
+    <string name="demo_mission_desc">Try entering 50 (e.g. coffee or quick expense) and press the checkmark to watch your balance update.</string>
+    <string name="demo_success_title">Expense logged and deducted</string>
+    <string name="demo_success_desc">The balance was deducted and transactions updated live. You can keep exploring or start your real budget now.</string>
+    <string name="demo_action_start_real">Start My Real Budget</string>
+    <string name="demo_action_keep_exploring">Keep Exploring</string>
+    <string name="demo_minimized_badge">Demo Mode (Sample Data)</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
@@ -270,9 +270,9 @@
     <string name="settings_exact_alarm_disabled_subtitle">Disabled; Android may delay the notification</string>
     <string name="settings_test_notification_title">Send test notification</string>
     <string name="settings_test_notification_subtitle">Tap to verify that alerts and sounds appear properly on your device</string>
-    <string name="notification_test_title">Test alert from Wafeer 🔔</string>
+    <string name="notification_test_title">Test alert from Wafeer</string>
     <string name="notification_test_message">Notifications are working properly! You will receive period end and recurring payment alerts on time.</string>
-    <string name="notification_test_sent_toast">Test notification sent successfully 🔔</string>
+    <string name="notification_test_sent_toast">Test notification sent successfully</string>
     <string name="notification_permission_needed_toast">Please allow notifications to receive alerts</string>
     <string name="settings_time_picker_cancel">Cancel</string>
     <string name="settings_time_picker_confirm">OK</string>
@@ -330,8 +330,8 @@
     <string name="settings_import_csv_subtitle">Import data from a CSV file</string>
     <string name="settings_reset_tutorial_title">Reset tutorial</string>
     <string name="settings_reset_tutorial_subtitle">You will see gesture hints, info, and actions across the app again.</string>
-    <string name="settings_simulation_demo_title">Start Simulation Demo Mode</string>
-    <string name="settings_simulation_demo_subtitle">Populate the app with sample transactions to test spending and analytics hands-on.</string>
+    <string name="settings_simulation_demo_title">Demo Mode</string>
+    <string name="settings_simulation_demo_subtitle">Populate the app with sample data to test spending and explore features.</string>
     <string name="settings_theme_dialog_title">App theme</string>
     <string name="settings_theme_light_title">Light</string>
     <string name="settings_theme_light_subtitle">Always use light theme</string>
@@ -915,5 +915,5 @@
     <string name="tutorial_hand_hint_apply">Tap the checkmark button to save this expense</string>
     <string name="tutorial_hand_hint_pill">Tap here to view your remaining daily budget</string>
     <string name="tutorial_hand_hint_analytics">Tap here to view analytics and charts</string>
-    <string name="tutorial_hand_hint_tap_here">Tap here 👇</string>
+    <string name="tutorial_hand_hint_tap_here">Tap here</string>
 </resources>
