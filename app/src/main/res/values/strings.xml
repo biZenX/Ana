@@ -20,6 +20,11 @@
     <string name="tutorial_practice_mode">وضع تجربة</string>
     <string name="tutorial_interactive_test_mode">وضع تجربة تفاعلي</string>
     <string name="tutorial_test_censor_action">جرّب تشويش الأرقام الآن</string>
+    <string name="tutorial_diagnose_sensor_action">فحص واكتشاف مكان المستشعر</string>
+    <string name="tutorial_sandbox_banner_title">وضع التجربة الحرة</string>
+    <string name="tutorial_sandbox_banner_desc">جرّب الأرقام والحركات والمستشعر بحرية تامة دون تسجيل عمليات فعلية.</string>
+    <string name="tutorial_sandbox_resume_guide">الدليل</string>
+    <string name="tutorial_sandbox_finish">إنهاء وبدء الاستخدام</string>
     <string name="tutorial_calc_title">تعديل الميزانية الجارية</string>
     <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
     <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>

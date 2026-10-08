@@ -104,6 +104,7 @@ fun TutorialBox(
     tutorialTarget: @Composable (index: Int) -> Unit,
     onTutorialReopened: () -> Unit = {},
     onCutoutClick: ((Int) -> Unit)? = null,
+    onFreePractice: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     var canvasSize by remember { mutableStateOf(Size.Zero) }
@@ -152,6 +153,7 @@ fun TutorialBox(
                 onNext = { state.advance() },
                 onSkipAll = { state.skipAll() },
                 onCutoutClick = onCutoutClick,
+                onFreePractice = onFreePractice,
             )
         }
     }
@@ -245,6 +247,7 @@ private fun TutorialOverlay(
     onNext: () -> Unit,
     onSkipAll: () -> Unit,
     onCutoutClick: ((Int) -> Unit)? = null,
+    onFreePractice: (() -> Unit)? = null,
 ) {
     val density = LocalDensity.current
     val isPrivacyStep = index == 6
@@ -293,17 +296,22 @@ private fun TutorialOverlay(
         label = "PulseAlpha"
     )
 
+    var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val actualWidth = if (tooltipSize.width > 0) tooltipSize.width.toFloat() else tooltipMaxWidthPx
+    val actualHeight = if (tooltipSize.height > 0) tooltipSize.height.toFloat() else tooltipMinHeightEstimate
+
     val (tooltipX, tooltipY) = if (isVirtual && !isPrivacyStep) {
-        val centredX = (canvasSize.width - tooltipMaxWidthPx) / 2f
-        val centredY = (canvasSize.height - tooltipMinHeightEstimate) / 2f
+        val centredX = (canvasSize.width - actualWidth) / 2f
+        val centredY = (canvasSize.height - actualHeight) / 2f
         centredX.toInt() to centredY.toInt()
     } else {
         computeTooltipPosition(
             targetBounds = effectiveBounds,
             canvasSize = canvasSize,
             gapPx = tooltipGapPx,
-            tooltipWidthPx = tooltipMaxWidthPx,
-            tooltipHeightPx = tooltipMinHeightEstimate,
+            tooltipWidthPx = actualWidth,
+            tooltipHeightPx = actualHeight,
         )
     }
 
@@ -326,8 +334,6 @@ private fun TutorialOverlay(
         label = "TooltipOffset"
     )
 
-    var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
-
     val contentAlpha = remember { Animatable(0f) }
     val contentScale = remember { Animatable(0.92f) }
     val progress = remember { Animatable(0f) }
@@ -341,22 +347,25 @@ private fun TutorialOverlay(
     }
 
     val hasHole = !animatedCutout.isEmpty && (!isVirtual || isPrivacyStep)
+    val currentLayoutDir = LocalLayoutDirection.current
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(animatedCutout, isVirtual, isPrivacyStep, onCutoutClick, onNext) {
-                detectTapGestures { offset ->
-                    if (hasHole && animatedCutout.contains(offset)) {
-                        if (onCutoutClick != null) {
-                            onCutoutClick(index)
-                        } else {
-                            onNext()
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(animatedCutout, isVirtual, isPrivacyStep, onCutoutClick, onNext) {
+                    detectTapGestures { offset ->
+                        if (hasHole && animatedCutout.contains(offset)) {
+                            if (onCutoutClick != null) {
+                                onCutoutClick(index)
+                            } else {
+                                onNext()
+                            }
                         }
                     }
-                }
-            },
-    ) {
+                },
+            contentAlignment = Alignment.TopStart,
+        ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             if (!hasHole) {
                 drawRect(color = scrimColor)
@@ -525,29 +534,26 @@ private fun TutorialOverlay(
             PulsingTapPointer(targetBounds = animatedCutout)
         }
 
-        val currentLayoutDir = LocalLayoutDirection.current
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                tonalElevation = 6.dp,
-                shadowElevation = 8.dp,
-                modifier = Modifier
-                    .offset { animatedOffset }
-                    .onGloballyPositioned { coords ->
-                        tooltipSize = coords.size
-                    }
-                    .graphicsLayer {
-                        alpha = contentAlpha.value
-                        scaleX = contentScale.value
-                        scaleY = contentScale.value
-                    }
-                    .widthIn(max = tooltipMaxWidth)
-                    .padding(horizontal = 16.dp),
-            ) {
-                CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDir) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
+        Surface(
+            shape = RoundedCornerShape(14.dp),
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            tonalElevation = 6.dp,
+            shadowElevation = 8.dp,
+            modifier = Modifier
+                .offset { animatedOffset }
+                .onGloballyPositioned { coords ->
+                    tooltipSize = coords.size
+                }
+                .graphicsLayer {
+                    alpha = contentAlpha.value
+                    scaleX = contentScale.value
+                    scaleY = contentScale.value
+                }
+                .widthIn(max = tooltipMaxWidth),
+        ) {
+            CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDir) {
+                Column(modifier = Modifier.fillMaxWidth()) {
                         // Balanced reading timer line
                         Box(
                             modifier = Modifier
@@ -608,6 +614,21 @@ private fun TutorialOverlay(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     val isLast = currentStep >= totalSteps - 1
+                                    if (!isLast && onFreePractice != null) {
+                                        TextButton(
+                                            onClick = onFreePractice,
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 0.dp),
+                                        ) {
+                                            Text(
+                                                text = "تجربة حرة",
+                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                                                color = MaterialTheme.colorScheme.primary,
+                                                maxLines = 1,
+                                                softWrap = false,
+                                            )
+                                        }
+                                    }
                                     if (!isLast) {
                                         TextButton(
                                             onClick = onSkipAll,
@@ -636,7 +657,9 @@ private fun TutorialOverlay(
                                         )
                                     ) {
                                         Text(
-                                            text = if (isLast || isVirtual) {
+                                            text = if (isLast) {
+                                                "إنهاء وبدء الاستخدام"
+                                            } else if (isVirtual) {
                                                 stringResource(R.string.tutorial_understood)
                                             } else {
                                                 stringResource(R.string.next)

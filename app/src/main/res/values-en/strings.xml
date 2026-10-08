@@ -20,6 +20,11 @@
     <string name="tutorial_practice_mode">Practice Mode</string>
     <string name="tutorial_interactive_test_mode">Interactive Trial</string>
     <string name="tutorial_test_censor_action">Try blurring numbers now</string>
+    <string name="tutorial_diagnose_sensor_action">Diagnose &amp; Locate Sensor</string>
+    <string name="tutorial_sandbox_banner_title">Practice Sandbox Active</string>
+    <string name="tutorial_sandbox_banner_desc">Freely test numpad, gestures, and sensor without saving real data.</string>
+    <string name="tutorial_sandbox_resume_guide">Guide</string>
+    <string name="tutorial_sandbox_finish">Finish &amp; Start App</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>

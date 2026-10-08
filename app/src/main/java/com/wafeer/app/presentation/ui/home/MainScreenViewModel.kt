@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import com.wafeer.app.presentation.util.CensorManager
@@ -28,6 +29,9 @@ class MainScreenViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val censorManager: CensorManager? = null,
 ) : ViewModel() {
+
+    val censorDiagnosticState: StateFlow<com.wafeer.app.presentation.util.ProximityDiagnosticState> = censorManager?.diagnosticState
+        ?: MutableStateFlow(com.wafeer.app.presentation.util.ProximityDiagnosticState()).asStateFlow()
 
     fun toggleCensor() {
         censorManager?.toggleCensor()
