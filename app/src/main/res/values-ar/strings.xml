@@ -1,26 +1,43 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">وفير</string>
-    <string name="tutorial_numpad_title">لوحة الأرقام</string>
-    <string name="tutorial_numpad_description">أدخل المبلغ الذي أنفقته واضغط على علامة الصح الخضراء للحفظ. اسحب للأعلى على لوحة الأرقام لبدء العمليات الحسابية.</string>
-    <string name="tutorial_comment_title">إضافة تصنيف</string>
-    <string name="tutorial_comment_description">حدد تصنيفاً أو اكتب ملاحظة سريعة لتتذكر وجه إنفاق هذا المبلغ.</string>
+    <string name="tutorial_numpad_title">تسجيل المصاريف</string>
+    <string name="tutorial_numpad_description">اكتب المبلغ اللي صرفته واضغط على علامة الصح الخضراء لحفظه. واسحب لوحة الأرقام لفوق عشان تفتح الآلة الحاسبة.</string>
+    <string name="tutorial_comment_title">التصنيف والملاحظات</string>
+    <string name="tutorial_comment_description">حدد تصنيف المصروف أو اكتب ملاحظة سريعة عشان تفتكر الفلوس اتصرفت في إيه.</string>
     <string name="tutorial_budget_pill_title">مؤشر الميزانية</string>
-    <string name="tutorial_budget_pill_description">انقر للتبديل بين عرض الميزانية اليومية أو الأسبوعية أو الشهرية، أو لتعديل إعدادات الفترة. اضغط مطولاً لمعرفة تفاصيل احتساب الرصيد.</string>
-    <string name="tutorial_budget_pill_setup_title">إعداد الميزانية</string>
-    <string name="tutorial_budget_pill_setup_description">انقر هنا لتحديد ميزانيتك وفترة مصروفك لتبدأ استخدام التطبيق.</string>
+    <string name="tutorial_budget_pill_description">اضغط هنا للتبديل بين الميزانية اليومية أو الأسبوعية أو الشهرية، أو لتعديل الميزانية. واضغط مطولاً لمعرفة تفاصيل الحسبة.</string>
+    <string name="tutorial_budget_pill_setup_title">تحديد الميزانية</string>
+    <string name="tutorial_budget_pill_setup_description">اضغط هنا لتحديد ميزانيتك وفترة مصروفك لتبدأ استخدام وفيّر.</string>
     <string name="tutorial_settings_title">الإعدادات</string>
-    <string name="tutorial_settings_description">افتح الإعدادات لتخصيص الخصائص، إعداد ودجات الشاشة الرئيسية، أو إعادة تشغيل هذا الدليل الترحيبي.</string>
-    <string name="tutorial_recurrent_title">المدفوعات الدورية</string>
-    <string name="tutorial_recurrent_description">اضغط هنا لتعيين هذا المبلغ كدفعة دورية (أسبوعياً، نصف شهرياً، أو شهرياً). وسيقوم التطبيق بتذكيرك بتسجيلها في موعدها.</string>
-    <string name="tutorial_analytics_title">الإحصائيات والتحليلات</string>
-    <string name="tutorial_analytics_description">استعرض تحليلاتك المالية لترى كيف يتوزع إنفاقك بمرور الوقت، حسب التصنيف ومقارنة بأهداف ميزانيتك.</string>
-    <string name="tutorial_privacy_title">وضع الخصوصية</string>
-    <string name="tutorial_privacy_description">غطِ الجزء العلوي من الهاتف (مكان الكاميرا الأمامية) بيدك لثانية واحدة لتشويش وحجب جميع الأرقام المالية على الشاشة. كرر الحركة لإلغاء القفل.</string>
+    <string name="tutorial_settings_description">افتح الإعدادات لتخصيص الخصائص، إعداد ودجات الشاشة، أو إعادة تشغيل هذا الدليل في أي وقت.</string>
+    <string name="tutorial_recurrent_title">المصاريف الثابتة</string>
+    <string name="tutorial_recurrent_description">اضغط هنا إذا كان هذا المصروف يتكرر بانتظام (أسبوعياً أو شهرياً)، والتطبيق هيفكرك بيه في ميعاده.</string>
+    <string name="tutorial_analytics_title">التقارير والإحصائيات</string>
+    <string name="tutorial_analytics_description">استعرض تحليلاتك المالية لترى أين تذهب أموالك بالتفصيل، وتوزيعها مقارنة بأهداف ميزانيتك.</string>
+    <string name="tutorial_privacy_title">وضع الخصوصية السريع</string>
+    <string name="tutorial_privacy_description">غطّ الكاميرا الأمامية للهاتف بيدك لثانية واحدة لتشويش وحجب جميع الأرقام المالية على الشاشة فوراً. كرر الحركة لإلغاء القفل.</string>
+    <string name="tutorial_practice_mode">وضع تجربة</string>
+    <string name="tutorial_interactive_test_mode">وضع تجربة تفاعلي</string>
+    <string name="tutorial_test_censor_action">تجربة إخفاء الأرقام</string>
+    <string name="tutorial_diagnose_sensor_action">كيفية إخفاء الأرقام ومكان الحساس</string>
+    <string name="tutorial_sandbox_banner_title">وضع التجربة الحرة</string>
+    <string name="tutorial_sandbox_banner_desc">جرّب الأرقام والحركات وإخفاء الخصوصية بحرية تامة دون تسجيل عمليات فعلية.</string>
+    <string name="tutorial_sandbox_resume_guide">الدليل</string>
+    <string name="tutorial_sandbox_finish">إنهاء وبدء الاستخدام</string>
+    <string name="demo_banner_badge">وضع التجربة</string>
+    <string name="demo_banner_skip">تخطي التجربة</string>
+    <string name="demo_mission_title">تجربة سريعة</string>
+    <string name="demo_mission_desc">جرب تسجل 50 جنيه (مثلاً قهوة أو طلب بسيط) واضغط علامة الصح، عشان تشوف الحركة بتتخصم إزاي في حسابك.</string>
+    <string name="demo_success_title">تمام، اتسجلت وخصمت من الرصيد</string>
+    <string name="demo_success_desc">الرصيد اتخصم والحساب اتحدث قدامك. تقدر تكمل تجربة وتشوف باقي الأقسام، أو تبدأ حسابك الأساسي دلوقتي.</string>
+    <string name="demo_action_start_real">بدء حسابي الأساسي</string>
+    <string name="demo_action_keep_exploring">متابعة التجربة</string>
+    <string name="demo_minimized_badge">وضع التجربة (بيانات افتراضية)</string>
     <string name="tutorial_calc_title">تعديل الميزانية الجارية</string>
-    <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو خصمها.</string>
-    <string name="tutorial_credit_toggle_title">الدفع بالبطاقة الائتمانية</string>
-    <string name="tutorial_credit_toggle_description">اضغط هنا لتحديد أن هذه النفقة دُفعت بالبطاقة الائتمانية. وستُتابع بشكل مستقل في تقاريرك المالية.</string>
+    <string name="tutorial_calc_description">استخدم علامتي + أو - في البداية لزيادة ميزانيتك المتبقية لهذه الفترة أو الخصم منها.</string>
+    <string name="tutorial_credit_toggle_title">الدفع بكارت الائتمان</string>
+    <string name="tutorial_credit_toggle_description">اضغط هنا لتسجيل أن هذا المبلغ تم دفعه بالبطاقة الائتمانية، لمتابعتها بشكل مستقل في تقاريرك.</string>
     <string name="today">اليوم</string>
     <string name="yesterday">أمس</string>
     <string name="tomorrow">غداً</string>
@@ -305,7 +322,7 @@
     <string name="settings_section_language">اللغة</string>
     <string name="settings_language_header">لغة التطبيق</string>
     <string name="settings_language_currently_format">الحالية: %1$s</string>
-    <string name="settings_language_disclaimer">الترجمة العربية معتمدة ورسمية ومطابقة لأفضل المعايير المالية.</string>
+    <string name="settings_language_disclaimer">يمكنك التبديل بين العربية الفصحى أو المصرية أو الإنجليزية في أي وقت.</string>
     <string name="settings_theme_system">النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
@@ -313,8 +330,8 @@
     <string name="settings_contrast_normal">عادي</string>
     <string name="settings_contrast_medium">متوسط</string>
     <string name="settings_contrast_high">مرتفع</string>
-    <string name="settings_typography_condensed">الخط المعاصر المنظم</string>
-    <string name="settings_typography_expressive">الخط الأصيل الرصين</string>
+    <string name="settings_typography_condensed">بلكس</string>
+    <string name="settings_typography_expressive">ثمانية</string>
     <string name="settings_language_ar" translatable="false">العربية (الفصحى)</string>
     <string name="settings_language_ar_eg" translatable="false">عربي (مصري)</string>
     <string name="settings_color_scheme_title">سمة الألوان</string>
@@ -331,8 +348,8 @@
     <string name="settings_widgets_title">الودجات</string>
     <string name="settings_widgets_subtitle">استكشف الودجات المتاحة لإضافتها لشاشتك الرئيسية</string>
     <string name="settings_typography_title">الخطوط</string>
-    <string name="settings_typography_subtitle">تخصيص مظهر ورسم الخطوط في واجهة التطبيق</string>
-    <string name="settings_rounded_font_title">نمط الخط المستدير الانسيابي</string>
+    <string name="settings_typography_subtitle">تغيير خط التطبيق (ثمانية، بلكس، خط النظام)</string>
+    <string name="settings_rounded_font_title">خط مستدير</string>
     <string name="settings_material_you_title">ألوان النظام المتناسقة</string>
     <string name="settings_material_you_subtitle">استخراج ألوان السمة ديناميكياً من خلفية جهازك</string>
     <string name="settings_amoled_title">السمة الداكنة الموفرة للطاقة</string>
@@ -392,9 +409,9 @@
     <string name="settings_exact_alarm_disabled_subtitle">معطل؛ قد يؤخر نظام أندرويد الإشعار لتوفير الطاقة</string>
     <string name="settings_test_notification_title">إرسال إشعار تجريبي</string>
     <string name="settings_test_notification_subtitle">اضغط للتحقق الفوري من ظهور التنبيهات وصلاحية الأذونات على هاتفك</string>
-    <string name="notification_test_title">تنبيه تجريبي من وفير 🔔</string>
+    <string name="notification_test_title">تنبيه تجريبي من وفير</string>
     <string name="notification_test_message">الإشعارات تعمل بنجاح وبأعلى كفاءة! ستصلك تنبيهات نهاية الفترة والمدفوعات والميزانية في مواعيدها.</string>
-    <string name="notification_test_sent_toast">تم إرسال الإشعار التجريبي بنجاح 🔔</string>
+    <string name="notification_test_sent_toast">تم إرسال الإشعار التجريبي بنجاح</string>
     <string name="notification_permission_needed_toast">يرجى منح إذن الإشعارات أولاً لتتمكن من استقبال التنبيهات</string>
     <string name="settings_time_picker_cancel">إلغاء</string>
     <string name="settings_time_picker_confirm">تأكيد</string>
@@ -452,6 +469,8 @@
     <string name="settings_import_csv_subtitle">استيراد بياناتك السابقة من ملف CSV</string>
     <string name="settings_reset_tutorial_title">إعادة تشغيل الدليل الترحيبي</string>
     <string name="settings_reset_tutorial_subtitle">ستظهر لك تلميحات الإيماءات والإرشادات التفاعلية مجدداً.</string>
+    <string name="settings_simulation_demo_title">وضع التجربة</string>
+    <string name="settings_simulation_demo_subtitle">ملء بيانات افتراضية لتجربة تسجيل المصاريف واستكشاف التطبيق.</string>
     <string name="settings_theme_dialog_title">مظهر التطبيق</string>
     <string name="settings_theme_light_title">فاتح</string>
     <string name="settings_theme_light_subtitle">استخدام المظهر الفاتح دائماً</string>
@@ -460,12 +479,12 @@
     <string name="settings_theme_system_title">حسب النظام</string>
     <string name="settings_theme_system_subtitle">مطابقة إعداد مظهر نظام التشغيل</string>
     <string name="settings_typography_dialog_title">خطوط التطبيق</string>
-    <string name="settings_typography_default_title">الخط المتزن الهادئ</string>
-    <string name="settings_typography_default_subtitle">خط عربي فخم بتوازن مريح للعين في القراءة</string>
-    <string name="settings_typography_condensed_title">الخط المعاصر المنظم</string>
-    <string name="settings_typography_condensed_subtitle">خط تقني عصري فائق الوضوح والأناقة</string>
-    <string name="settings_typography_expressive_title">الخط الأصيل الرصين</string>
-    <string name="settings_typography_expressive_subtitle">خط عربي كلاسيكي أصيل مع انحناءات فنية رصينة</string>
+    <string name="settings_typography_default_title">ثمانية</string>
+    <string name="settings_typography_default_subtitle">خط عربي مميز ومريح للقراءة</string>
+    <string name="settings_typography_condensed_title">بلكس</string>
+    <string name="settings_typography_condensed_subtitle">خط عصري وواضح</string>
+    <string name="settings_typography_expressive_title">ثمانية</string>
+    <string name="settings_typography_expressive_subtitle">خط عربي مميز مع تفاصيل جمالية</string>
     <string name="settings_clear_cache_title">تنظيف الذاكرة المؤقتة</string>
     <string name="settings_clear_cache_subtitle">تفريغ ملفات التحديث المؤقتة وتوفير مساحة التخزين</string>
     <string name="settings_clear_cache_success">تم تنظيف الذاكرة المؤقتة بنجاح (%1$s)</string>
@@ -820,7 +839,7 @@
     <string name="wallet_total_income_label">إجمالي الدخل الإضافي</string>
     <string name="onboarding_language_title">اختر لغة التطبيق</string>
     <string name="onboarding_language_subtitle">حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات.</string>
-    <string name="tutorial_end_tour">إنهاء</string>
+    <string name="tutorial_end_tour">تخطي الشرح</string>
     <string name="tutorial_understood">فهمت</string>
     <string name="financial_tip_8_title">فخ العروض والتخفيضات</string>
     <string name="financial_tip_8_body" formatted="false">خصم 50% على سلعة لا تحتاجها فعلياً هو خسارة كاملة لمالك وليس توفيراً. لا تشترِ لمجرد وجود تخفيض.</string>
@@ -858,4 +877,49 @@
     <string name="settings_reset_tips_title">إعادة إظهار النصائح المستبعدة</string>
     <string name="settings_reset_tips_subtitle">إعادة تفعيل كافة النصائح التي تم إلغاؤها مسبقاً</string>
     <string name="settings_reset_tips_toast">تمت إعادة تفعيل جميع النصائح بنجاح</string>
+
+    <!-- Leftover Choice Save -->
+    <string name="leftover_choice_save">ادخار وحفظ الفائض</string>
+    <string name="leftover_choice_save_desc">حفظ الفائض كمدخرات وعدم إضافته لمصروف الأيام القادمة.</string>
+    <string name="leftover_choice_save_outcome">حفظ كمدخرات</string>
+
+    <!-- Onboarding Customization Survey -->
+    <string name="survey_title">تحديد ميزانيتك</string>
+    <string name="survey_subtitle">اختر نمط حياتك لنظبط وفيّر على مقاسك واحتياجك</string>
+    <string name="survey_budget_type_title">تحب تنظّم ميزانية إيه؟</string>
+    <string name="survey_type_home">ميزانية البيت ومشتريات العائلة</string>
+    <string name="survey_type_home_desc">مشتريات البيت، الطلبات الدورية، ومصاريف المطبخ والخزين.</string>
+    <string name="survey_type_salary">المرتّب والدخل الشهري</string>
+    <string name="survey_type_salary_desc">دخل شهري ثابت بيتقسم بالتساوي على أيام الشهر ليكفيك لآخره براحة.</string>
+    <string name="survey_type_allowance">مصروف يومي</string>
+    <string name="survey_type_allowance_desc">مصروف يومي مرن، وتقدر تحدد أيام إجازة وراحة بدون مصاريف.</string>
+    <string name="survey_role_title">دورك في مصاريف البيت</string>
+    <string name="survey_role_head">رب أسرة (المسؤول المالي)</string>
+    <string name="survey_role_head_desc">مسؤول عن اللحوم، الفاكهة، الفواتير، ومشتريات البيت الأساسية.</string>
+    <string name="survey_role_homemaker">ست البيت (مدبرة الميزانية)</string>
+    <string name="survey_role_homemaker_desc">مسؤولة عن المطبخ، الألبان والجبن، الخضار، المنظفات، وطلبات الطبخ.</string>
+    <string name="survey_role_individual">شاب مستقل / طالب</string>
+    <string name="survey_role_individual_desc">مصروف شخصي، مواصلات، دراسة، والتزامات يومية.</string>
+    <string name="survey_varieties_title">أصناف ومصاريف بتشتريها بانتظام</string>
+    <string name="survey_varieties_subtitle">اختر الأصناف لتجهيز تصنيفات سريعة ومناسبة لك</string>
+    <string name="survey_category_dairy">ألبان وجبن</string>
+    <string name="survey_category_meat">لحوم ودواجن وأسماك</string>
+    <string name="survey_category_legumes">بقوليات وخزين وعطارة</string>
+    <string name="survey_category_vegetables">خضار وطبيخ</string>
+    <string name="survey_category_fruits">فاكهة طازجة</string>
+    <string name="survey_category_spices">توابل ومشروبات</string>
+    <string name="survey_category_cleaning">منظفات وطلبات البيت</string>
+    <string name="survey_category_transport">مواصلات وبنزين</string>
+    <string name="survey_category_bills">فواتير والتزامات شهرية</string>
+    <string name="survey_category_personal">مصروف شخصي ونثريات</string>
+    <string name="survey_btn_continue">متابعة</string>
+    <string name="survey_btn_finish">ابدأ استخدام وفيّر</string>
+    <string name="survey_step_counter">خطوة %1$d من %2$d</string>
+
+    <!-- Interactive Tutorial -->
+    <string name="tutorial_hand_hint_numpad">اضغط على أي رقم لتسجيل المصروف</string>
+    <string name="tutorial_hand_hint_apply">اضغط على علامة الصح لحفظ المصروف</string>
+    <string name="tutorial_hand_hint_pill">اضغط هنا لمتابعة متبقي ميزانيتك اليومية</string>
+    <string name="tutorial_hand_hint_analytics">اضغط هنا للاطلاع على الإحصائيات والرسوم</string>
+    <string name="tutorial_hand_hint_tap_here">اضغط هنا</string>
 </resources>

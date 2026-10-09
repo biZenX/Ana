@@ -45,6 +45,75 @@ class OnboardingViewModel @Inject constructor(
         logcat(TAG) { "processIntent: $intent (state before: isCompleted=${_localState.value.isCompleted})" }
         when (intent) {
             is OnboardingUiIntent.OnWelcomeDismissed -> handleWelcomeDismissed()
+            is OnboardingUiIntent.OnSurveyCompleted -> handleSurveyCompleted(intent)
+        }
+    }
+
+    private fun handleSurveyCompleted(intent: OnboardingUiIntent.OnSurveyCompleted) {
+        logcat(TAG) { "handleSurveyCompleted: budgetType=${intent.budgetType}, role=${intent.role}, categories=${intent.selectedCategoryTitles.size}" }
+        viewModelScope.launch {
+            try {
+                for (catTitle in intent.selectedCategoryTitles) {
+                    if (catTitle.isNotBlank()) {
+                        budgetRepository.findOrCreateCategory(catTitle)
+                    }
+                }
+
+                val existing = budgetRepository.getBudgetSettingsSync()
+                val (period, splitMode, allowanceEnabled) = when (intent.budgetType) {
+                    SurveyBudgetType.ALLOWANCE -> Triple(
+                        com.wafeer.app.domain.model.BudgetPeriod.DAILY,
+                        com.wafeer.app.domain.model.BudgetSplitMode.DYNAMIC,
+                        true
+                    )
+                    SurveyBudgetType.SALARY -> Triple(
+                        com.wafeer.app.domain.model.BudgetPeriod.MONTHLY,
+                        com.wafeer.app.domain.model.BudgetSplitMode.STATIC,
+                        false
+                    )
+                    SurveyBudgetType.HOUSEHOLD -> Triple(
+                        com.wafeer.app.domain.model.BudgetPeriod.MONTHLY,
+                        com.wafeer.app.domain.model.BudgetSplitMode.DYNAMIC,
+                        false
+                    )
+                }
+
+                val sampleBudget = when (intent.budgetType) {
+                    SurveyBudgetType.ALLOWANCE -> java.math.BigDecimal("1200.00")
+                    SurveyBudgetType.SALARY, SurveyBudgetType.HOUSEHOLD -> java.math.BigDecimal("5000.00")
+                }
+
+                val currentTotal = existing?.totalBudget ?: sampleBudget
+                val currency = existing?.currencyCode ?: "EGP"
+
+                val updatedSettings = (existing ?: com.wafeer.app.domain.model.BudgetSettings(
+                    totalBudget = sampleBudget,
+                    period = period,
+                    startDate = java.time.LocalDate.now().withDayOfMonth(1),
+                    currencyCode = currency,
+                )).copy(
+                    totalBudget = sampleBudget,
+                    period = period,
+                    splitMode = splitMode,
+                )
+
+                budgetRepository.saveBudgetSettings(updatedSettings)
+                if (allowanceEnabled) {
+                    settingsRepository.setAllowanceDaysEnabled(true)
+                }
+
+                // Seed interactive simulation mock transactions
+                budgetRepository.seedDemoData(currencyCode = currency, sampleBudget = sampleBudget)
+                settingsRepository.setDemoModeActive(true)
+                settingsRepository.setDemoMissionCompleted(false)
+
+                settingsRepository.setOnboardingCompleted(true)
+                _localState.update { it.copy(isCompleted = true) }
+                _effects.emit(OnboardingUiEffect.OnboardingCompleted)
+            } catch (e: Exception) {
+                logcat(TAG) { "handleSurveyCompleted failed: ${e.message}" }
+                _effects.emit(OnboardingUiEffect.OnboardingFailed(e.message ?: "Unknown error"))
+            }
         }
     }
 

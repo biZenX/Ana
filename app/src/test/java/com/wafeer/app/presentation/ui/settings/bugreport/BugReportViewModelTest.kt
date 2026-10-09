@@ -162,7 +162,7 @@ class BugReportViewModelTest {
         val reportUri = mockk<Uri>()
         coEvery { zipGenerator.generate(any()) } returns GeneratedBugReport(
             uri = reportUri,
-            fileName = "minus-bug.zip",
+            fileName = "wafeer-bug.zip",
             markdown = "# Bug report",
         )
         val vm = newViewModel()
@@ -175,7 +175,7 @@ class BugReportViewModelTest {
             assertThat(effect).isInstanceOf(BugReportUiEffect.OpenEmailComposer::class.java)
             effect as BugReportUiEffect.OpenEmailComposer
             assertThat(effect.uri).isEqualTo(reportUri)
-            assertThat(effect.fileName).isEqualTo("minus-bug.zip")
+            assertThat(effect.fileName).isEqualTo("wafeer-bug.zip")
             assertThat(effect.title).isEqualTo("[Bug]: Crash on save")
             assertThat(effect.body).isEqualTo("# Bug report")
             cancelAndIgnoreRemainingEvents()
@@ -186,7 +186,7 @@ class BugReportViewModelTest {
     fun `a successful feature-request submission tags the title with Feature`() = runTest {
         coEvery { zipGenerator.generate(any()) } returns GeneratedBugReport(
             uri = mockk(),
-            fileName = "minus-feature.zip",
+            fileName = "wafeer-feature.zip",
             markdown = "# Feature",
         )
         val vm = newViewModel()

@@ -74,6 +74,11 @@ const val ACTIVE_SPENDING_DAYS_KEY_NAME = "active_spending_days"
 const val BUDGET_ALERT_THRESHOLD_KEY_NAME = "budget_alert_threshold"
 const val FINANCIAL_TIPS_ENABLED_KEY_NAME = "financial_tips_enabled"
 const val DISMISSED_FINANCIAL_TIP_IDS_KEY_NAME = "dismissed_financial_tip_ids"
+const val DEMO_MODE_ACTIVE_KEY_NAME = "demo_mode_active"
+const val DEMO_MISSION_COMPLETED_KEY_NAME = "demo_mission_completed"
+
+private val DEMO_MODE_ACTIVE = booleanPreferencesKey(DEMO_MODE_ACTIVE_KEY_NAME)
+private val DEMO_MISSION_COMPLETED = booleanPreferencesKey(DEMO_MISSION_COMPLETED_KEY_NAME)
 
 private val ALLOWANCE_DAYS_ENABLED = booleanPreferencesKey(ALLOWANCE_DAYS_ENABLED_KEY_NAME)
 private val ACTIVE_SPENDING_DAYS = stringSetPreferencesKey(ACTIVE_SPENDING_DAYS_KEY_NAME)
@@ -241,6 +246,8 @@ class SettingsRepositoryImpl @Inject constructor(
                 financialTipsEnabled = preferences[FINANCIAL_TIPS_ENABLED] ?: true,
                 dismissedFinancialTipIds = preferences[DISMISSED_FINANCIAL_TIP_IDS]?.mapNotNull { it.toIntOrNull() }?.toSet()
                     ?: emptySet(),
+                demoModeActive = preferences[DEMO_MODE_ACTIVE] ?: false,
+                demoMissionCompleted = preferences[DEMO_MISSION_COMPLETED] ?: false,
             )
         }
     }
@@ -681,6 +688,18 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun resetDismissedFinancialTips() {
         dataStore.edit { preferences ->
             preferences.remove(DISMISSED_FINANCIAL_TIP_IDS)
+        }
+    }
+
+    override suspend fun setDemoModeActive(active: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[DEMO_MODE_ACTIVE] = active
+        }
+    }
+
+    override suspend fun setDemoMissionCompleted(completed: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[DEMO_MISSION_COMPLETED] = completed
         }
     }
 }

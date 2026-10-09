@@ -34,12 +34,14 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -68,7 +70,6 @@ import java.util.Date
 import kotlin.math.abs
 
 val BUTTON_GAP = 3.dp
-private const val TEST_NOTIFICATION_TAP_COUNT = 5
 
 enum class EditMode { ADD, EDIT }
 
@@ -121,8 +122,6 @@ fun Numpad(
     tutorialBoxState: TutorialBoxState? = null,
 ) {
     val view = LocalView.current
-    var debugProgress by remember { mutableIntStateOf(0) }
-
     val effectiveDragProgress by animateFloatAsState(
         targetValue = if (dragProgress > 0f && dragProgress < 1f) dragProgress else if (isCalculation) 1f else 0f,
         animationSpec = if (dragProgress > 0f && dragProgress < 1f) tween(0) else tween(200),
@@ -133,20 +132,12 @@ fun Numpad(
         derivedStateOf { editorState.rawSpentValue.any { it in "+-×÷" } }
     }
 
-    val shouldTriggerTestNotifications: () -> Boolean = {
-        if (debugProgress >= TEST_NOTIFICATION_TAP_COUNT) {
-            onTestNotifications?.invoke()
-            onShowSnackbar?.invoke("Test notifications triggered!")
-            debugProgress = 0
-            true
-        } else false
-    }
-
-    Column(
-        modifier
-            .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(horizontal = 14.dp)
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Column(
+            modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(horizontal = 14.dp)
             .pointerInput(
                 isCalculation,
                 hasOperators,
@@ -263,19 +254,9 @@ fun Numpad(
                                 effectiveDragProgress = effectiveDragProgress,
                                 isCalculation = isCalculation,
                                 showThousandsShortcut = showThousandsShortcut,
-                                onNumberInput = {
-                                    onNumberInput(it)
-                                    debugProgress = 0
-                                },
-                                onDotInput = {
-                                    onDotInput()
-                                    debugProgress =
-                                        (debugProgress + 1).coerceAtMost(TEST_NOTIFICATION_TAP_COUNT)
-                                },
-                                onThousandsInput = {
-                                    onThousandsInput()
-                                    debugProgress = 0
-                                },
+                                onNumberInput = { onNumberInput(it) },
+                                onDotInput = { onDotInput() },
+                                onThousandsInput = { onThousandsInput() },
                                 numberHintAnchorModifier = numberHintAnchorModifier,
                                 onNumberPressedForTutorial = onNumberPressedForTutorial
                             )
@@ -289,21 +270,12 @@ fun Numpad(
                     effectiveDragProgress = effectiveDragProgress,
                     showThousandsShortcut = showThousandsShortcut,
                     backspaceIcon = backspaceIcon,
-                    onBackspace = {
-                        onBackspace()
-                        debugProgress = 0
-                    },
-                    onBackspaceLongPress = {
-                        onBackspaceLongPress()
-                        debugProgress = 0
-                    },
+                    onBackspace = onBackspace,
+                    onBackspaceLongPress = onBackspaceLongPress,
                     onDelete = onDelete,
                     onApply = {
-                        if (!shouldTriggerTestNotifications()) {
-                            debugProgress = 0
-                            onApplyPressedForTutorial?.invoke()
-                            onApply()
-                        }
+                        onApplyPressedForTutorial?.invoke()
+                        onApply()
                     },
                     onEqualsInput = onEqualsInput,
                     applyHintAnchorModifier = applyHintAnchorModifier
@@ -311,6 +283,7 @@ fun Numpad(
             }
         }
     }
+}
 }
 
 @Composable

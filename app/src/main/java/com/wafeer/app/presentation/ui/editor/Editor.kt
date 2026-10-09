@@ -165,6 +165,7 @@ fun Editor(
     onOpenHistory: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenAnalytics: () -> Unit = {},
+    onOpenSmartTools: () -> Unit = {},
     onOpenWallet: () -> Unit = {},
     onUnresolvedSurplusBannerClick: () -> Unit = {},
     onPendingLeftoverClick: () -> Unit = {},
@@ -577,6 +578,21 @@ fun Editor(
                     }
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                onOpenSmartTools()
+                                view.weakHapticFeedback()
+                            },
+                            modifier = Modifier.size(48.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Savings,
+                                contentDescription = "أدوات التوفير الذكية",
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(26.dp),
+                            )
+                        }
+
                         if (showAnalyticsButton) {
                             IconButton(
                                 onClick = {
@@ -1185,14 +1201,18 @@ private fun IdleContent(
     val remainingToday = budgetState?.remainingToday ?: BigDecimal.ZERO
     val alertThreshold = uiState.budgetAlertThresholdPercent
 
-    val percentSpent = remember(dailyLimit, spentToday) {
-        if (dailyLimit > BigDecimal.ZERO) {
-            (spentToday.toFloat() / dailyLimit.toFloat() * 100f).toInt()
+    val availableToday = remember(dailyLimit, spentToday, remainingToday) {
+        (remainingToday + spentToday).coerceAtLeast(dailyLimit)
+    }
+
+    val percentSpent = remember(availableToday, spentToday) {
+        if (availableToday > BigDecimal.ZERO) {
+            (spentToday.toFloat() / availableToday.toFloat() * 100f).toInt()
         } else 0
     }
 
-    val isAlertExceeded = dailyLimit > BigDecimal.ZERO && (spentToday > dailyLimit || remainingToday < BigDecimal.ZERO)
-    val isAlertWarning = !isAlertExceeded && dailyLimit > BigDecimal.ZERO && percentSpent >= alertThreshold && percentSpent > 0
+    val isAlertExceeded = remainingToday < BigDecimal.ZERO || (availableToday > BigDecimal.ZERO && remainingToday <= BigDecimal.ZERO && spentToday > BigDecimal.ZERO)
+    val isAlertWarning = !isAlertExceeded && availableToday > BigDecimal.ZERO && remainingToday > BigDecimal.ZERO && percentSpent >= alertThreshold && percentSpent > 0
 
     var tipDismissedState by rememberSaveable { mutableStateOf(sessionTipDismissed) }
     var dismissedIdsState by rememberSaveable { mutableStateOf(sessionDismissedTipIds.toSet()) }

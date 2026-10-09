@@ -78,7 +78,7 @@ fun AppNavGraph(
                 onOnboardingCompleted = {
                     onOnboardingComplete()
                     navController.navigate(
-                        Screen.Main.createRoute(openWallet = true, forceWalletSetup = true),
+                        Screen.Main.createRoute(openWallet = false, forceWalletSetup = false),
                     ) { popUpTo(Screen.Onboarding.route) { inclusive = true } }
                 },
             )

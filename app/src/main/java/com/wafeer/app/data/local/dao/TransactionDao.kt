@@ -74,6 +74,12 @@ interface TransactionDao {
     @Query("DELETE FROM transactions WHERE id = :transactionId")
     suspend fun deleteById(transactionId: Long)
 
+    @Query("DELETE FROM transactions WHERE clientGeneratedId LIKE 'demo_%'")
+    suspend fun deleteDemoTransactions()
+
+    @Query("DELETE FROM transactions")
+    suspend fun clearAll()
+
     @Query("DELETE FROM transactions WHERE periodId = :periodId AND isRecurrent = 0")
     suspend fun deleteOneTimeByPeriodId(periodId: Long)
 

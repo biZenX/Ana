@@ -85,12 +85,23 @@ android {
     val releaseStorePassword = keystoreProps.getProperty("storePassword")
     val releaseKeyAlias = keystoreProps.getProperty("keyAlias")
     val releaseKeyPassword = keystoreProps.getProperty("keyPassword")
-    val hasReleaseSigningConfig = listOf(
+    val fallbackKeystore = rootProject.file("keystore/wafeer-release.jks")
+    val hasExplicitReleaseSigningConfig = listOf(
         releaseStoreFile,
         releaseStorePassword,
         releaseKeyAlias,
         releaseKeyPassword,
     ).all { v -> !v.isNullOrBlank() }
+
+    val effectiveStoreFile = when {
+        hasExplicitReleaseSigningConfig -> File(releaseStoreFile!!)
+        fallbackKeystore.exists() -> fallbackKeystore
+        else -> null
+    }
+    val effectiveStorePassword = if (hasExplicitReleaseSigningConfig) releaseStorePassword!! else "wafeer_release_pwd"
+    val effectiveKeyAlias = if (hasExplicitReleaseSigningConfig) releaseKeyAlias!! else "wafeer"
+    val effectiveKeyPassword = if (hasExplicitReleaseSigningConfig) releaseKeyPassword!! else "wafeer_release_pwd"
+    val hasReleaseSigningConfig = effectiveStoreFile != null && effectiveStoreFile.exists()
 
     defaultConfig {
         applicationId = "com.wafeer.app"
@@ -115,10 +126,10 @@ android {
     signingConfigs {
         if (hasReleaseSigningConfig) {
             create("release") {
-                storeFile = File(releaseStoreFile!!)
-                storePassword = releaseStorePassword!!
-                keyAlias = releaseKeyAlias!!
-                keyPassword = releaseKeyPassword!!
+                storeFile = effectiveStoreFile
+                storePassword = effectiveStorePassword
+                keyAlias = effectiveKeyAlias
+                keyPassword = effectiveKeyPassword
             }
         }
     }

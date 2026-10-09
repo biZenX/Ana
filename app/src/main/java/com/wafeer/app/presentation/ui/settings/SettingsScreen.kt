@@ -44,13 +44,6 @@ fun SettingsScreen(
         viewModel.refreshNotificationPermission()
         if (isGranted) {
             viewModel.onNotificationPermissionGranted()
-            val sent = viewModel.onSendTestNotification()
-            val msg = if (sent) {
-                context.getString(com.wafeer.app.R.string.notification_test_sent_toast)
-            } else {
-                context.getString(com.wafeer.app.R.string.notification_permission_needed_toast)
-            }
-            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
         } else {
             android.widget.Toast.makeText(
                 context,
@@ -114,6 +107,7 @@ fun SettingsScreen(
             updateInfo = info,
             downloadState = downloadState,
             onStartDownload = viewModel::startDownloadingUpdate,
+            onOpenDownloads = viewModel::openDownloadsFolder,
             onDismiss = viewModel::dismissUpdateDialog,
         )
     }
@@ -141,21 +135,6 @@ fun SettingsScreen(
                 viewModel.refreshNotificationPermission()
             }
         },
-        onSendTestNotification = {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU && !uiState.notificationPermissionGranted) {
-                notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                val sent = viewModel.onSendTestNotification()
-                if (sent) {
-                    val msg = context.getString(com.wafeer.app.R.string.notification_test_sent_toast)
-                    android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.onOpenNotificationSettings()
-                    val msg = "يرجى السماح بالإشعارات من إعدادات النظام للتطبيق"
-                    android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
-                }
-            }
-        },
         periodMappingMode = uiState.periodMappingMode,
         onPeriodMappingModeChange = viewModel::onPeriodMappingModeChange,
         savingsPreferences = uiState.savingsPreferences,
@@ -165,6 +144,7 @@ fun SettingsScreen(
         cacheSize = cacheSize,
         onClearCache = viewModel::onClearCache,
         onResetTutorial = viewModel::onResetTutorial,
+        onStartSimulationDemo = viewModel::onStartSimulationDemo,
         financialTipsEnabled = uiState.financialTipsEnabled,
         onFinancialTipsToggle = viewModel::setFinancialTipsEnabled,
         onResetDismissedTips = viewModel::resetDismissedFinancialTips,
@@ -173,7 +153,6 @@ fun SettingsScreen(
         onNavigateToAppearance = onNavigateToAppearance,
         isCheckingUpdate = isCheckingUpdate,
         onCheckForUpdates = viewModel::checkForUpdates,
-        onTestUpdateDialog = viewModel::showDemoUpdateDialog,
         onBack = viewModel::onBack,
     )
 }

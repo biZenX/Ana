@@ -34,6 +34,22 @@ internal fun calculateBudgetMetrics(
 ): BudgetMetrics {
     val hasDraft = draftSpend.signum() != 0
 
+    if (state.isAllowanceDayOff && period == BudgetPeriod.DAILY) {
+        val periodSpent = state.spentIn(period).add(draftSpend)
+        val spentInPeriod = state.totalSpentInPeriod.add(draftSpend)
+        val isOverBudget = state.isOverBudget || (hasDraft && spentInPeriod > state.totalBudget)
+        return BudgetMetrics(
+            periodRemaining = BigDecimal.ZERO.subtract(periodSpent).coerceAtLeast(BigDecimal.ZERO),
+            spendProgress = if (periodSpent > BigDecimal.ZERO) 1f else 0f,
+            isCurrentPeriodOverBudget = isOverBudget,
+            isOverCurrentSubPeriod = periodSpent > BigDecimal.ZERO,
+            nextPeriodAllocation = null,
+            periodBudget = BigDecimal.ZERO,
+            periodSpent = periodSpent,
+            spentInPeriod = spentInPeriod,
+        )
+    }
+
     val multiplier = when (period) {
         BudgetPeriod.DAILY -> BigDecimal.ONE
         BudgetPeriod.WEEKLY -> BigDecimal(7)

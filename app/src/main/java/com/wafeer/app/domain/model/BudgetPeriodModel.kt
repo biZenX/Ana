@@ -34,6 +34,7 @@ enum class BudgetSplitMode {
 enum class LeftoverChoice {
     SPREAD,
     CARRY,
+    SAVE,
 }
 
 enum class SymbolPosition {

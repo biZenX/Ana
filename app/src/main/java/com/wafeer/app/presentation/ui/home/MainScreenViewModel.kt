@@ -1,7 +1,8 @@
-﻿package com.wafeer.app.presentation.ui.home
+package com.wafeer.app.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wafeer.app.data.repository.BudgetRepository
 import com.wafeer.app.data.repository.SettingsRepository
 import com.wafeer.app.domain.model.BudgetPeriod
 import com.wafeer.app.domain.model.FirstLaunchTutorialStage
@@ -9,6 +10,7 @@ import com.wafeer.app.domain.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -16,16 +18,29 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import com.wafeer.app.presentation.util.CensorManager
+import logcat.logcat
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+
+private const val TAG = "MainScreenViewModel"
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
+    private val censorManager: CensorManager? = null,
+    private val budgetRepository: BudgetRepository? = null,
 ) : ViewModel() {
+
+    val censorDiagnosticState: StateFlow<com.wafeer.app.presentation.util.ProximityDiagnosticState> = censorManager?.diagnosticState
+        ?: MutableStateFlow(com.wafeer.app.presentation.util.ProximityDiagnosticState()).asStateFlow()
+
+    fun toggleCensor() {
+        censorManager?.toggleCensor()
+    }
 
     private val _localState = MutableStateFlow(MainScreenLocalState())
 
@@ -57,6 +72,8 @@ class MainScreenViewModel @Inject constructor(
             showBudgetPeriodSheet = local.showBudgetPeriodSheet,
             forceBudgetPeriodSheetSetup = local.forceBudgetPeriodSheetSetup,
             walletSheetOpened = local.walletSheetOpened,
+            demoModeActive = settings.demoModeActive,
+            demoMissionCompleted = settings.demoMissionCompleted,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -78,10 +95,25 @@ class MainScreenViewModel @Inject constructor(
             is MainScreenUiIntent.SetSelectedPeriod -> setSelectedPeriod(intent.period)
             is MainScreenUiIntent.MarkWalletSheetOpened -> markWalletSheetOpened()
             is MainScreenUiIntent.SetTutorialBoxCompleted -> setTutorialBoxCompleted(intent.completed)
+            is MainScreenUiIntent.ExitDemoModeAndStartRealBudget -> exitDemoModeAndStartRealBudget()
 
             is MainScreenUiIntent.ProcessBudgetTransactionIntent -> { /* caller */ }
             is MainScreenUiIntent.ProcessBudgetEditorIntent -> { /* caller */ }
             is MainScreenUiIntent.ProcessBudgetNumpadIntent -> { /* caller */ }
+        }
+    }
+
+    fun exitDemoModeAndStartRealBudget() {
+        viewModelScope.launch {
+            try {
+                budgetRepository?.deleteDemoTransactions()
+                settingsRepository.setDemoModeActive(false)
+                settingsRepository.setDemoMissionCompleted(false)
+                settingsRepository.setTutorialBoxCompleted(true)
+                showBudgetPeriodSheet(forceSetup = true)
+            } catch (e: Exception) {
+                logcat(TAG) { "exitDemoModeAndStartRealBudget failed: ${e.message}" }
+            }
         }
     }
 

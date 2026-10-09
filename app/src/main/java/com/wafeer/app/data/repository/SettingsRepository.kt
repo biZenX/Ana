@@ -141,4 +141,8 @@ interface SettingsRepository {
     suspend fun dismissFinancialTip(tipId: Int)
 
     suspend fun resetDismissedFinancialTips()
+
+    suspend fun setDemoModeActive(active: Boolean)
+
+    suspend fun setDemoMissionCompleted(completed: Boolean)
 }

@@ -180,8 +180,8 @@ fun computeNextBlockAllocations(
     )
 }
 
-fun BudgetState.dynamicAllocations(draft: BigDecimal = BigDecimal.ZERO): DynamicAllocations =
-    computeDynamicAllocations(
+fun BudgetState.dynamicAllocations(draft: BigDecimal = BigDecimal.ZERO): DynamicAllocations {
+    val allocations = computeDynamicAllocations(
         totalBudget = totalBudget,
         totalSpentInPeriod = totalSpentInPeriod.add(draft),
         totalSpentToday = totalSpentToday.add(draft),
@@ -191,6 +191,15 @@ fun BudgetState.dynamicAllocations(draft: BigDecimal = BigDecimal.ZERO): Dynamic
         totalSpentThisBiweek = totalSpentThisBiweek.add(draft),
         totalSpentThisMonth = totalSpentThisMonth.add(draft),
     )
+    return if (isAllowanceDayOff) {
+        allocations.copy(
+            dailyAllocation = BigDecimal.ZERO,
+            isTodayOverDailyAllocation = totalSpentToday.add(draft) > BigDecimal.ZERO,
+        )
+    } else {
+        allocations
+    }
+}
 
 fun BudgetState.allocationFor(
     period: BudgetPeriod,

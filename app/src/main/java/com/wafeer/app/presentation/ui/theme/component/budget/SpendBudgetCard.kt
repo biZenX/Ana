@@ -253,11 +253,16 @@ fun SpendBudgetCard(
                 CompositionLocalProvider(
                     LocalContentColor provides textColor,
                 ) {
-                    Text(
-                        text = stringResource(
+                    val subtitleText = if (budget <= BigDecimal.ZERO) {
+                        stringResource(R.string.budget_allowance_day_off)
+                    } else {
+                        stringResource(
                             R.string.spend_budget_card_available_percent_format,
                             percentFormatted
-                        ),
+                        )
+                    }
+                    Text(
+                        text = subtitleText,
                         style = MaterialTheme.typography.bodySmallCondensed.copy(fontWeight = FontWeight.Light),
                         modifier = Modifier.censor()
                     )

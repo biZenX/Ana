@@ -36,7 +36,14 @@ import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.TrendingUp
+import androidx.compose.material.icons.rounded.AccountBalance
+import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.PieChart
+import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -369,37 +376,44 @@ fun Analytics(
             when (index) {
                 0 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_minmax_title),
-                    description = stringResource(R.string.analytics_tutorial_minmax_desc)
+                    description = stringResource(R.string.analytics_tutorial_minmax_desc),
+                    icon = Icons.AutoMirrored.Rounded.TrendingUp,
                 )
 
                 1 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_header_title),
-                    description = stringResource(R.string.analytics_tutorial_header_desc)
+                    description = stringResource(R.string.analytics_tutorial_header_desc),
+                    icon = Icons.Rounded.CalendarMonth,
                 )
 
                 2 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_budget_title),
-                    description = stringResource(R.string.analytics_tutorial_budget_desc)
+                    description = stringResource(R.string.analytics_tutorial_budget_desc),
+                    icon = Icons.Rounded.AccountBalance,
                 )
 
                 3 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_heatmap_title),
-                    description = stringResource(R.string.analytics_tutorial_heatmap_desc)
+                    description = stringResource(R.string.analytics_tutorial_heatmap_desc),
+                    icon = Icons.Rounded.DateRange,
                 )
 
                 4 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_charts_title),
-                    description = stringResource(R.string.analytics_tutorial_charts_desc)
+                    description = stringResource(R.string.analytics_tutorial_charts_desc),
+                    icon = Icons.Rounded.PieChart,
                 )
 
                 5 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_savings_title),
-                    description = stringResource(R.string.analytics_tutorial_savings_desc)
+                    description = stringResource(R.string.analytics_tutorial_savings_desc),
+                    icon = Icons.Rounded.Savings,
                 )
 
                 6 -> TutorialTooltip(
                     title = stringResource(R.string.analytics_tutorial_credit_title),
-                    description = stringResource(R.string.analytics_tutorial_credit_desc)
+                    description = stringResource(R.string.analytics_tutorial_credit_desc),
+                    icon = Icons.Rounded.CreditCard,
                 )
             }
         }) {

@@ -87,6 +87,8 @@ fun isArabicLocale(): Boolean {
     return true
 }
 
+const val THMANYAH_DESCENT_FEATURES = "\"ss01\" 1, \"dlig\" 1, \"swsh\" 1"
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
     val noPadding = PlatformTextStyle(includeFontPadding = false)
@@ -98,6 +100,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 62.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displayMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -106,6 +109,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 52.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displaySmall = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -114,6 +118,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -122,6 +127,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -130,6 +136,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineSmall = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -138,6 +145,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleLarge = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -146,6 +154,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 28.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleMedium = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -154,6 +163,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 24.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleSmall = TextStyle(
             fontFamily = ThmanyahSerifTextFamily,
@@ -221,6 +231,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 68.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displayMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -229,6 +240,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 56.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         displaySmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -237,6 +249,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 48.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -245,6 +258,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 42.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -253,6 +267,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 38.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         headlineSmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -261,6 +276,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 34.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleLargeEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -269,6 +285,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 30.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleMediumEmphasized = TextStyle(
             fontFamily = ThmanyahSerifDisplayFamily,
@@ -277,6 +294,7 @@ fun getThmanyahTypography(withEmphasized: Boolean = true): Typography {
             lineHeight = 26.sp,
             letterSpacing = 0.sp,
             platformStyle = noPadding,
+            fontFeatureSettings = THMANYAH_DESCENT_FEATURES,
         ),
         titleSmallEmphasized = TextStyle(
             fontFamily = ThmanyahSerifTextFamily,

@@ -158,7 +158,6 @@ fun Settings(
     onRecurrentNotificationTimeChange: (Int, Int) -> Unit,
     onOpenExactAlarmSettings: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
-    onSendTestNotification: () -> Unit = {},
     periodMappingMode: PeriodMappingMode,
     onPeriodMappingModeChange: (PeriodMappingMode) -> Unit,
     savingsPreferences: SavingsPreferences = SavingsPreferences.DEFAULT,
@@ -168,6 +167,7 @@ fun Settings(
     cacheSize: String = "",
     onClearCache: () -> Unit = {},
     onResetTutorial: () -> Unit = {},
+    onStartSimulationDemo: () -> Unit = {},
     financialTipsEnabled: Boolean = true,
     onFinancialTipsToggle: (Boolean) -> Unit = {},
     onResetDismissedTips: () -> Unit = {},
@@ -176,7 +176,6 @@ fun Settings(
     onNavigateToAppearance: () -> Unit = {},
     isCheckingUpdate: Boolean = false,
     onCheckForUpdates: () -> Unit = {},
-    onTestUpdateDialog: () -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     var showRecurrentPaymentsViewModeDialog by remember { mutableStateOf(false) }
@@ -428,6 +427,30 @@ fun Settings(
                         }
                     }
 
+                    CustomPaddedListItem(
+                        onClick = {
+                            view.toggleFeedback()
+                            onStartSimulationDemo()
+                        },
+                        position = PaddedListItemPosition.Middle,
+                        modifier = Modifier.testTag("SettingsStartSimulationDemoItem")
+                    ) {
+                        SettingsLeadingIcon(icon = Icons.Rounded.AutoAwesome)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.settings_simulation_demo_title),
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.settings_simulation_demo_subtitle),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
                     SettingsToggleItem(
                         icon = Icons.Rounded.Lightbulb,
                         title = stringResource(R.string.settings_financial_tips_title),
@@ -532,37 +555,6 @@ fun Settings(
                         onClick = onOpenNotificationSettings,
                         position = PaddedListItemPosition.First,
                     )
-
-                    CustomPaddedListItem(
-                        onClick = {
-                            onSendTestNotification()
-                            view.weakHapticFeedback()
-                        },
-                        position = PaddedListItemPosition.Middle,
-                    ) {
-                        SettingsLeadingIcon(
-                            icon = Icons.Rounded.NotificationsActive,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = stringResource(R.string.settings_test_notification_title),
-                                style = MaterialTheme.typography.bodyMediumEmphasized,
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                            Text(
-                                text = stringResource(R.string.settings_test_notification_subtitle),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                        Icon(
-                            imageVector = Icons.Rounded.Send,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
 
                     CustomPaddedListItem(
                         onClick = {
@@ -865,10 +857,6 @@ fun Settings(
                             view.weakHapticFeedback()
                             onCheckForUpdates()
                         },
-                        onLongClick = {
-                            view.weakHapticFeedback()
-                            onTestUpdateDialog()
-                        },
                         position = PaddedListItemPosition.Last,
                     ) {
                         SettingsLeadingIcon(icon = Icons.Rounded.SystemUpdate)
@@ -880,7 +868,7 @@ fun Settings(
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "تنزيل وتثبيت أحدث إصدار تلقائياً (مطولاً للتجربة)",
+                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "التحقق من توفر إصدارات أحدث وتثبيتها",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

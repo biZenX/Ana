@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.animation.animateColorAsState
@@ -44,6 +45,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,6 +73,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -75,6 +84,14 @@ import com.wafeer.app.presentation.ui.theme.WafeerTheme
 import com.wafeer.app.R
 import com.wafeer.app.presentation.ui.theme.bodyMediumCondensed
 import com.wafeer.app.presentation.ui.theme.titleMediumCondensed
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.IntSize
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.sin
 import kotlinx.coroutines.delay
 import logcat.logcat
 import kotlin.time.Duration.Companion.milliseconds
@@ -87,6 +104,7 @@ fun TutorialBox(
     tutorialTarget: @Composable (index: Int) -> Unit,
     onTutorialReopened: () -> Unit = {},
     onCutoutClick: ((Int) -> Unit)? = null,
+    onFreePractice: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     var canvasSize by remember { mutableStateOf(Size.Zero) }
@@ -135,6 +153,7 @@ fun TutorialBox(
                 onNext = { state.advance() },
                 onSkipAll = { state.skipAll() },
                 onCutoutClick = onCutoutClick,
+                onFreePractice = onFreePractice,
             )
         }
     }
@@ -228,14 +247,28 @@ private fun TutorialOverlay(
     onNext: () -> Unit,
     onSkipAll: () -> Unit,
     onCutoutClick: ((Int) -> Unit)? = null,
+    onFreePractice: (() -> Unit)? = null,
 ) {
-    if (!isVirtual && bounds.isEmpty) return
+    val density = LocalDensity.current
+    val isPrivacyStep = index == 6
+    val effectiveBounds = if (isPrivacyStep) {
+        val sensorWidthPx = with(density) { 150.dp.toPx() }
+        val sensorHeightPx = with(density) { 52.dp.toPx() }
+        val sensorLeft = (canvasSize.width - sensorWidthPx) / 2f
+        Rect(
+            left = sensorLeft,
+            top = 0f,
+            right = sensorLeft + sensorWidthPx,
+            bottom = sensorHeightPx,
+        )
+    } else bounds
+
+    if (!isPrivacyStep && !isVirtual && bounds.isEmpty) return
 
     val scrimColor = Color.Black.copy(alpha = 0.6f)
     val highlightStrokeColor = MaterialTheme.colorScheme.inversePrimary
     val pulseStrokeColor = MaterialTheme.colorScheme.inversePrimary
     val interactionSource = remember { MutableInteractionSource() }
-    val density = LocalDensity.current
     val paddingPx = with(density) { 4.dp.toPx() }
     val cornerRadiusPx = with(density) { 12.dp.toPx() }
     val tooltipGapPx = with(density) { 20.dp.toPx() }
@@ -263,22 +296,27 @@ private fun TutorialOverlay(
         label = "PulseAlpha"
     )
 
-    val (tooltipX, tooltipY) = if (isVirtual) {
-        val centredX = (canvasSize.width - tooltipMaxWidthPx) / 2f
-        val centredY = (canvasSize.height - tooltipMinHeightEstimate) / 2f
+    var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val actualWidth = if (tooltipSize.width > 0) tooltipSize.width.toFloat() else tooltipMaxWidthPx
+    val actualHeight = if (tooltipSize.height > 0) tooltipSize.height.toFloat() else tooltipMinHeightEstimate
+
+    val (tooltipX, tooltipY) = if (isVirtual && !isPrivacyStep) {
+        val centredX = (canvasSize.width - actualWidth) / 2f
+        val centredY = (canvasSize.height - actualHeight) / 2f
         centredX.toInt() to centredY.toInt()
     } else {
         computeTooltipPosition(
-            targetBounds = bounds,
+            targetBounds = effectiveBounds,
             canvasSize = canvasSize,
             gapPx = tooltipGapPx,
-            tooltipWidthPx = tooltipMaxWidthPx,
-            tooltipHeightPx = tooltipMinHeightEstimate,
+            tooltipWidthPx = actualWidth,
+            tooltipHeightPx = actualHeight,
         )
     }
 
     val animatedBounds by animateRectAsState(
-        targetValue = bounds,
+        targetValue = effectiveBounds,
         animationSpec = tween(400, easing = LinearOutSlowInEasing),
         label = "TargetBounds"
     )
@@ -306,30 +344,33 @@ private fun TutorialOverlay(
         progress.snapTo(0f)
         contentAlpha.animateTo(1f, tween(300))
         contentScale.animateTo(1f, tween(400, easing = LinearOutSlowInEasing))
-        progress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 5500, easing = LinearEasing)
-        )
-        onNext()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(animatedCutout, isVirtual, onCutoutClick, onNext) {
-                detectTapGestures { offset ->
-                    if (!isVirtual && animatedCutout.contains(offset) && onCutoutClick != null) {
-                        onCutoutClick(index)
-                    } else {
-                        onNext()
+    val hasHole = !animatedCutout.isEmpty && (!isVirtual || isPrivacyStep)
+    val currentLayoutDir = LocalLayoutDirection.current
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(animatedCutout, isVirtual, isPrivacyStep, onCutoutClick, onNext) {
+                    detectTapGestures { offset ->
+                        if (hasHole && animatedCutout.contains(offset)) {
+                            if (onCutoutClick != null) {
+                                onCutoutClick(index)
+                            } else {
+                                onNext()
+                            }
+                        }
                     }
-                }
-            },
-    ) {
+                },
+            contentAlignment = Alignment.TopStart,
+        ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            if (isVirtual) {
+            if (!hasHole) {
                 drawRect(color = scrimColor)
             } else {
+                val holeRadius = if (isPrivacyStep) 24.dp.toPx() else cornerRadiusPx
                 val outer = Path().apply {
                     addRect(Rect(offset = Offset.Zero, size = this@Canvas.size))
                 }
@@ -337,7 +378,7 @@ private fun TutorialOverlay(
                     addRoundRect(
                         RoundRect(
                             rect = animatedCutout,
-                            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                            cornerRadius = CornerRadius(holeRadius, holeRadius),
                         ),
                     )
                 }
@@ -358,8 +399,8 @@ private fun TutorialOverlay(
                     topLeft = pulseTopLeft,
                     size = Size(pulseWidth, pulseHeight),
                     cornerRadius = CornerRadius(
-                        cornerRadiusPx * pulseScale,
-                        cornerRadiusPx * pulseScale
+                        holeRadius * pulseScale,
+                        holeRadius * pulseScale
                     ),
                     style = Stroke(width = 8f),
                 )
@@ -368,10 +409,129 @@ private fun TutorialOverlay(
                     color = highlightStrokeColor,
                     topLeft = Offset(animatedCutout.left, animatedCutout.top),
                     size = Size(animatedCutout.width, animatedCutout.height),
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                    cornerRadius = CornerRadius(holeRadius, holeRadius),
                     style = Stroke(width = 5f),
                 )
+
+                // Dynamic Curved Directional Arrow
+                if (hasHole && tooltipSize.width > 0 && tooltipSize.height > 0) {
+                    val tooltipRect = Rect(
+                        left = animatedOffset.x.toFloat(),
+                        top = animatedOffset.y.toFloat(),
+                        right = (animatedOffset.x + tooltipSize.width).toFloat(),
+                        bottom = (animatedOffset.y + tooltipSize.height).toFloat(),
+                    )
+                    val isBelow = tooltipRect.top >= animatedCutout.bottom - 6f
+                    val isAbove = tooltipRect.bottom <= animatedCutout.top + 6f
+                    val isLeft = tooltipRect.right <= animatedCutout.left + 6f
+
+                    val (startPt, endPt, controlPt) = when {
+                        isBelow -> {
+                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 24f, tooltipRect.right - 24f)
+                            val startY = tooltipRect.top
+                            val endX = animatedCutout.center.x.coerceIn(animatedCutout.left + 12f, animatedCutout.right - 12f)
+                            val endY = animatedCutout.bottom + 8.dp.toPx()
+                            val curvature = 24.dp.toPx() * (if (startX >= endX) 1f else -1f)
+                            Triple(
+                                Offset(startX, startY),
+                                Offset(endX, endY),
+                                Offset((startX + endX) / 2f + curvature, (startY + endY) / 2f)
+                            )
+                        }
+                        isAbove -> {
+                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 24f, tooltipRect.right - 24f)
+                            val startY = tooltipRect.bottom
+                            val endX = animatedCutout.center.x.coerceIn(animatedCutout.left + 12f, animatedCutout.right - 12f)
+                            val endY = animatedCutout.top - 8.dp.toPx()
+                            val curvature = 24.dp.toPx() * (if (startX >= endX) 1f else -1f)
+                            Triple(
+                                Offset(startX, startY),
+                                Offset(endX, endY),
+                                Offset((startX + endX) / 2f + curvature, (startY + endY) / 2f)
+                            )
+                        }
+                        isLeft -> {
+                            val startX = tooltipRect.right
+                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 16f, tooltipRect.bottom - 16f)
+                            val endX = animatedCutout.left - 8.dp.toPx()
+                            val endY = animatedCutout.center.y.coerceIn(animatedCutout.top + 12f, animatedCutout.bottom - 12f)
+                            Triple(
+                                Offset(startX, startY),
+                                Offset(endX, endY),
+                                Offset((startX + endX) / 2f, (startY + endY) / 2f + 20.dp.toPx())
+                            )
+                        }
+                        else -> {
+                            val startX = tooltipRect.left
+                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 16f, tooltipRect.bottom - 16f)
+                            val endX = animatedCutout.right + 8.dp.toPx()
+                            val endY = animatedCutout.center.y.coerceIn(animatedCutout.top + 12f, animatedCutout.bottom - 12f)
+                            Triple(
+                                Offset(startX, startY),
+                                Offset(endX, endY),
+                                Offset((startX + endX) / 2f, (startY + endY) / 2f + 20.dp.toPx())
+                            )
+                        }
+                    }
+
+                    val dist = hypot(endPt.x - startPt.x, endPt.y - startPt.y)
+                    if (dist >= 20.dp.toPx()) {
+                        val arrowPath = Path().apply {
+                            moveTo(startPt.x, startPt.y)
+                            quadraticTo(controlPt.x, controlPt.y, endPt.x, endPt.y)
+                        }
+
+                        // Shadow outline
+                        drawPath(
+                            path = arrowPath,
+                            color = Color.Black.copy(alpha = 0.4f),
+                            style = Stroke(width = 5.dp.toPx(), cap = StrokeCap.Round)
+                        )
+                        // Highlight arrow curve
+                        drawPath(
+                            path = arrowPath,
+                            color = highlightStrokeColor,
+                            style = Stroke(width = 2.8.dp.toPx(), cap = StrokeCap.Round)
+                        )
+                        // Origin dot
+                        drawCircle(
+                            color = highlightStrokeColor,
+                            radius = 3.5.dp.toPx(),
+                            center = startPt
+                        )
+
+                        // Arrowhead
+                        val tangentX = endPt.x - controlPt.x
+                        val tangentY = endPt.y - controlPt.y
+                        val angle = atan2(tangentY.toDouble(), tangentX.toDouble())
+                        val arrowHeadLen = 12.dp.toPx()
+                        val spread = Math.PI / 5.5
+
+                        val tip = endPt
+                        val wing1 = Offset(
+                            (endPt.x - cos(angle - spread) * arrowHeadLen).toFloat(),
+                            (endPt.y - sin(angle - spread) * arrowHeadLen).toFloat()
+                        )
+                        val wing2 = Offset(
+                            (endPt.x - cos(angle + spread) * arrowHeadLen).toFloat(),
+                            (endPt.y - sin(angle + spread) * arrowHeadLen).toFloat()
+                        )
+
+                        val headPath = Path().apply {
+                            moveTo(tip.x, tip.y)
+                            lineTo(wing1.x, wing1.y)
+                            lineTo(wing2.x, wing2.y)
+                            close()
+                        }
+                        drawPath(path = headPath, color = Color.Black.copy(alpha = 0.4f), style = Stroke(width = 2.dp.toPx()))
+                        drawPath(path = headPath, color = highlightStrokeColor, style = Fill)
+                    }
+                }
             }
+        }
+
+        if (hasHole) {
+            PulsingTapPointer(targetBounds = animatedCutout)
         }
 
         Surface(
@@ -382,117 +542,134 @@ private fun TutorialOverlay(
             shadowElevation = 8.dp,
             modifier = Modifier
                 .offset { animatedOffset }
+                .onGloballyPositioned { coords ->
+                    tooltipSize = coords.size
+                }
                 .graphicsLayer {
                     alpha = contentAlpha.value
                     scaleX = contentScale.value
                     scaleY = contentScale.value
                 }
-                .widthIn(max = tooltipMaxWidth)
-                .padding(horizontal = 16.dp),
+                .widthIn(max = tooltipMaxWidth),
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Balanced reading timer line
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progress.value)
-                            .height(3.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                }
-
-                Column(modifier = Modifier.padding(16.dp)) {
-                    tutorialTarget(index)
-                    Spacer(Modifier.height(14.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Animated dots indicator with smooth transition between dots (بدون كلام)
-                        if (totalSteps > 1) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                for (i in 0 until totalSteps) {
-                                    val isActive = i == currentStep
-                                    val dotWidth by animateDpAsState(
-                                        targetValue = if (isActive) 18.dp else 6.dp,
-                                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                        label = "DotWidth_$i"
-                                    )
-                                    val dotColor by animateColorAsState(
-                                        targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
-                                        animationSpec = tween(300),
-                                        label = "DotColor_$i"
-                                    )
-                                    Box(
-                                        modifier = Modifier
-                                            .height(6.dp)
-                                            .width(dotWidth)
-                                            .clip(RoundedCornerShape(3.dp))
-                                            .background(dotColor)
-                                    )
-                                }
-                            }
-                        } else {
-                            Spacer(Modifier.width(1.dp))
+            CompositionLocalProvider(LocalLayoutDirection provides currentLayoutDir) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                        // Balanced reading timer line
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(3.dp)
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(progress.value)
+                                    .height(3.dp)
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
                         }
 
-                        // Next and End Tour action buttons
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val isLast = currentStep >= totalSteps - 1
-                            if (!isLast) {
-                                TextButton(
-                                    onClick = onSkipAll,
-                                    modifier = Modifier.height(36.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.tutorial_end_tour),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                                        maxLines = 1,
-                                        softWrap = false,
-                                    )
-                                }
-                            }
-                            FilledTonalButton(
-                                onClick = {
-                                    if (index == 1 && onCutoutClick != null) {
-                                        onCutoutClick(index)
-                                    } else {
-                                        onNext()
-                                    }
-                                },
-                                modifier = Modifier
-                                    .height(36.dp)
-                                    .defaultMinSize(minWidth = 64.dp),
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-                                colors = ButtonDefaults.filledTonalButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            tutorialTarget(index)
+                            Spacer(Modifier.height(14.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = if (isLast) {
-                                        stringResource(R.string.tutorial_understood)
-                                    } else {
-                                        stringResource(R.string.next)
-                                    },
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                    maxLines = 1,
-                                    softWrap = false,
-                                )
+                                // Animated dots indicator with smooth transition between dots (بدون كلام)
+                                if (totalSteps > 1) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        for (i in 0 until totalSteps) {
+                                            val isActive = i == currentStep
+                                            val dotWidth by animateDpAsState(
+                                                targetValue = if (isActive) 18.dp else 6.dp,
+                                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                                                label = "DotWidth_$i"
+                                            )
+                                            val dotColor by animateColorAsState(
+                                                targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f),
+                                                animationSpec = tween(300),
+                                                label = "DotColor_$i"
+                                            )
+                                            Box(
+                                                modifier = Modifier
+                                                    .height(6.dp)
+                                                    .width(dotWidth)
+                                                    .clip(RoundedCornerShape(3.dp))
+                                                    .background(dotColor)
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    Spacer(Modifier.width(1.dp))
+                                }
+
+                                // Next and Skip Tour action buttons
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    val isLast = currentStep >= totalSteps - 1
+                                    if (!isLast && onFreePractice != null) {
+                                        TextButton(
+                                            onClick = onFreePractice,
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 0.dp),
+                                        ) {
+                                            Text(
+                                                text = "تجربة حرة",
+                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                                                color = MaterialTheme.colorScheme.primary,
+                                                maxLines = 1,
+                                                softWrap = false,
+                                            )
+                                        }
+                                    }
+                                    if (!isLast) {
+                                        TextButton(
+                                            onClick = onSkipAll,
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.tutorial_end_tour),
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                                                maxLines = 1,
+                                                softWrap = false,
+                                            )
+                                        }
+                                    }
+
+                                    FilledTonalButton(
+                                        onClick = onNext,
+                                        modifier = Modifier
+                                            .height(36.dp)
+                                            .defaultMinSize(minWidth = 68.dp),
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                                        colors = ButtonDefaults.filledTonalButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    ) {
+                                        Text(
+                                            text = if (isLast) {
+                                                "إنهاء وبدء الاستخدام"
+                                            } else if (isVirtual) {
+                                                stringResource(R.string.tutorial_understood)
+                                            } else {
+                                                stringResource(R.string.next)
+                                            },
+                                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -586,25 +763,128 @@ private fun TutorialBoxPreview() {
 fun TutorialTooltip(
     title: String?,
     description: String,
+    icon: ImageVector? = null,
+    badgeText: String? = null,
+    actionContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (title != null) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMediumCondensed,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+        if (badgeText != null) {
+            Surface(
+                shape = RoundedCornerShape(6.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = badgeText,
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                )
+            }
         }
+
+        if (icon != null || title != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (icon != null) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                        ),
+                        modifier = Modifier.size(38.dp),
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp),
+                            )
+                        }
+                    }
+                }
+
+                if (title != null) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMediumCondensed.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+        }
+
         if (description.isNotBlank()) {
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMediumCondensed,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        if (actionContent != null) {
+            Spacer(Modifier.height(10.dp))
+            actionContent()
+        }
+    }
+}
+
+@Composable
+private fun PulsingTapPointer(
+    targetBounds: Rect,
+    modifier: Modifier = Modifier,
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "TapPointerTransition")
+
+    val rippleScale by infiniteTransition.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1.4f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1400, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "RippleScale"
+    )
+    val rippleAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.75f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1400, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "RippleAlpha"
+    )
+
+    val centerX = targetBounds.center.x
+    val centerY = targetBounds.center.y
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Canvas(modifier = modifier.fillMaxSize()) {
+            // Soft focal wave pulse on the interactive target
+            drawCircle(
+                color = primaryColor.copy(alpha = rippleAlpha),
+                radius = 18.dp.toPx() * rippleScale,
+                center = Offset(centerX, centerY),
+                style = Stroke(width = 2.dp.toPx()),
+            )
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.25f),
+                radius = 6.dp.toPx(),
+                center = Offset(centerX, centerY)
             )
         }
     }
