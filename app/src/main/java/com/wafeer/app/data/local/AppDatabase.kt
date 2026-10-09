@@ -6,15 +6,19 @@ import androidx.room.RoomDatabase
 import com.wafeer.app.data.local.dao.ArchivedBudgetDao
 import com.wafeer.app.data.local.dao.BudgetSettingsDao
 import com.wafeer.app.data.local.dao.CategoryDao
+import com.wafeer.app.data.local.dao.MicroGoalDao
 import com.wafeer.app.data.local.dao.PaidRecurrentOccurrenceDao
 import com.wafeer.app.data.local.dao.QueuedTransactionDao
 import com.wafeer.app.data.local.dao.TransactionDao
+import com.wafeer.app.data.local.dao.WishlistDao
 import com.wafeer.app.data.local.entity.ArchivedBudgetEntity
 import com.wafeer.app.data.local.entity.BudgetSettingsEntity
 import com.wafeer.app.data.local.entity.CategoryEntity
+import com.wafeer.app.data.local.entity.MicroGoalEntity
 import com.wafeer.app.data.local.entity.PaidRecurrentOccurrenceEntity
 import com.wafeer.app.data.local.entity.QueuedTransactionEntity
 import com.wafeer.app.data.local.entity.TransactionEntity
+import com.wafeer.app.data.local.entity.WishlistItemEntity
 
 @Database(
     entities = [
@@ -23,9 +27,11 @@ import com.wafeer.app.data.local.entity.TransactionEntity
         CategoryEntity::class,
         QueuedTransactionEntity::class,
         ArchivedBudgetEntity::class,
-        PaidRecurrentOccurrenceEntity::class
+        PaidRecurrentOccurrenceEntity::class,
+        MicroGoalEntity::class,
+        WishlistItemEntity::class,
     ],
-    version = 21,
+    version = 22,
     autoMigrations = [
         AutoMigration(from = 16, to = 17),
         AutoMigration(from = 17, to = 18),
@@ -46,6 +52,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun queuedTransactionDao(): QueuedTransactionDao
 
     abstract fun paidRecurrentOccurrenceDao(): PaidRecurrentOccurrenceDao
+
+    abstract fun microGoalDao(): MicroGoalDao
+
+    abstract fun wishlistDao(): WishlistDao
 
     companion object {
         const val DATABASE_NAME = "wafeer_budget.db"

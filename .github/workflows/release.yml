@@ -49,8 +49,14 @@ jobs:
             STORE_PASS="$RELEASE_STORE_PASSWORD"
             KEY_ALIAS="$RELEASE_KEY_ALIAS"
             KEY_PASS="$RELEASE_KEY_PASSWORD"
+          elif [ -f "keystore/wafeer-release.jks" ]; then
+            echo "Using committed persistent repository release keystore."
+            cp keystore/wafeer-release.jks release-keystore.jks
+            STORE_PASS="wafeer_release_pwd"
+            KEY_ALIAS="wafeer"
+            KEY_PASS="wafeer_release_pwd"
           else
-            echo "No keystore secrets found in repository. Generating release keystore."
+            echo "No keystore secrets or fallback found. Generating release keystore."
             STORE_PASS="wafeer_release_pwd"
             KEY_ALIAS="wafeer"
             KEY_PASS="wafeer_release_pwd"

@@ -274,6 +274,9 @@ class MainActivity : AppCompatActivity() {
                                             appUpdateManager.downloadUpdate(info)
                                         }
                                     },
+                                    onOpenDownloads = {
+                                        appUpdateManager.openDownloadsFolder()
+                                    },
                                     onDismiss = {
                                         autoUpdateInfo.value = null
                                         appUpdateManager.resetState()

@@ -20,6 +20,7 @@
 # Release signing artifacts
 *.jks
 *.keystore
+!keystore/wafeer-release.jks
 *.apk
 photo_*.jpg
 

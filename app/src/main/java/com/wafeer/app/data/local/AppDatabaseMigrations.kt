@@ -190,4 +190,34 @@ object AppDatabaseMigrations {
             )
         }
     }
+
+    val MIGRATION_21_22: Migration = object : Migration(21, 22) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `micro_goals` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `title` TEXT NOT NULL,
+                    `targetAmount` TEXT NOT NULL,
+                    `savedAmount` TEXT NOT NULL DEFAULT '0',
+                    `createdAt` INTEGER NOT NULL,
+                    `isCompleted` INTEGER NOT NULL DEFAULT 0
+                )
+                """.trimIndent()
+            )
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `wishlist_items` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `title` TEXT NOT NULL,
+                    `price` TEXT NOT NULL,
+                    `createdAt` INTEGER NOT NULL,
+                    `coolingHours` INTEGER NOT NULL DEFAULT 48,
+                    `status` TEXT NOT NULL DEFAULT 'COOLING',
+                    `resolvedAt` INTEGER
+                )
+                """.trimIndent()
+            )
+        }
+    }
 }

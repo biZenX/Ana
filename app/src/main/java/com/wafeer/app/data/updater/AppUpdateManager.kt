@@ -217,10 +217,68 @@ class AppUpdateManager @Inject constructor(
 
             _downloadState.value = UpdateDownloadState.ReadyToInstall(apkFile)
             logcat(TAG) { "APK downloaded successfully: ${apkFile.absolutePath} (${apkFile.length()} bytes)" }
+            copyApkToPublicDownloads(apkFile, info.versionName)
             installApk(apkFile)
         } catch (e: Exception) {
             logcat(TAG) { "Download failed: ${e.message}" }
             _downloadState.value = UpdateDownloadState.Error(e.message ?: "فشل تنزيل ملف التحديث")
+        }
+    }
+
+    /**
+     * Copies the downloaded APK to the public Downloads folder so the user can easily find it.
+     */
+    fun copyApkToPublicDownloads(apkFile: File, versionName: String): Boolean {
+        return runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val contentValues = android.content.ContentValues().apply {
+                    put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, "Wafeer-v$versionName.apk")
+                    put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/vnd.android.package-archive")
+                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
+                }
+                val uri = context.contentResolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+                if (uri != null) {
+                    context.contentResolver.openOutputStream(uri)?.use { out ->
+                        apkFile.inputStream().use { input -> input.copyTo(out) }
+                    }
+                    logcat(TAG) { "Saved update APK to public MediaStore.Downloads: $uri" }
+                    true
+                } else {
+                    false
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                val downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS)
+                if (downloadsDir.exists() || downloadsDir.mkdirs()) {
+                    val targetFile = File(downloadsDir, "Wafeer-v$versionName.apk")
+                    apkFile.copyTo(targetFile, overwrite = true)
+                    logcat(TAG) { "Saved update APK to public downloads dir: ${targetFile.absolutePath}" }
+                    true
+                } else {
+                    false
+                }
+            }
+        }.getOrElse {
+            logcat(TAG) { "Failed to copy APK to public Downloads: ${it.message}" }
+            false
+        }
+    }
+
+    fun openDownloadsFolder() {
+        runCatching {
+            val intent = Intent(android.app.DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        }.onFailure {
+            runCatching {
+                @Suppress("DEPRECATION")
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(Uri.parse(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS).path), "*/*")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(intent)
+            }
         }
     }
 

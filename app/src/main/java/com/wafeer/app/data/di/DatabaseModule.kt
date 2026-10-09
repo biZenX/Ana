@@ -57,6 +57,7 @@ object DatabaseModule {
             .addMigrations(AppDatabaseMigrations.MIGRATION_15_16)
             .addMigrations(AppDatabaseMigrations.MIGRATION_19_20)
             .addMigrations(AppDatabaseMigrations.MIGRATION_20_21)
+            .addMigrations(AppDatabaseMigrations.MIGRATION_21_22)
             .build()
     }
 
@@ -88,5 +89,15 @@ object DatabaseModule {
     @Provides
     fun providePaidRecurrentOccurrenceDao(database: AppDatabase): PaidRecurrentOccurrenceDao {
         return database.paidRecurrentOccurrenceDao()
+    }
+
+    @Provides
+    fun provideMicroGoalDao(database: AppDatabase): com.wafeer.app.data.local.dao.MicroGoalDao {
+        return database.microGoalDao()
+    }
+
+    @Provides
+    fun provideWishlistDao(database: AppDatabase): com.wafeer.app.data.local.dao.WishlistDao {
+        return database.wishlistDao()
     }
 }

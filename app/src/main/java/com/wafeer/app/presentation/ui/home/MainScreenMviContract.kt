@@ -85,6 +85,7 @@ data class MainScreenActions(
     val onNavigateToAnalytics: () -> Unit = {},
     val onNavigateToSettings: () -> Unit = {},
     val onNavigateToWallet: () -> Unit = {},
+    val onOpenSmartTools: () -> Unit = {},
     val onPeriodSelected: (BudgetPeriod) -> Unit = {},
     val onShowSnackbar: (String) -> Unit = {},
     val onUnresolvedSurplusBannerClick: () -> Unit = {},

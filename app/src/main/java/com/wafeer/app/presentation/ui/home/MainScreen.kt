@@ -74,11 +74,14 @@ fun MainScreen(
     onRequestNotificationPermission: () -> Unit = {},
     budgetViewModel: BudgetViewModel = hiltViewModel(),
     mainScreenViewModel: MainScreenViewModel = hiltViewModel(),
+    smartToolsViewModel: com.wafeer.app.presentation.ui.smart.SmartToolsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val mainScreenState by mainScreenViewModel.uiState.collectAsStateWithLifecycle()
     val budgetUiState by budgetViewModel.uiState.collectAsStateWithLifecycle()
     val censorDiagnosticState by mainScreenViewModel.censorDiagnosticState.collectAsStateWithLifecycle()
+    val smartToolsState by smartToolsViewModel.uiState.collectAsStateWithLifecycle()
+    var showSmartToolsBottomSheet by remember { mutableStateOf(false) }
 
     val tutorialStage = mainScreenState.tutorialStage
     val tutorialBoxCompleted = mainScreenState.tutorialBoxCompleted
@@ -340,6 +343,7 @@ fun MainScreen(
                                 },
                                 onNavigateToAnalytics = onNavigateToAnalytics,
                                 onNavigateToSettings = onNavigateToSettings,
+                                onOpenSmartTools = { showSmartToolsBottomSheet = true },
                                 onUnresolvedSurplusBannerClick = budgetViewModel::onUnresolvedSurplusBannerClicked,
                                 onLeftoverChoice = budgetViewModel::onLeftoverChoice,
                                 onCreateCategory = budgetViewModel::createCategory,
@@ -454,6 +458,41 @@ fun MainScreen(
                 diagnosticState = censorDiagnosticState,
                 onToggleCensor = { mainScreenViewModel.toggleCensor() },
                 onDismiss = { showSensorDiagnostic = false },
+            )
+        }
+
+        if (showSmartToolsBottomSheet) {
+            val dailyAllowance = budgetUiState.budgetState?.dailyBudget ?: java.math.BigDecimal.ZERO
+            val totalBudget = budgetUiState.budgetState?.totalBudget ?: java.math.BigDecimal.ZERO
+            val totalSpent = budgetUiState.budgetState?.totalSpentInPeriod ?: java.math.BigDecimal.ZERO
+            val remainingBudget = (totalBudget - totalSpent).coerceAtLeast(java.math.BigDecimal.ZERO)
+            val remainingDays = budgetUiState.budgetState?.daysRemaining ?: 1
+            val currencyCode = budgetUiState.budgetSettings?.currencyCode ?: "EGP"
+
+            com.wafeer.app.presentation.ui.smart.SmartToolsBottomSheet(
+                uiState = smartToolsState,
+                currentDailyAllowance = dailyAllowance,
+                remainingBudget = remainingBudget,
+                remainingDays = remainingDays,
+                currencyCode = currencyCode,
+                onTabSelected = smartToolsViewModel::selectTab,
+                onPriceInputChanged = { price ->
+                    smartToolsViewModel.onPriceInputChanged(
+                        priceInput = price,
+                        currentDailyAllowance = dailyAllowance,
+                        remainingBudget = remainingBudget,
+                        remainingDays = remainingDays,
+                    )
+                },
+                onAddGoal = smartToolsViewModel::addMicroGoal,
+                onDepositToGoal = smartToolsViewModel::depositToGoal,
+                onDeleteGoal = smartToolsViewModel::deleteGoal,
+                onAddWishlistItem = smartToolsViewModel::addWishlistItem,
+                onMarkWishlistSaved = smartToolsViewModel::markWishlistSaved,
+                onMarkWishlistPurchased = smartToolsViewModel::markWishlistPurchased,
+                onDeleteWishlistItem = smartToolsViewModel::deleteWishlistItem,
+                onSetFunFundRatio = smartToolsViewModel::setFunFundRatio,
+                onDismiss = { showSmartToolsBottomSheet = false },
             )
         }
     }

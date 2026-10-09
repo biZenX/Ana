@@ -130,6 +130,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun openDownloadsFolder() {
+        appUpdateManager.openDownloadsFolder()
+    }
+
     fun dismissUpdateDialog() {
         _pendingUpdate.value = null
         appUpdateManager.resetState()
