@@ -165,7 +165,6 @@ fun Editor(
     onOpenHistory: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenAnalytics: () -> Unit = {},
-    onOpenSmartTools: () -> Unit = {},
     onOpenWallet: () -> Unit = {},
     onUnresolvedSurplusBannerClick: () -> Unit = {},
     onPendingLeftoverClick: () -> Unit = {},
@@ -578,21 +577,6 @@ fun Editor(
                     }
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(
-                            onClick = {
-                                onOpenSmartTools()
-                                view.weakHapticFeedback()
-                            },
-                            modifier = Modifier.size(48.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Savings,
-                                contentDescription = "أدوات التوفير الذكية",
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.size(26.dp),
-                            )
-                        }
-
                         if (showAnalyticsButton) {
                             IconButton(
                                 onClick = {

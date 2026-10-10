@@ -107,7 +107,6 @@ fun SettingsScreen(
             updateInfo = info,
             downloadState = downloadState,
             onStartDownload = viewModel::startDownloadingUpdate,
-            onOpenDownloads = viewModel::openDownloadsFolder,
             onDismiss = viewModel::dismissUpdateDialog,
         )
     }
