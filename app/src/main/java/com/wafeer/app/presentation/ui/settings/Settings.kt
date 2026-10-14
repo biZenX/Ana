@@ -103,7 +103,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -862,13 +864,18 @@ fun Settings(
                         SettingsLeadingIcon(icon = Icons.Rounded.SystemUpdate)
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(modifier = Modifier.weight(1f)) {
+                            val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
                             Text(
-                                text = "التحقق من وجود تحديثات",
+                                text = if (isAr) "التحقق من وجود تحديثات" else "Check for updates",
                                 style = MaterialTheme.typography.bodyMediumEmphasized,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = if (isCheckingUpdate) "جاري فحص الإصدارات الجديدة..." else "التحقق من توفر إصدارات أحدث وتثبيتها",
+                                text = if (isCheckingUpdate) {
+                                    if (isAr) "جاري فحص الإصدارات الجديدة..." else "Checking for new releases..."
+                                } else {
+                                    if (isAr) "التحقق من توفر إصدارات أحدث وتثبيتها" else "Check for and install newer versions"
+                                },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -925,6 +932,7 @@ fun Settings(
         }
 
         if (showAboutDialog) {
+            val uriHandler = LocalUriHandler.current
             AlertDialog(
                 onDismissRequest = { showAboutDialog = false },
                 title = {
@@ -936,26 +944,40 @@ fun Settings(
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            text = "المطور: عبدالرحمن كريم",
-                            style = MaterialTheme.typography.bodyMedium,
+                            text = stringResource(R.string.about_app_title),
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "الإصدار: ${BuildConfig.VERSION_NAME}",
+                            text = stringResource(R.string.about_app_version, BuildConfig.VERSION_NAME),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "تطبيق ذكي وبسيط لإدارة الميزانية وتتبع المصاريف اليومية والشهرية بخصوصية تامة وسهولة فائقة.",
+                            text = stringResource(R.string.about_developer),
                             style = MaterialTheme.typography.bodyMedium
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                         Text(
-                            text = "جميع الحقوق محفوظة © للمطور عبدالرحمن كريم",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.outline
+                            text = stringResource(R.string.about_credits_title),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
                         )
+                        Text(
+                            text = stringResource(R.string.about_credits_desc),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        TextButton(
+                            onClick = {
+                                uriHandler.openUri("https://github.com/isaacsa51/Minus")
+                            }
+                        ) {
+                            Text(
+                                text = "GitHub: isaacsa51/Minus",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
                     }
                 },
                 confirmButton = {

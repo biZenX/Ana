@@ -1,54 +1,75 @@
 <p align="center">
-  <img src="assets/banner.png" alt="شعار وفير" width="100%">
+  <img src="assets/banner.png" alt="Wafeer" width="100%">
 </p>
 
-# وفير - Wafeer
-### إدارة الميزانية والمصاريف الذكية بكل بساطة واحترافية
+# Wafeer (وفير)
 
-<p align="center">
-  <strong>تطبيق وفير (Wafeer)</strong> هو تطبيق متكامل وقوي لإدارة الميزانية والمصروفات اليومية والشهرية. يتيح لك تسجيل نفقاتك بسهولة عبر لوحة آلة حاسبة تفاعلية سريعة، ومتابعة الفواتير المتكررة، وتنظيم فترات الميزانية بدقة.
-</p>
+A fast, private, offline-first expense and budget manager for Android.
 
 ---
 
-## 🌟 أبرز المميزات
+## Features
 
-- 💸 **تسجيل وحساب سريع وفوري:** واجهة آلة حاسبة ذكية تتيح إجراء العمليات الحسابية فوراً وتسجيل المصروف في ثوانٍ معدودة دون نماذج معقدة.
-- 📅 **فترات ميزانية مرنة:** خيارات متعددة لتوزيع الميزانية (يومية، أسبوعية، نصف شهرية، وشهرية) تناسب نمط دخلك وأسلوب حياتك.
-- 🔄 **المصاريف المتكررة والاشتراكات:** متابعة دورية للاشتراكات والفواتير ومواعيد استحقاق البطاقات الائتمانية مع تنبيهات استباقية قابلة للتخصيص.
-- 📊 **تحليلات وتقارير بيانية:** رسوم بيانية وتوزيع نفقات حسب التصنيفات لفهم أين تذهب أموالك مع توصيات ذكية للتوفير.
-- 🎨 **هوية بصرية وطباعة عربية أصيلة:** 
-  - دعم **خط ثمانية (Thmanyah)** مع تفعيل الأحرف المنسدلة والمرسلة (`OpenType 'salt'`) للعناوين الرئيسية لإضفاء لمسة عربية جمالية فخمة، وخط متن مريح للقراءة.
-  - دعم **خط آي بي إم بلكس (IBM Plex Sans Arabic)** لتجربة تقنية عصرية فائقة الوضوح.
-  - دعم كامل للوضع الداكن المتقدم ووضع شاشات AMOLED لتوفير البطارية.
-  - وضع الخصوصية وحجب الأرقام المالية.
-- 💾 **نسخ احتياطي واستيراد/تصدير:** تصدير واستيراد سجل المعاملات بتنسيق CSV بسهولة لحفظ بياناتك محلياً بأمان تام.
-- 📱 **ودجات للشاشة الرئيسية وتوافق Wear OS:** الوصول السريع لمؤشرات الصرف عبر الشاشة الرئيسية وساعات Wear OS.
-
----
-
-<table align="center">
-  <tr>
-    <td><img src="assets/screenshot_1.png" alt="تسجيل المصروف" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_2.png" alt="الميزانية" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_3.png" alt="التحليلات" width="200" style="border-radius:26px;"/></td>
-  </tr>
-  <tr>
-    <td><img src="assets/screenshot_4.png" alt="الإعدادات" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_5.png" alt="الودجات" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_6.png" alt="نظرة عامة" width="200" style="border-radius:26px;"/></td>
-  </tr>
-</table>
+- **Calculator Numpad:** Calculate and log expenses in seconds without multi-step forms.
+- **Micro-Goal Jar:** Save for specific goals with an automated daily savings pacer.
+- **Affordability Check:** Test the impact of any purchase on your remaining budget before you buy.
+- **48-Hour Wishlist Filter:** A cooling-off period for impulse buys that counts how much money you saved.
+- **Guilt-Free Fun Fund:** Safe discretionary spending allocation that never touches your essentials.
+- **Flexible Budget Cycles:** Daily, weekly, bi-weekly, or monthly periods matching your income.
+- **Subscriptions & Bills:** Due date reminders and automatic budget deduction.
+- **Visual Analytics:** Clear breakdown of your spending habits and categories.
+- **100% Private & Offline:** Your financial data stays strictly on your device. No accounts, no cloud sync, no tracking.
+- **Data Export & Import:** Full CSV backup and restore.
+- **Wear OS Companion:** Track your budget from your smartwatch.
 
 ---
 
-## 🔒 الخصوصية والأمان
+## Privacy & Permissions
 
-تطبيق **وفير** يعمل محلياً بالكامل على جهازك. لا يتطلب تسجيل حساب، ولا يرسل بياناتك المالية أو نفقاتك لأي خوادم خارجية. بياناتك ملكك وحدك.
+- **100% Offline Financial Data:** Wafeer never collects, transmits, or stores your financial data outside your physical device. There are no remote servers, no user accounts, and zero analytics trackers.
+- **Google Play Edition:** Completely devoid of `INTERNET` and `REQUEST_INSTALL_PACKAGES` permissions. Updates are handled entirely by the Google Play Store.
+- **GitHub / FOSS Edition:** Includes `INTERNET` solely to check GitHub Releases for newer versions, and `REQUEST_INSTALL_PACKAGES` to enable seamless in-app installation of updates directly from GitHub.
 
 ---
 
-## 👨‍💻 المطور والتواصل
+## Credits & License
 
-- **المطور:** عبدالرحمن كريم (Abdelrahman Karim)
-- **البريد الإلكتروني:** [abdelrhmanBit@proton.me](mailto:abdelrhmanBit@proton.me)
+Wafeer is based on the open-source architecture of **[Minus](https://github.com/isaacsa51/Minus)** by **[Isaac Serrano (@isaacsa51)](https://github.com/isaacsa51)**.
+
+Licensed under the **[Apache License 2.0](LICENSE)**.
+
+---
+
+# النسخة العربية
+
+تطبيق بسيط، سريع، ويعمل بدون إنترنت لإدارة المصاريف والميزانية اليومية والشهرية بخصوصية تامة.
+
+---
+
+## أبرز المميزات
+
+- **آلة حاسبة سريعة:** حساب وتسجيل فوري للمصاريف بنقرة واحدة بدون شاشات معقدة.
+- **برطمان الأهداف:** تجميع وتوفير لأهدافك الصغيرة مع حساب المبلغ المطلوب يومياً.
+- **أقدر أشتريها ولا لأ؟:** حاسبة فورية لمعرفة تأثير أي عملية شراء على ميزانيتك قبل ما تدفع.
+- **فلتر الـ 48 ساعة:** مهلة تفكير قبل الشراء المتسرع مع عداد يوضح إجمالي ما وفرته.
+- **فلوس الروقان:** نسبة مخصصة للترفيه والمصاريف الشخصية بدون المساس بالأساسيات.
+- **فترات ميزانية مرنة:** يومية، أسبوعية، نصف شهرية، أو شهرية حسب طبيعة دخلك.
+- **الفواتير والاشتراكات:** متابعة مواعيد التجديد وتنبيهات مسبقة قبل الاستحقاق.
+- **رسوم بيانية:** نظرة سريعة على أماكن صرف أموالك وتوزيع المصاريف.
+- **خصوصية كاملة (أوفلاين):** بياناتك محفوظة محلياً على جهازك فقط، بدون حسابات وبدون تتبع.
+- **نسخ احتياطي:** تصدير واستيراد سجلاتك بسهولة بصيغة CSV.
+- **دعم ساعات Wear OS:** متابعة الميزانية مباشرة من ساعتك الذكية.
+
+---
+
+## الخصوصية والأذونات
+
+- **بياناتك المالية أوفلاين 100%:** لا يجمع تطبيق وفير أي بيانات مالية ولا يرسلها إلى أي خوادم خارجية؛ بياناتك مشفرة ومحفوظة على جهازك فقط بدون حسابات أو أدوات تتبع.
+- **نسخة متجر Google Play:** خالية تماماً من إذن الإنترنت (`INTERNET`) وإذن تثبيت الحزم (`REQUEST_INSTALL_PACKAGES`)؛ وتتم التحديثات عبر المتجر مباشرة.
+- **نسخة GitHub / FOSS:** تتضمن إذن الإنترنت فقط للتحقق من وجود إصدارات جديدة عبر GitHub Releases، وإذن تثبيت الحزم لتثبيت التحديثات مباشرة من داخل التطبيق عند موافقتك.
+
+---
+
+## الشكر والترخيص
+
+مبني استناداً إلى تطبيق **[Minus](https://github.com/isaacsa51/Minus)** مفتوح المصدر للمطور **[Isaac Serrano (@isaacsa51)](https://github.com/isaacsa51)** بموجب رخصة **[Apache License 2.0](LICENSE)**.

@@ -1,4 +1,3 @@
-- تحسينات عامة على واجهة وتجربة المستخدم لتكون أكثر سلاسة ووضوحاً.
-- تحسين إدارة الذاكرة المؤقتة لتقليل استهلاك المساحة وزيادة سرعة التطبيق.
-- ضبط حسابات الميزانية للأيام المحددة وترحيل الفائض بدقة.
-- إصلاح بعض الأخطاء وتحسين استقرار التطبيق والأداء العام.
+- improve: Storage Cleanup: Remove old update files to save device space.
+- improve: Smoother History Browsing: Faster navigation across transactions and logs.
+- fix: Accurate Rollover Balance: Correct allowance calculation on active days.

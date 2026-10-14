@@ -1,5 +1,3 @@
-- إضافة استبيان التخصيص التفاعلي لاختيار نوع الميزانية والدور المالي وأصناف المشتريات المنزلية والمصرية.
-- تصحيح شريط التنبيه العلوي لمنع ظهور تجاوز الحد اليومي بالخطأ عند وجود رصيد متبقٍ.
-- ضبط إشعار نهاية اليوم (75%) ليلتزم بوجود مصاريف فعلية وإلغائه تلقائياً عند حفظ أي مصروف.
-- تحسين الجولة التفاعلية التوضيحية وإضافة مؤشر النقر النابض لتوجيه المستخدم بدقة.
-- دعم خيار ادخار وحفظ الفائض وتحديثات الترحيل المالي وتطهير الهوية البرمجية.
+- feat: Flexible Daily Rollover: Carry unused funds forward or save them.
+- feat: Quick Budget Setup: Pick spending style and categories in seconds.
+- improve: Smart Reminder Silence: Evening alert disappears once you log spending.

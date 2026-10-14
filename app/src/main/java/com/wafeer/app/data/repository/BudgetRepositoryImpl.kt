@@ -234,9 +234,8 @@ class BudgetRepositoryImpl @Inject constructor(
             .map { entities -> entities.map { it.toDomain() } }
     }
 
-    override suspend fun addTransaction(transaction: Transaction) {
+    override suspend fun addTransaction(transaction: Transaction): Long =
         transactionDao.insert(transaction.toEntity())
-    }
 
     override suspend fun addQueuedTransaction(transaction: Transaction) {
         queuedTransactionDao.insert(transaction.toQueuedEntity())
@@ -464,48 +463,164 @@ class BudgetRepositoryImpl @Inject constructor(
         }
     }
 
+    private val defaultCategoryPairs = listOf(
+        "سوبرماركت" to "Groceries",
+        "مواصلات" to "Transit",
+        "فواتير" to "Bills",
+        "فواتير وخدمات" to "Bills",
+        "قهوة" to "Coffee",
+        "الألبان والبيض" to "Dairy & Eggs",
+        "اللحوم والدواجن" to "Meat & Poultry",
+        "البقوليات والحبوب" to "Grains & Pantry",
+        "الخضروات" to "Vegetables",
+        "الفواكه" to "Fruits",
+        "التوابل والقهوة" to "Coffee & Spices",
+        "المنظفات والمنزل" to "Household Supplies",
+        "المواصلات والوقود" to "Transit & Fuel",
+        "الفواتير والخدمات" to "Bills & Utilities",
+        "مصروف شخصي" to "Personal Spending",
+        "إيداع محفظة" to "Wallet Deposit",
+    )
+
+    private suspend fun migrateDefaultCategoriesInPlace(isArabic: Boolean) {
+        for ((arName, enName) in defaultCategoryPairs) {
+            val fromName = if (isArabic) enName else arName
+            val toName = if (isArabic) arName else enName
+            if (fromName == toName) continue
+            val fromCat = categoryDao.getCategoryByName(fromName) ?: continue
+            val existingToCat = categoryDao.getCategoryByName(toName)
+            if (existingToCat != null) {
+                transactionDao.migrateTransactionCategory(
+                    oldName = fromName,
+                    oldCategoryId = fromCat.id,
+                    newName = toName,
+                    newCategoryId = existingToCat.id,
+                )
+                categoryDao.deleteCategoryById(fromCat.id)
+            } else {
+                categoryDao.updateCategory(fromCat.copy(name = toName))
+                transactionDao.migrateTransactionCategory(
+                    oldName = fromName,
+                    oldCategoryId = fromCat.id,
+                    newName = toName,
+                    newCategoryId = fromCat.id,
+                )
+            }
+        }
+    }
+
+    override suspend fun localizeDefaultCategoriesAndDemoData(
+        isArabic: Boolean,
+        isDemoMode: Boolean,
+    ) {
+        migrateDefaultCategoriesInPlace(isArabic)
+        if (isDemoMode) {
+            val currentSettings = getBudgetSettingsSync()
+            if (currentSettings != null) {
+                val targetCurrency = if (isArabic) "EGP" else "USD"
+                val isOppositeDemoCurrency = (isArabic && currentSettings.currencyCode == "USD") ||
+                    (!isArabic && currentSettings.currencyCode == "EGP")
+                val updatedBudget = when {
+                    isArabic && currentSettings.totalBudget.compareTo(BigDecimal("1200.00")) == 0 && currentSettings.currencyCode == "USD" -> BigDecimal("5000.00")
+                    isArabic && currentSettings.totalBudget.compareTo(BigDecimal("300.00")) == 0 && currentSettings.currencyCode == "USD" -> BigDecimal("1200.00")
+                    isArabic && currentSettings.totalBudget.compareTo(BigDecimal("900.00")) == 0 && currentSettings.currencyCode == "USD" -> BigDecimal("5000.00")
+                    !isArabic && currentSettings.totalBudget.compareTo(BigDecimal("5000.00")) == 0 && currentSettings.currencyCode == "EGP" -> BigDecimal("1200.00")
+                    !isArabic && currentSettings.totalBudget.compareTo(BigDecimal("1200.00")) == 0 && currentSettings.currencyCode == "EGP" -> BigDecimal("300.00")
+                    else -> currentSettings.totalBudget
+                }
+                val newCurrency = if (isOppositeDemoCurrency) targetCurrency else currentSettings.currencyCode
+                if (newCurrency != currentSettings.currencyCode || updatedBudget != currentSettings.totalBudget) {
+                    saveBudgetSettings(
+                        currentSettings.copy(
+                            currencyCode = newCurrency,
+                            totalBudget = updatedBudget,
+                        )
+                    )
+                }
+            }
+            seedDemoDataInternal(isArabic)
+        }
+    }
+
     override suspend fun seedDemoData(
         currencyCode: String,
         sampleBudget: BigDecimal,
     ) {
-        appDatabase.withTransaction {
-            transactionDao.deleteDemoTransactions()
+        val isArabic = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+        seedDemoDataInternal(isArabic)
+    }
 
-            val groceryCat = findOrCreateCategory("سوبرماركت وطلبات")
-            val transportCat = findOrCreateCategory("مواصلات وبنزين")
-            val billsCat = findOrCreateCategory("فواتير وخدمات")
+    private suspend fun seedDemoDataInternal(isArabic: Boolean) {
+        transactionDao.deleteDemoTransactions()
+        migrateDefaultCategoriesInPlace(isArabic)
 
-            val now = LocalDateTime.now()
-            val sampleTransactions = listOf(
+        val groceryTitle = if (isArabic) "سوبرماركت" else "Groceries"
+        val transportTitle = if (isArabic) "مواصلات" else "Transit"
+        val billsTitle = if (isArabic) "فواتير" else "Bills"
+
+        val groceryCat = findOrCreateCategory(groceryTitle)
+        val transportCat = findOrCreateCategory(transportTitle)
+        val billsCat = findOrCreateCategory(billsTitle)
+
+        val now = LocalDateTime.now()
+        val sampleTransactions = if (isArabic) {
+            listOf(
                 TransactionEntity(
                     amount = "420.00",
-                    comment = "سوبرماركت وطلبات",
-                    note = "مشتريات خضار ومستلزمات",
+                    comment = groceryTitle,
+                    note = "مشتريات للبيت",
                     date = now.minusDays(2).toEpochSecond(ZoneOffset.UTC) * 1000,
                     clientGeneratedId = "demo_seed_grocery",
                     categoryId = groceryCat.id,
                 ),
                 TransactionEntity(
                     amount = "120.00",
-                    comment = "مواصلات وبنزين",
-                    note = "تفويلة بنزين",
+                    comment = transportTitle,
+                    note = "مواصلات وبنزين",
                     date = now.minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000,
                     clientGeneratedId = "demo_seed_transport",
                     categoryId = transportCat.id,
                 ),
                 TransactionEntity(
                     amount = "350.00",
-                    comment = "فواتير وخدمات",
-                    note = "فاتورة الإنترنت",
+                    comment = billsTitle,
+                    note = "فاتورة دورية",
                     date = now.minusDays(3).toEpochSecond(ZoneOffset.UTC) * 1000,
                     clientGeneratedId = "demo_seed_bills",
                     categoryId = billsCat.id,
                 ),
             )
+        } else {
+            listOf(
+                TransactionEntity(
+                    amount = "42.00",
+                    comment = groceryTitle,
+                    note = "Weekly groceries",
+                    date = now.minusDays(2).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_grocery",
+                    categoryId = groceryCat.id,
+                ),
+                TransactionEntity(
+                    amount = "12.00",
+                    comment = transportTitle,
+                    note = "Subway commute",
+                    date = now.minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_transport",
+                    categoryId = transportCat.id,
+                ),
+                TransactionEntity(
+                    amount = "35.00",
+                    comment = billsTitle,
+                    note = "Utility bill",
+                    date = now.minusDays(3).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    clientGeneratedId = "demo_seed_bills",
+                    categoryId = billsCat.id,
+                ),
+            )
+        }
 
-            for (tx in sampleTransactions) {
-                transactionDao.insertOrReplace(tx)
-            }
+        for (tx in sampleTransactions) {
+            transactionDao.insertOrReplace(tx)
         }
     }
 }

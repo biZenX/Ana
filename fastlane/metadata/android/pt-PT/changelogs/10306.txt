@@ -1,0 +1,3 @@
+- improve: Smart Space Cleanup: Clear temporary files automatically for speed.
+- improve: Clearer Balance Reading: Display daily and monthly totals cleanly.
+- fix: Steady Rollover Math: Carry remaining funds smoothly into the next day.

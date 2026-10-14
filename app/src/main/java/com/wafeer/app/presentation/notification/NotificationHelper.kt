@@ -31,6 +31,9 @@ class NotificationHelper @Inject constructor(
         const val CHANNEL_RECURRENT = "recurrent_expenses_v131"
         const val CHANNEL_CREDIT = "credit_expenses_v131"
         const val CHANNEL_APP_UPDATES = "app_updates_v133"
+        const val CHANNEL_SPEND_DETECTED = "spend_detected_v133"
+
+        const val SPEND_SAVED_TIMEOUT_MS = 6000L
 
         const val NOTIFICATION_ID_PERIOD_END = 1001
         const val NOTIFICATION_ID_RECURRENT = 1002
@@ -80,12 +83,24 @@ class NotificationHelper @Inject constructor(
             setShowBadge(true)
         }
 
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
         val updatesChannel = NotificationChannel(
             CHANNEL_APP_UPDATES,
-            "تحديثات وفير",
+            if (isAr) "تحديثات وفير" else "Wafeer Updates",
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "إشعارات توفر إصدارات وتحديثات جديدة لتطبيق وفير"
+            description = if (isAr) "إشعارات توفر إصدارات وتحديثات جديدة لتطبيق وفير" else "Notifications for new Wafeer releases and updates"
+            enableVibration(true)
+            enableLights(true)
+            setShowBadge(true)
+        }
+
+        val spendDetectedChannel = NotificationChannel(
+            CHANNEL_SPEND_DETECTED,
+            context.getString(R.string.notification_channel_spend_detected_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = context.getString(R.string.notification_channel_spend_detected_description)
             enableVibration(true)
             enableLights(true)
             setShowBadge(true)
@@ -95,7 +110,17 @@ class NotificationHelper @Inject constructor(
         notificationManager.createNotificationChannel(recurrentChannel)
         notificationManager.createNotificationChannel(creditChannel)
         notificationManager.createNotificationChannel(updatesChannel)
+        notificationManager.createNotificationChannel(spendDetectedChannel)
         logcat { "Notification channels created (v133)" }
+    }
+
+    fun canPostNotifications(channelId: String? = null): Boolean {
+        if (!checkNotificationPermission()) return false
+        val manager = NotificationManagerCompat.from(context)
+        if (!manager.areNotificationsEnabled()) return false
+        if (channelId == null) return true
+        val channel = manager.getNotificationChannelCompat(channelId) ?: return true
+        return channel.importance != NotificationManagerCompat.IMPORTANCE_NONE
     }
 
     private fun checkNotificationPermission(): Boolean {
@@ -119,7 +144,7 @@ class NotificationHelper @Inject constructor(
         channelId: String,
         title: String,
         message: String,
-        tag: String = "وفير • الرقيب المالي الذكي",
+        tag: String = if (com.wafeer.app.presentation.util.LocaleHelper.isArabic()) "وفير • الرقيب المالي الذكي" else "Wafeer • Smart Financial Assistant",
     ): Boolean {
         if (!checkNotificationPermission()) {
             logcat { "Cannot show notification: permission not granted" }
@@ -157,6 +182,7 @@ class NotificationHelper @Inject constructor(
             .bigText(message)
             .setSummaryText(tag)
 
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(0xFFA3CD51.toInt())
@@ -172,12 +198,12 @@ class NotificationHelper @Inject constructor(
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .addAction(
                 R.drawable.ic_notification,
-                "تسجيل مصروف +",
+                if (isAr) "تسجيل مصروف +" else "Log Expense +",
                 addPendingIntent
             )
             .addAction(
                 0,
-                "عرض الميزانية",
+                if (isAr) "عرض الميزانية" else "View Budget",
                 mainPendingIntent
             )
             .build()
@@ -197,23 +223,29 @@ class NotificationHelper @Inject constructor(
         val formattedAmount = formatAmount(remainingBudget, currency)
         val message = buildPeriodEndMessage(remainingBudget, formattedAmount)
         val title = context.getString(R.string.notification_period_end_title)
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
 
         showRichCustomNotification(
             notificationId = NOTIFICATION_ID_PERIOD_END,
             channelId = CHANNEL_PERIOD_END,
             title = title,
             message = message,
-            tag = "وفير • تجديد الميزانية",
+            tag = if (isAr) "وفير • تجديد الميزانية" else "Wafeer • Budget Renewal",
         )
     }
 
     fun showDaily75PercentAlert(): Boolean {
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
         return showRichCustomNotification(
             notificationId = NOTIFICATION_ID_DAILY_75_PERCENT,
             channelId = CHANNEL_PERIOD_END,
-            title = "يوم هادئ وموفر، أم نسيت تدوين مصاريفك؟",
-            message = "انقضى 75% من يومك دون تسجيل أي حركة مالية. بلمسة واحدة دوّن مصاريفك وحافظ على انضباط ميزانيتك اليومية.",
-            tag = "وفير • نشاط اليوم",
+            title = if (isAr) "يوم هادئ وموفر، أم نسيت تدوين مصاريفك؟" else "A quiet, frugal day — or did you forget to log expenses?",
+            message = if (isAr) {
+                "انقضى 75% من يومك دون تسجيل أي حركة مالية. بلمسة واحدة دوّن مصاريفك وحافظ على انضباط ميزانيتك اليومية."
+            } else {
+                "75% of your day has passed without logging any transaction. Log your expenses with one tap to stay on top of your daily budget."
+            },
+            tag = if (isAr) "وفير • نشاط اليوم" else "Wafeer • Today's Activity",
         )
     }
 
@@ -484,13 +516,22 @@ class NotificationHelper @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val title = "تحديث جديد لوفير: v${info.versionName}"
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+        val title = if (isAr) "تحديث جديد لوفير: v${info.versionName}" else "New Wafeer Update: v${info.versionName}"
         val firstHighlight = info.mainFeatures.firstOrNull() ?: info.improvements.firstOrNull() ?: ""
         val cleanSummary = com.wafeer.app.presentation.util.MarkdownParser.stripMarkdown(firstHighlight)
         val message = if (cleanSummary.isNotBlank()) {
-            "$cleanSummary\nاضغط للتحميل والتثبيت المباشر."
+            if (isAr) {
+                "$cleanSummary\nاضغط للتحميل والتثبيت المباشر."
+            } else {
+                "$cleanSummary\nTap to download and install directly."
+            }
         } else {
-            "يتوفر إصدار جديد بتحسينات ومميزات ذكية. اضغط للتحميل والتثبيت."
+            if (isAr) {
+                "يتوفر إصدار جديد بتحسينات ومميزات ذكية. اضغط للتحميل والتثبيت."
+            } else {
+                "A new release with smart features and improvements is available. Tap to download and install."
+            }
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_APP_UPDATES)
@@ -509,6 +550,117 @@ class NotificationHelper @Inject constructor(
 
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_APP_UPDATE, notification)
         logcat { "Update notification shown for version ${info.versionName}" }
+    }
+
+    fun spendDetectedNotificationId(sourceLabel: String, amount: String): Int =
+        "spend_${sourceLabel}_$amount".hashCode()
+
+    fun showSpendDetectedNotification(
+        amount: BigDecimal,
+        currency: String,
+        sourceLabel: String,
+    ) {
+        if (!canPostNotifications(CHANNEL_SPEND_DETECTED)) return
+
+        val plainAmount = amount.toPlainString()
+        val notificationId = spendDetectedNotificationId(sourceLabel, plainAmount)
+        val formattedAmount = formatAmount(plainAmount, currency)
+        val message = context.getString(R.string.notification_scan_detected_message, formattedAmount)
+
+        val openIntent = Intent(context, MainActivity::class.java).apply {
+            action = com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.ACTION_QUICK_ADD
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_AMOUNT, plainAmount)
+            putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+        }
+        val openPendingIntent = PendingIntent.getActivity(
+            context,
+            notificationId,
+            openIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+
+        val quickSaveIntent = Intent(context, com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver::class.java).apply {
+            action = com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.ACTION_QUICK_SAVE
+            putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_AMOUNT, plainAmount)
+            putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_SOURCE_LABEL, sourceLabel)
+            putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+        }
+        val quickSavePendingIntent = PendingIntent.getBroadcast(
+            context,
+            notificationId + 1,
+            quickSaveIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_SPEND_DETECTED)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(sourceLabel)
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(openPendingIntent)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(0, context.getString(R.string.notification_scan_action_minus_it), openPendingIntent)
+            .addAction(0, context.getString(R.string.notification_scan_action_quick_save), quickSavePendingIntent)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(notificationId, notification)
+        logcat { "Spend detected notification shown for $sourceLabel" }
+    }
+
+    fun showSpendSavedNotification(
+        notificationId: Int,
+        amount: String,
+        currency: String,
+        transactionId: Long,
+        queuedForNextPeriod: Boolean,
+    ) {
+        if (!canPostNotifications(CHANNEL_SPEND_DETECTED)) {
+            cancelSpendNotification(notificationId)
+            return
+        }
+
+        val formattedAmount = formatAmount(amount, currency)
+        val message = if (queuedForNextPeriod) {
+            context.getString(R.string.notification_scan_queued_message, formattedAmount)
+        } else {
+            context.getString(R.string.notification_scan_saved_message, formattedAmount)
+        }
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_SPEND_DETECTED)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(context.getString(R.string.notification_scan_saved_title))
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setAutoCancel(true)
+            .setTimeoutAfter(SPEND_SAVED_TIMEOUT_MS)
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
+
+        if (transactionId > 0L) {
+            val undoIntent = Intent(context, com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver::class.java).apply {
+                action = com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.ACTION_UNDO
+                putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_TRANSACTION_ID, transactionId)
+                putExtra(com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+            }
+            builder.addAction(
+                0,
+                context.getString(R.string.notification_scan_action_undo),
+                PendingIntent.getBroadcast(
+                    context,
+                    notificationId + 2,
+                    undoIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                ),
+            )
+        }
+
+        NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+    }
+
+    fun cancelSpendNotification(notificationId: Int) {
+        NotificationManagerCompat.from(context).cancel(notificationId)
     }
 
     fun cancelAllNotifications() {

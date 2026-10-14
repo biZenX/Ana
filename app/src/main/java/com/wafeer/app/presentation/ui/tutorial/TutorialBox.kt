@@ -621,7 +621,7 @@ private fun TutorialOverlay(
                                             contentPadding = PaddingValues(horizontal = 6.dp, vertical = 0.dp),
                                         ) {
                                             Text(
-                                                text = "تجربة حرة",
+                                                text = stringResource(R.string.tutorial_practice_mode),
                                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                                                 color = MaterialTheme.colorScheme.primary,
                                                 maxLines = 1,
@@ -658,7 +658,7 @@ private fun TutorialOverlay(
                                     ) {
                                         Text(
                                             text = if (isLast) {
-                                                "إنهاء وبدء الاستخدام"
+                                                stringResource(R.string.tutorial_sandbox_finish)
                                             } else if (isVirtual) {
                                                 stringResource(R.string.tutorial_understood)
                                             } else {

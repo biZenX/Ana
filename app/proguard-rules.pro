@@ -42,3 +42,8 @@
     public static void checkNotNullParameter(java.lang.Object, java.lang.String);
 }
 
+# Compose Animation rules
+-keep class androidx.compose.animation.** { *; }
+-dontwarn androidx.compose.animation.**
+
+

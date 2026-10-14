@@ -1,0 +1,3 @@
+- improve: Smoother Transaction Logs: Browse spending comfortably with less storage.
+- improve: Clearer Spend Summaries: Easy-to-read numbers across all budget cards.
+- fix: Precise Rollover Allowance: Accurate balance handoff on scheduled active days.

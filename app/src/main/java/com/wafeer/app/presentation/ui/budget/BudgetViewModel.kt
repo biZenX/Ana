@@ -17,6 +17,7 @@ import com.wafeer.app.domain.model.RecurrentFrequency
 import com.wafeer.app.domain.model.RemainingBudgetStrategy
 import com.wafeer.app.domain.model.Transaction
 import com.wafeer.app.domain.model.calculatePaymentDueDate
+import com.wafeer.app.domain.notification.PENDING_QUICK_ADD_AMOUNT_KEY_NAME
 import com.wafeer.app.domain.time.MidnightTransitionManager
 import com.wafeer.app.domain.usecase.ClearEarlyFinishStateUseCase
 import com.wafeer.app.domain.usecase.FinishBudgetEarlyUseCase
@@ -49,6 +50,7 @@ import com.wafeer.app.presentation.ui.editor.AnimState
 import com.wafeer.app.presentation.util.font.format.symbolOnlyCurrencyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -57,6 +59,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -72,6 +77,7 @@ import javax.inject.Inject
 
 private const val TAG = "BudgetViewModel"
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class BudgetViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -232,9 +238,26 @@ class BudgetViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            uiState.collect { baseState ->
-                budgetWidgetUpdater.update(baseState)
-            }
+            uiState
+                .distinctUntilChanged { old, new ->
+                    old.budgetSettings == new.budgetSettings &&
+                    old.budgetState == new.budgetState &&
+                    old.transactions == new.transactions &&
+                    old.selectedViewPeriod == new.selectedViewPeriod &&
+                    old.currentPeriodId == new.currentPeriodId
+                }
+                .debounce(1000L)
+                .collect { baseState ->
+                    budgetWidgetUpdater.update(baseState)
+                }
+        }
+        viewModelScope.launch {
+            settingsRepository.observeString(PENDING_QUICK_ADD_AMOUNT_KEY_NAME)
+                .filter { !it.isNullOrBlank() }
+                .collect { amount ->
+                    numpadController.setInput(amount.orEmpty())
+                    settingsRepository.setString(PENDING_QUICK_ADD_AMOUNT_KEY_NAME, "")
+                }
         }
     }
 

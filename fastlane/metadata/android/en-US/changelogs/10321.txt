@@ -1,0 +1,3 @@
+- improve: Clear Budget Ring: Unobstructed view of balance rings in demo mode.
+- improve: Single-Word Categories: Concise category names for quicker selection.
+- fix: Solid App Launch: Reliable startup across all devices without crashes.

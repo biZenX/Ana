@@ -1,0 +1,2 @@
+- improve: Live Typography Preview: Test styles instantly inside appearance settings.
+- fix: Persistent Style Settings: Keep your chosen layout across all menus.

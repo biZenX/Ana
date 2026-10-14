@@ -1,0 +1,2 @@
+- improve: Flexible Tour Controls: Finish or skip the walkthrough at any time.
+- improve: Visual Pointer Arrows: Clear direction arrows guiding you to key buttons.

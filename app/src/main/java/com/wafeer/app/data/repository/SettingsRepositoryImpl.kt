@@ -76,7 +76,11 @@ const val FINANCIAL_TIPS_ENABLED_KEY_NAME = "financial_tips_enabled"
 const val DISMISSED_FINANCIAL_TIP_IDS_KEY_NAME = "dismissed_financial_tip_ids"
 const val DEMO_MODE_ACTIVE_KEY_NAME = "demo_mode_active"
 const val DEMO_MISSION_COMPLETED_KEY_NAME = "demo_mission_completed"
+const val NOTIFICATION_SCAN_ENABLED_KEY_NAME = "notification_scan_enabled"
+const val NOTIFICATION_SCAN_PACKAGES_KEY_NAME = "notification_scan_packages"
 
+private val NOTIFICATION_SCAN_ENABLED = booleanPreferencesKey(NOTIFICATION_SCAN_ENABLED_KEY_NAME)
+private val NOTIFICATION_SCAN_PACKAGES = stringSetPreferencesKey(NOTIFICATION_SCAN_PACKAGES_KEY_NAME)
 private val DEMO_MODE_ACTIVE = booleanPreferencesKey(DEMO_MODE_ACTIVE_KEY_NAME)
 private val DEMO_MISSION_COMPLETED = booleanPreferencesKey(DEMO_MISSION_COMPLETED_KEY_NAME)
 
@@ -159,6 +163,11 @@ private val LEFTOVER_CHOICES = stringSetPreferencesKey("leftover_choices")
 class SettingsRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : SettingsRepository {
+
+    @Volatile
+    private var cachedSettings: UserSettings? = null
+
+    override fun getCachedSettings(): UserSettings? = cachedSettings
 
     override fun observeSettings(): Flow<UserSettings> {
         return dataStore.data.map { preferences ->
@@ -248,12 +257,14 @@ class SettingsRepositoryImpl @Inject constructor(
                     ?: emptySet(),
                 demoModeActive = preferences[DEMO_MODE_ACTIVE] ?: false,
                 demoMissionCompleted = preferences[DEMO_MISSION_COMPLETED] ?: false,
-            )
+                notificationScanEnabled = preferences[NOTIFICATION_SCAN_ENABLED] ?: false,
+                notificationScanPackages = preferences[NOTIFICATION_SCAN_PACKAGES] ?: emptySet(),
+            ).also { cachedSettings = it }
         }
     }
 
     override suspend fun getSettings(): UserSettings {
-        return observeSettings().first()
+        return observeSettings().first().also { cachedSettings = it }
     }
 
     override fun observeCurrentPeriodRollover(): Flow<Pair<BigDecimal, Boolean>> {
@@ -278,6 +289,7 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setOnboardingCompleted(completed: Boolean) {
+        cachedSettings = cachedSettings?.copy(onboardingCompleted = completed)
         dataStore.edit { preferences ->
             preferences[ONBOARDING_COMPLETED] = completed
         }
@@ -366,6 +378,7 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setLanguage(language: String) {
+        cachedSettings = cachedSettings?.copy(language = language)
         dataStore.edit { preferences ->
             preferences[LANGUAGE] = language
         }
@@ -700,6 +713,33 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setDemoMissionCompleted(completed: Boolean) {
         dataStore.edit { preferences ->
             preferences[DEMO_MISSION_COMPLETED] = completed
+        }
+    }
+
+    override fun observeString(key: String): Flow<String?> {
+        return dataStore.data.map { it[stringPreferencesKey(key)] }
+    }
+
+    override suspend fun setNotificationScanEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATION_SCAN_ENABLED] = enabled
+        }
+    }
+
+    override suspend fun setNotificationScanPackages(packages: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATION_SCAN_PACKAGES] = packages
+        }
+    }
+
+    override suspend fun toggleNotificationScanPackage(packageName: String) {
+        dataStore.edit { preferences ->
+            val current = preferences[NOTIFICATION_SCAN_PACKAGES] ?: emptySet()
+            preferences[NOTIFICATION_SCAN_PACKAGES] = if (packageName in current) {
+                current - packageName
+            } else {
+                current + packageName
+            }
         }
     }
 }

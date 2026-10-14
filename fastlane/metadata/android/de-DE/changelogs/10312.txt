@@ -1,0 +1,3 @@
+- feat: Flexible Daily Rollover: Carry unused funds forward or save them.
+- feat: Quick Budget Setup: Pick spending style and categories in seconds.
+- improve: Smart Reminder Silence: Evening alert disappears once you log spending.

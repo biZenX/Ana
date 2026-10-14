@@ -1,4 +1,3 @@
-- feat: cambiar StepToReproduceField para usar outlined en lugar de basic
-- feat: mejorar interacciones de UI, reporte de bugs y detalles de transacción
-- feat: implementar sistema de reporte de bugs basado en MVI
-- fix: generar pantalla BugReportForm
+- feat: Instant Savings Tips: Smart guidance tailored to your daily spending.
+- improve: Cleaner Home Widget: Check remaining allowance faster with clearer layout.
+- improve: Recurrent Expense Reminders: Clear alerts for upcoming bills and subscriptions.

@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.rounded.CreditCard
 import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.EventRepeat
 import androidx.compose.material.icons.rounded.NewLabel
+import androidx.compose.material.icons.rounded.NotificationsActive
 import androidx.compose.material.icons.rounded.Sell
 import androidx.compose.material.icons.rounded.YoutubeSearchedFor
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,8 +46,10 @@ import com.wafeer.app.R
 import com.wafeer.app.presentation.ui.settings.SettingsUiState
 import com.wafeer.app.presentation.ui.theme.WafeerTheme
 import com.wafeer.app.presentation.ui.theme.bodySmallCondensed
+import com.wafeer.app.presentation.ui.theme.component.CustomPaddedListItem
 import com.wafeer.app.presentation.ui.theme.component.PaddedListGroup
 import com.wafeer.app.presentation.ui.theme.component.PaddedListItemPosition
+import com.wafeer.app.presentation.ui.theme.component.SettingsLeadingIcon
 import com.wafeer.app.presentation.ui.theme.component.SettingsToggleItem
 
 @Composable
@@ -58,6 +62,7 @@ fun FeatureLabScreen(
     onExtraNoteToggle: () -> Unit,
     onReserveUpcomingChargesToggle: () -> Unit,
     onNewCategoryTagToggle: () -> Unit,
+    onNavigateToNotificationScan: () -> Unit = {},
     onBack: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -157,6 +162,38 @@ fun FeatureLabScreen(
                         position = PaddedListItemPosition.Last,
                         modifier = Modifier.testTag("FeatureLabReserveUpcomingCharges"),
                     )
+                }
+            }
+
+            item {
+                PaddedListGroup(
+                    title = stringResource(R.string.settings_feature_group_notifications)
+                ) {
+                    CustomPaddedListItem(
+                        onClick = onNavigateToNotificationScan,
+                        position = PaddedListItemPosition.Single,
+                        modifier = Modifier.testTag("FeatureLabNotificationScan"),
+                    ) {
+                        SettingsLeadingIcon(icon = Icons.Rounded.NotificationsActive)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.settings_feature_notification_scan_title),
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.settings_feature_notification_scan_description),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
 

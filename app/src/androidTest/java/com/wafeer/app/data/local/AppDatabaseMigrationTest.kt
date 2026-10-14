@@ -8,6 +8,9 @@ import com.google.common.truth.Truth.assertThat
 import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_13_14
 import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_14_15
 import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_15_16
+import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_19_20
+import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_20_21
+import com.wafeer.app.data.local.AppDatabaseMigrations.MIGRATION_21_22
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -147,12 +150,78 @@ class AppDatabaseMigrationTest {
     }
 
     @Test
-    fun migrateAllFrom13_runsTheWholeChain_andValidatesTheCurrentSchema() {
+    fun migrate19To20_updatesBudgetSettingsTable_andPreservesExistingRows() {
+        helper.createDatabase(testDb, 19).apply {
+            execSQL(
+                "INSERT INTO budget_settings " +
+                    "(id, totalBudget, period, startDate, endDate, currencyCode, daysInPeriod, " +
+                    "rollOverEnabled, rollOverCarryForward, rollOverLimit, remainingBudgetStrategy, creditCardCutoffDay, splitMode) " +
+                    "VALUES (1, '1500.00', 'MONTHLY', 0, NULL, 'USD', 30, 1, 1, NULL, 'ASK_ALWAYS', NULL, 'STATIC')"
+            )
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(testDb, 20, true, MIGRATION_19_20)
+
+        assertThat(db.columnNames("budget_settings")).contains("rollOverAppliedDate")
+        db.query("SELECT totalBudget, rollOverEnabled FROM budget_settings WHERE id = 1").use { c ->
+            assertThat(c.moveToFirst()).isTrue()
+            assertThat(c.getString(0)).isEqualTo("1500.00")
+            assertThat(c.getInt(1)).isEqualTo(1)
+        }
+    }
+
+    @Test
+    fun migrate20To21_addsStatusColumnToPaidRecurrentOccurrences() {
+        helper.createDatabase(testDb, 20).apply {
+            execSQL(
+                "INSERT INTO paid_recurrent_occurrences " +
+                    "(transactionId, occurrenceDateEpochDay, paidAt) " +
+                    "VALUES (100, 19000, 123456789)"
+            )
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(testDb, 21, true, MIGRATION_20_21)
+
+        assertThat(db.columnNames("paid_recurrent_occurrences")).contains("status")
+        db.query("SELECT status FROM paid_recurrent_occurrences WHERE transactionId = 100").use { c ->
+            assertThat(c.moveToFirst()).isTrue()
+            assertThat(c.getString(0)).isEqualTo("PAID")
+        }
+    }
+
+    @Test
+    fun migrate21To22_createsMicroGoalsAndWishlistTables() {
+        helper.createDatabase(testDb, 21).close()
+
+        val db = helper.runMigrationsAndValidate(testDb, 22, true, MIGRATION_21_22)
+
+        assertThat(db.tableExists("micro_goals")).isTrue()
+        assertThat(db.tableExists("wishlist_items")).isTrue()
+        assertThat(db.columnNames("micro_goals"))
+            .containsExactly("id", "title", "targetAmount", "savedAmount", "createdAt", "isCompleted")
+        assertThat(db.columnNames("wishlist_items"))
+            .containsExactly("id", "title", "price", "createdAt", "coolingHours", "status", "resolvedAt")
+    }
+
+    @Test
+    fun migrateAllFrom13To22_runsTheWholeChain_andValidatesTheCurrentSchema() {
         helper.createDatabase(testDb, 13).close()
 
-        helper.runMigrationsAndValidate(
-            testDb, 18, true,
+        val db = helper.runMigrationsAndValidate(
+            testDb, 22, true,
             MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
+            MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22,
         )
+
+        assertThat(db.tableExists("transactions")).isTrue()
+        assertThat(db.tableExists("budget_settings")).isTrue()
+        assertThat(db.tableExists("category")).isTrue()
+        assertThat(db.tableExists("queued_transactions")).isTrue()
+        assertThat(db.tableExists("archived_budgets")).isTrue()
+        assertThat(db.tableExists("paid_recurrent_occurrences")).isTrue()
+        assertThat(db.tableExists("micro_goals")).isTrue()
+        assertThat(db.tableExists("wishlist_items")).isTrue()
     }
 }

@@ -10,6 +10,7 @@ import com.wafeer.app.presentation.appTypography
 import com.wafeer.app.presentation.isRoundedFontEnabled
 import com.wafeer.app.presentation.isAmoledEnabled
 import com.wafeer.app.presentation.dynamicColorEnabled
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,14 +24,40 @@ class ThemeManager @Inject constructor() {
         context.isAmoledEnabled = settings.isAmoledEnabled
         context.appColorScheme = settings.colorScheme
         context.dynamicColorEnabled = settings.dynamicColorEnabled
-        val appLocale = if (settings.language == "system") {
-            LocaleListCompat.getEmptyLocaleList()
-        } else {
-            LocaleListCompat.forLanguageTags(settings.language)
+
+        applyLocale(settings.language)
+    }
+
+    fun applyLocale(language: String) {
+        val currentLocales = runCatching { AppCompatDelegate.getApplicationLocales() }.getOrNull()
+        val isEmpty = currentLocales == null || currentLocales.isEmpty
+        val currentTags = currentLocales?.toLanguageTags().orEmpty()
+
+        val isSystem = language == "system" || language.isBlank()
+
+        if (isSystem) {
+            if (!isEmpty) {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+            }
+            return
         }
-        if (AppCompatDelegate.getApplicationLocales() != appLocale) {
+
+        val targetLocale = Locale.forLanguageTag(language)
+        val targetTag = targetLocale.toLanguageTag()
+
+        val alreadyMatches = if (isEmpty) {
+            false
+        } else {
+            currentTags.equals(targetTag, ignoreCase = true) ||
+                currentTags.equals(language, ignoreCase = true)
+        }
+
+        if (!alreadyMatches) {
+            runCatching {
+                Locale.setDefault(targetLocale)
+            }
+            val appLocale = LocaleListCompat.forLanguageTags(language)
             AppCompatDelegate.setApplicationLocales(appLocale)
         }
     }
 }
-

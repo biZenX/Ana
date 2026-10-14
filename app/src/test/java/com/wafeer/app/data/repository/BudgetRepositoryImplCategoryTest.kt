@@ -43,6 +43,10 @@ class BudgetRepositoryImplCategoryTest {
         override suspend fun incrementUsage(name: String, timestamp: Long) =
             replace(name) { it.copy(usageCount = it.usageCount + 1, lastUsedAt = timestamp) }
 
+        override suspend fun deleteCategoryById(id: Long) {
+            rows.removeAll { it.id == id }
+        }
+
         private fun replace(name: String, transform: (CategoryEntity) -> CategoryEntity) {
             val index = rows.indexOfFirst { it.name == name }
             if (index >= 0) rows[index] = transform(rows[index])
@@ -98,5 +102,20 @@ class BudgetRepositoryImplCategoryTest {
         val row = categoryDao.rows.single()
         assertThat(row.id).isEqualTo(1L)
         assertThat(row.usageCount).isEqualTo(2)
+    }
+
+    @Test
+    fun `localizeDefaultCategoriesAndDemoData translates default categories between Arabic and English`() = runTest {
+        repo.createCategory("سوبرماركت")
+        repo.createCategory("مواصلات")
+        repo.createCategory("فواتير")
+
+        repo.localizeDefaultCategoriesAndDemoData(isArabic = false, isDemoMode = false)
+
+        assertThat(categoryDao.rows.map { it.name }).containsExactly("Groceries", "Transit", "Bills")
+
+        repo.localizeDefaultCategoriesAndDemoData(isArabic = true, isDemoMode = false)
+
+        assertThat(categoryDao.rows.map { it.name }).containsExactly("سوبرماركت", "مواصلات", "فواتير")
     }
 }

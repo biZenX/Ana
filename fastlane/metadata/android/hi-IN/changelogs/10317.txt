@@ -1,0 +1,3 @@
+- feat: Ready Demo Data: Explore charts and budgets before entering real numbers.
+- improve: Interactive Spend Task: Quick practice to see balance reactions in real time.
+- improve: Instant Setup Handoff: Switch to real budget anytime keeping your settings.

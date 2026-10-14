@@ -118,4 +118,16 @@ interface TransactionDao {
         WHERE id = :transactionId AND isCredit = 1
     """)
     suspend fun markTransactionAsPaid(transactionId: Long)
+
+    @Query("""
+        UPDATE transactions
+        SET comment = :newName, categoryId = :newCategoryId
+        WHERE comment = :oldName OR categoryId = :oldCategoryId
+    """)
+    suspend fun migrateTransactionCategory(
+        oldName: String,
+        oldCategoryId: Long,
+        newName: String,
+        newCategoryId: Long,
+    )
 }

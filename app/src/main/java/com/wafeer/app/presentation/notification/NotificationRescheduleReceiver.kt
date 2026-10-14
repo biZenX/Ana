@@ -15,6 +15,15 @@ import logcat.asLog
 import logcat.logcat
 
 class NotificationRescheduleReceiver : BroadcastReceiver() {
+    companion object {
+        val ALLOWED_SYSTEM_ACTIONS = setOf(
+            Intent.ACTION_BOOT_COMPLETED,
+            Intent.ACTION_TIME_CHANGED,
+            Intent.ACTION_TIMEZONE_CHANGED,
+            Intent.ACTION_MY_PACKAGE_REPLACED,
+        )
+    }
+
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface NotificationRescheduleReceiverEntryPoint {
@@ -23,10 +32,17 @@ class NotificationRescheduleReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        val action = intent.action
+        if (action !in ALLOWED_SYSTEM_ACTIONS) {
+            logcat { "Ignoring unauthorized or unhandled broadcast action: $action" }
+            return
+        }
+
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                logcat { "Rescheduling notifications after system event: ${intent.action}" }
+                logcat { "Rescheduling notifications after system event: $action" }
+                com.wafeer.app.presentation.notification.scan.ExpenseNotificationListener.requestRebindIfGranted(context.applicationContext)
                 val entryPoint = EntryPointAccessors.fromApplication(
                     context.applicationContext,
                     NotificationRescheduleReceiverEntryPoint::class.java

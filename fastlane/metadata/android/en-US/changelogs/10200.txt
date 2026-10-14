@@ -1,5 +1,3 @@
-- feat: نصائح مالية ذكية ومحفزة تظهر بدقة حسب سلوكك المالي
-- feat: ويدجتس جديدة للشاشة الرئيسية بحواف ناعمة وتصميم عصري
-- improve: إشعارات أنيقة وواضحة لتجديد الميزانية ومواعيد الاستحقاق
-- improve: عرض التحديثات وتواريخ الإصدار في سجل التغييرات بشكل مرتب
-- fix: اعتماد الجنيه المصري (ج.م) كعملة افتراضية وتحسين استقرار التطبيق
+- feat: Instant Savings Tips: Smart guidance tailored to your daily spending.
+- improve: Cleaner Home Widget: Check remaining allowance faster with clearer layout.
+- improve: Recurrent Expense Reminders: Clear alerts for upcoming bills and subscriptions.

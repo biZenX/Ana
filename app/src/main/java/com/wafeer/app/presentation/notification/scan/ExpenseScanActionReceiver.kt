@@ -1,0 +1,143 @@
+package com.wafeer.app.presentation.notification.scan
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import androidx.core.app.NotificationManagerCompat
+import com.wafeer.app.data.repository.BudgetRepository
+import com.wafeer.app.domain.usecase.GetCurrentPeriodIdUseCase
+import com.wafeer.app.presentation.notification.NotificationHelper
+import com.wafeer.app.presentation.ui.budget.ApplyTransactionResult
+import com.wafeer.app.presentation.ui.budget.BudgetTransactionHandler
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
+import java.util.concurrent.ConcurrentHashMap
+
+class ExpenseScanActionReceiver : BroadcastReceiver() {
+    companion object {
+        const val ACTION_QUICK_SAVE = "com.wafeer.app.action.SCAN_QUICK_SAVE"
+        const val ACTION_UNDO = "com.wafeer.app.action.SCAN_UNDO"
+        const val ACTION_QUICK_ADD = "com.wafeer.app.action.SCAN_QUICK_ADD"
+
+        const val EXTRA_AMOUNT = "scan_amount"
+        const val EXTRA_SOURCE_LABEL = "scan_source_label"
+        const val EXTRA_TRANSACTION_ID = "scan_transaction_id"
+        const val EXTRA_NOTIFICATION_ID = "scan_notification_id"
+
+        /**
+         * Notification ids with a quick save in flight. Claiming an id is atomic, so two
+         * broadcasts for the same notification — a double tap, or a redelivery — can never both
+         * insert a transaction, while a quick save for any other notification still proceeds.
+         * The id is released once the save finishes, because ids repeat for a later charge of the
+         * same amount from the same app.
+         */
+        private val quickSavesInFlight = ConcurrentHashMap.newKeySet<Int>()
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface ExpenseScanActionEntryPoint {
+        fun budgetRepository(): BudgetRepository
+        fun budgetTransactionHandler(): BudgetTransactionHandler
+        fun getCurrentPeriodIdUseCase(): GetCurrentPeriodIdUseCase
+        fun notificationHelper(): NotificationHelper
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        val action = intent.action ?: return
+        if (action != ACTION_QUICK_SAVE && action != ACTION_UNDO) return
+
+        val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0)
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                withContext(NonCancellable) {
+                    val entryPoint = EntryPointAccessors.fromApplication(
+                        context.applicationContext,
+                        ExpenseScanActionEntryPoint::class.java,
+                    )
+                    when (action) {
+                        ACTION_QUICK_SAVE -> quickSave(entryPoint, intent, notificationId)
+                        ACTION_UNDO -> undo(entryPoint, context, intent, notificationId)
+                    }
+                }
+            } catch (e: Exception) {
+                logcat { "Error handling scan notification action $action\n${e.asLog()}" }
+            } finally {
+                pendingResult.finish()
+            }
+        }
+    }
+
+    private suspend fun quickSave(
+        entryPoint: ExpenseScanActionEntryPoint,
+        intent: Intent,
+        notificationId: Int,
+    ) {
+        if (!quickSavesInFlight.add(notificationId)) {
+            logcat { "Ignoring concurrent quick save for notification $notificationId" }
+            return
+        }
+
+        try {
+            val amount = intent.getStringExtra(EXTRA_AMOUNT)?.takeIf { it.isNotBlank() } ?: return
+            val sourceLabel = intent.getStringExtra(EXTRA_SOURCE_LABEL).orEmpty()
+            val budgetRepository = entryPoint.budgetRepository()
+            val budgetSettings = budgetRepository.getBudgetSettingsSync()
+
+            val result = entryPoint.budgetTransactionHandler().applyTransaction(
+                input = amount,
+                isCalculation = false,
+                isRecurrentEnabled = false,
+                isCreditEnabled = false,
+                comment = "",
+                note = sourceLabel,
+                budgetSettings = budgetSettings,
+                resolveActivePeriodId = { entryPoint.getCurrentPeriodIdUseCase().invoke() },
+            )
+
+            val notificationHelper = entryPoint.notificationHelper()
+            when (result) {
+                is ApplyTransactionResult.Added,
+                is ApplyTransactionResult.QueuedForNextPeriod -> {
+                    notificationHelper.showSpendSavedNotification(
+                        notificationId = notificationId,
+                        amount = amount,
+                        currency = budgetSettings?.currencyCode ?: "USD",
+                        transactionId = (result as? ApplyTransactionResult.Added)?.transactionId ?: 0L,
+                        queuedForNextPeriod = result is ApplyTransactionResult.QueuedForNextPeriod,
+                    )
+                }
+
+                else -> {
+                    logcat { "Scan quick save rejected: $result" }
+                    notificationHelper.cancelSpendNotification(notificationId)
+                }
+            }
+        } finally {
+            quickSavesInFlight.remove(notificationId)
+        }
+    }
+
+    private suspend fun undo(
+        entryPoint: ExpenseScanActionEntryPoint,
+        context: Context,
+        intent: Intent,
+        notificationId: Int,
+    ) {
+        NotificationManagerCompat.from(context).cancel(notificationId)
+        val transactionId = intent.getLongExtra(EXTRA_TRANSACTION_ID, 0L)
+        if (transactionId <= 0L) return
+        val transaction = entryPoint.budgetRepository().getTransactionById(transactionId) ?: return
+        entryPoint.budgetTransactionHandler().deleteTransaction(transaction)
+    }
+}

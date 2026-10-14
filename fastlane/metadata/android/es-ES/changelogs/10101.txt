@@ -1,3 +1,3 @@
-Versión de tarea
-
- - Agregada icono launcher faltante dentro de la app.
+- improve: Clearer Guided Tour: Simple visual walkthrough directly on your budget ring.
+- improve: Saved Currency Choice: Keep your preferred currency safely remembered.
+- fix: Accurate Spend Alerts: Notifications trigger only when truly exceeding limits.

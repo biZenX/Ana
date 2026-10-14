@@ -23,21 +23,29 @@ internal fun safeVariableWidth(width: Float): Float {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) width else 100f
 }
 
+private val googleSansFlexCache = java.util.concurrent.ConcurrentHashMap<Triple<Int, Float, Boolean>, FontFamily>()
+
 @OptIn(ExperimentalTextApi::class)
 fun googleSansFlex(
     weight: Int = 400,
     width: Float = 100f,
     isRounded: Boolean = true
-) = FontFamily(
-    Font(
-        resId = R.font.google_sans_flex,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(weight),
-            FontVariation.width(safeVariableWidth(width)),
-            roundness(if (isRounded) 100f else 0f)
+): FontFamily {
+    val effectiveWidth = safeVariableWidth(width)
+    val key = Triple(weight, effectiveWidth, isRounded)
+    return googleSansFlexCache.getOrPut(key) {
+        FontFamily(
+            Font(
+                resId = R.font.google_sans_flex,
+                variationSettings = FontVariation.Settings(
+                    FontVariation.weight(weight),
+                    FontVariation.width(effectiveWidth),
+                    roundness(if (isRounded) 100f else 0f)
+                )
+            )
         )
-    )
-)
+    }
+}
 
 @OptIn(ExperimentalTextApi::class)
 private val GoogleSansFlexBaseRounded = googleSansFlex(isRounded = true)
@@ -69,23 +77,7 @@ val IbmPlexSansArabicFamily = FontFamily(
     Font(R.font.ibm_plex_sans_arabic_bold, FontWeight.Bold),
 )
 
-fun isArabicLocale(): Boolean {
-    val appLocales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales()
-    if (!appLocales.isEmpty) {
-        val lang = appLocales[0]?.language
-        if (!lang.isNullOrEmpty()) {
-            return !lang.equals("en", ignoreCase = true) &&
-                    !lang.equals("de", ignoreCase = true) &&
-                    !lang.equals("es", ignoreCase = true) &&
-                    !lang.equals("fr", ignoreCase = true) &&
-                    !lang.equals("ru", ignoreCase = true) &&
-                    !lang.equals("zh", ignoreCase = true) &&
-                    !lang.equals("ja", ignoreCase = true)
-        }
-    }
-    // Default is always Arabic in Wafeer
-    return true
-}
+fun isArabicLocale(): Boolean = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
 
 const val THMANYAH_DESCENT_FEATURES = "\"ss01\" 1, \"dlig\" 1, \"swsh\" 1"
 

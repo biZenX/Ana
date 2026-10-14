@@ -1,8 +1,3 @@
-Lanzamiento público inicial.
-
-- Registro de gastos con interfaz tipo calculadora.
-- Control de presupuesto y gastos recurrentes.
-- Exportación CSV.
-- Widgets para consultar información y acciones rápidas.
-- Integración con app complementaria para Wear OS.
-- Publicación automática de releases de GitHub desde tags.
+- feat: Smart Financial Tips: Daily advice adapted to your spending habits.
+- feat: Custom Spending Days: Calculate daily allowance only on active days.
+- improve: Early Budget Alerts: Timely reminders before exceeding your daily limit.

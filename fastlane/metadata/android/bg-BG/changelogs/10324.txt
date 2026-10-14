@@ -1,0 +1,3 @@
+- improve: Faster Keypad Response: Type expenses and calculations instantly with zero delay.
+- improve: Battery-Friendly Widgets: Smarter and lighter home screen widget updates.
+- fix: Reliable Daily Alerts: Budget reminders arrive accurately without interruptions.

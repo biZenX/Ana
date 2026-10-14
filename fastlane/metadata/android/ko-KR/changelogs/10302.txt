@@ -1,0 +1,3 @@
+- feat: Expanded Budget Widget: View daily and monthly budgets in one glance.
+- improve: Full Category Display: Read long category names cleanly in widgets.
+- fix: Fast Widget Logging: Record transactions reliably from home screen buttons.

@@ -1,0 +1,3 @@
+- feat: Direct In-App Updates: Download and install new versions easily from settings.
+- improve: Quick Notification Actions: Log expenses directly from your notifications.
+- fix: Stable Home Widgets: Accurate reminders and reliable widget balance updates.

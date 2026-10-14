@@ -29,6 +29,7 @@ sealed interface ApplyTransactionResult {
 
     data class Added(
         val normalizedInput: String,
+        val transactionId: Long = 0L,
     ) : ApplyTransactionResult
 
     data object InvalidInput : ApplyTransactionResult
@@ -92,7 +93,8 @@ class BudgetTransactionHandler @Inject constructor(
         }
 
         val isAdjustment = isWalletIncomeEnabled || input.startsWith("+") || input.startsWith("-")
-        val effectiveComment = if (comment.isBlank() && isWalletIncomeEnabled) "إيداع محفظة" else comment
+        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+        val effectiveComment = if (comment.isBlank() && isWalletIncomeEnabled) (if (isAr) "إيداع محفظة" else "Wallet Deposit") else comment
         val today = LocalDate.now()
         return try {
             val categoryId: Long? = if (effectiveComment.isNotBlank()) {
@@ -139,12 +141,15 @@ class BudgetTransactionHandler @Inject constructor(
                 isCredit = isCreditEnabled,
                 isAdjustment = isAdjustment
             )
-            addTransactionUseCase(transaction)
+            val transactionId = addTransactionUseCase(transaction)
             if (isDemo) {
                 settingsRepository?.setDemoMissionCompleted(true)
             }
             notificationScheduler.cancelDaily75PercentAlert()
-            ApplyTransactionResult.Added(normalizedInput = normalizedInput)
+            ApplyTransactionResult.Added(
+                normalizedInput = normalizedInput,
+                transactionId = transactionId,
+            )
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

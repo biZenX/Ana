@@ -53,6 +53,7 @@ class BudgetTransactionHandlerTest {
 
         coEvery { budgetRepository.getTransactionById(template.id) } returns template
         coEvery { budgetRepository.findOrCreateCategory(any()) } returns Category(id = 1L, name = "Netflix")
+        coEvery { budgetRepository.addTransaction(any()) } returns 1L
     }
 
     @Test

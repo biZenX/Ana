@@ -1,3 +1,2 @@
-- تعريب واكتمال الواجهة الإنجليزية بالكامل ومنع ظهور أي نصوص عربية عند اختيار الإنجليزية.
-- ضبط أسماء خيارات الخطوط في الواجهة الإنجليزية لتظهر بالأسماء اللاتينية القياسية (Condensed, Expressive, System).
-- تحسينات عامة في ثبات المظهر والتنسيق.
+- improve: Live Typography Preview: Test styles instantly inside appearance settings.
+- fix: Persistent Style Settings: Keep your chosen layout across all menus.

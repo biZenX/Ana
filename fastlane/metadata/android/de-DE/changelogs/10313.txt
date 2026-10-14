@@ -1,0 +1,2 @@
+- improve: Faster Guided Steps: Tap highlighted areas to advance instantly.
+- improve: Visible Budget Ring: Keep balance ring clear during tutorials.

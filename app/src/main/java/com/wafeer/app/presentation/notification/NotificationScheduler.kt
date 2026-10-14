@@ -92,22 +92,12 @@ class NotificationScheduler @Inject constructor(
         val triggerTime = targetTime.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
         logcat { "Scheduling daily 75% financial check for $targetTime ($triggerTime)" }
 
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms() -> {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-            }
-            else -> {
-                alarmManager.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-            }
-        }
+        scheduleAlarmSafely(
+            alarmManager = alarmManager,
+            triggerMillis = triggerTime,
+            pendingIntent = pendingIntent,
+            tag = "Daily 75% check"
+        )
     }
 
     fun cancelDaily75PercentAlert() {
@@ -142,34 +132,12 @@ class NotificationScheduler @Inject constructor(
             "Scheduling midnight period check: triggerDateTime=$midnight triggerMillis=$triggerTime"
         }
 
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms() -> {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-                logcat { "Midnight period check scheduled for $midnight" }
-            }
-
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.S -> {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-                logcat { "Midnight period check scheduled for $midnight" }
-            }
-
-            else -> {
-                logcat { "Exact alarms not allowed, falling back to inexact alarm for midnight" }
-                alarmManager.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-            }
-        }
+        scheduleAlarmSafely(
+            alarmManager = alarmManager,
+            triggerMillis = triggerTime,
+            pendingIntent = pendingIntent,
+            tag = "Midnight period check"
+        )
     }
 
     private fun checkAndReschedulePeriodEndNotification() {
@@ -220,46 +188,18 @@ class NotificationScheduler @Inject constructor(
 
         alarmManager.cancel(pendingIntent)
 
-        when {
-            currentDate.isAfter(periodEndDate) || !triggerDateTime.isAfter(now) -> {
-                logcat {
-                    "Scheduling period end notification: triggerDateTime=$triggerDateTime triggerMillis=$triggerMillis mode=immediate_broadcast periodEndDate=$periodEndDate currentDate=$currentDate"
-                }
-                context.sendBroadcast(alarmIntent)
+        if (currentDate.isAfter(periodEndDate) || !triggerDateTime.isAfter(now)) {
+            logcat {
+                "Scheduling period end notification: triggerDateTime=$triggerDateTime triggerMillis=$triggerMillis mode=immediate_broadcast periodEndDate=$periodEndDate currentDate=$currentDate"
             }
-
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms() -> {
-                logcat {
-                    "Scheduling period end notification: triggerDateTime=$triggerDateTime triggerMillis=$triggerMillis mode=exact_allow_while_idle periodEndDate=$periodEndDate currentDate=$currentDate"
-                }
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerMillis,
-                    pendingIntent
-                )
-            }
-
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.S -> {
-                logcat {
-                    "Scheduling period end notification: triggerDateTime=$triggerDateTime triggerMillis=$triggerMillis mode=exact_allow_while_idle_pre_s periodEndDate=$periodEndDate currentDate=$currentDate"
-                }
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerMillis,
-                    pendingIntent
-                )
-            }
-
-            else -> {
-                logcat {
-                    "Scheduling period end notification: triggerDateTime=$triggerDateTime triggerMillis=$triggerMillis mode=inexact_allow_while_idle periodEndDate=$periodEndDate currentDate=$currentDate exactAlarmsAllowed=false"
-                }
-                alarmManager.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerMillis,
-                    pendingIntent
-                )
-            }
+            context.sendBroadcast(alarmIntent)
+        } else {
+            scheduleAlarmSafely(
+                alarmManager = alarmManager,
+                triggerMillis = triggerMillis,
+                pendingIntent = pendingIntent,
+                tag = "Period end notification"
+            )
         }
     }
 
@@ -566,5 +506,46 @@ class NotificationScheduler @Inject constructor(
     private suspend fun getRecurrentNotificationTime(): Pair<Int, Int> {
         val settings = settingsRepository.getSettings()
         return settings.recurrentNotificationHour to settings.recurrentNotificationMinute
+    }
+
+    private fun scheduleAlarmSafely(
+        alarmManager: AlarmManager,
+        triggerMillis: Long,
+        pendingIntent: PendingIntent,
+        tag: String = "Alarm",
+    ) {
+        val canScheduleExact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            try {
+                alarmManager.canScheduleExactAlarms()
+            } catch (e: Exception) {
+                false
+            }
+
+        if (canScheduleExact) {
+            try {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerMillis,
+                    pendingIntent
+                )
+                logcat { "$tag scheduled with setExactAndAllowWhileIdle" }
+                return
+            } catch (e: SecurityException) {
+                logcat { "SecurityException on setExactAndAllowWhileIdle for $tag, falling back to setAndAllowWhileIdle: ${e.message}" }
+            } catch (e: Exception) {
+                logcat { "Exception on setExactAndAllowWhileIdle for $tag: ${e.message}" }
+            }
+        }
+
+        try {
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerMillis,
+                pendingIntent
+            )
+            logcat { "$tag scheduled with setAndAllowWhileIdle (fallback)" }
+        } catch (e: Exception) {
+            logcat { "Failed to schedule alarm for $tag: ${e.message}" }
+        }
     }
 }

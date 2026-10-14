@@ -28,6 +28,8 @@ interface SettingsRepository {
 
     suspend fun getSettings(): UserSettings
 
+    fun getCachedSettings(): UserSettings? = null
+
     suspend fun setOnboardingCompleted(completed: Boolean)
 
     suspend fun setEarlyFinishActive(active: Boolean, actualDate: Long, originalEndDate: Long)
@@ -145,4 +147,16 @@ interface SettingsRepository {
     suspend fun setDemoModeActive(active: Boolean)
 
     suspend fun setDemoMissionCompleted(completed: Boolean)
+
+    fun observeString(key: String): Flow<String?>
+
+    suspend fun setNotificationScanEnabled(enabled: Boolean)
+
+    suspend fun setNotificationScanPackages(packages: Set<String>)
+
+    /**
+     * Adds [packageName] to the scanned apps, or removes it if it is already there, reading and
+     * writing the stored set in one atomic step so concurrent toggles cannot undo each other.
+     */
+    suspend fun toggleNotificationScanPackage(packageName: String)
 }

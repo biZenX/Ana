@@ -1,0 +1,2 @@
+- improve: Unified Digits Layout: Comfortable reading of charts and balances.
+- fix: Full Number Visibility: Ensure long figures fit nicely on all screens.

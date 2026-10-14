@@ -25,4 +25,6 @@ sealed class Screen(val route: String) {
     data object Appearance : Screen("appearance")
 
     data object FeatureLab : Screen("feature_lab")
+
+    data object NotificationScan : Screen("notification_scan")
 }

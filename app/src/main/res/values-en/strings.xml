@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">وفير</string>
+    <string name="app_name">Wafeer</string>
     <string name="tutorial_numpad_title">Numpad</string>
     <string name="tutorial_numpad_description">Enter the amount you spent and tap the green checkmark to save. Swipe up on the numpad to calculate.</string>
     <string name="tutorial_comment_title">Add a category</string>
@@ -25,15 +25,15 @@
     <string name="tutorial_sandbox_banner_desc">Freely test numpad, gestures, and sensor without saving real data.</string>
     <string name="tutorial_sandbox_resume_guide">Guide</string>
     <string name="tutorial_sandbox_finish">Finish &amp; Start App</string>
-    <string name="demo_banner_badge">Interactive Simulation Mode</string>
-    <string name="demo_banner_skip">Skip to Real Budget</string>
-    <string name="demo_mission_title">Quick Interactive Step</string>
-    <string name="demo_mission_desc">Suppose you just bought a coffee for 50 EGP; type 50 on the numpad and press the green checkmark to watch your budget update instantly.</string>
-    <string name="demo_success_title">Great job! 👏</string>
-    <string name="demo_success_desc">Notice how your balance deducted and the charts updated instantly! Feel free to explore analytics and when ready, tap below to start your real budget cleanly.</string>
-    <string name="demo_action_start_real">I\'m ready, start my real budget 🚀</string>
-    <string name="demo_action_keep_exploring">Keep exploring</string>
-    <string name="demo_minimized_badge">Simulation Mode Active (Sample Data)</string>
+    <string name="demo_banner_badge">Demo Mode</string>
+    <string name="demo_banner_skip">Skip Demo</string>
+    <string name="demo_mission_title">Quick Tryout</string>
+    <string name="demo_mission_desc">Try entering 5 (e.g. coffee) or 45 (e.g. groceries) and tap the checkmark to watch your balance update.</string>
+    <string name="demo_success_title">Expense logged and deducted</string>
+    <string name="demo_success_desc">The balance was deducted and transactions updated live. You can keep exploring or start your real budget now.</string>
+    <string name="demo_action_start_real">Start My Real Budget</string>
+    <string name="demo_action_keep_exploring">Keep Exploring</string>
+    <string name="demo_minimized_badge">Demo Mode (Sample Data)</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
@@ -270,9 +270,9 @@
     <string name="settings_exact_alarm_disabled_subtitle">Disabled; Android may delay the notification</string>
     <string name="settings_test_notification_title">Send test notification</string>
     <string name="settings_test_notification_subtitle">Tap to verify that alerts and sounds appear properly on your device</string>
-    <string name="notification_test_title">Test alert from Wafeer 🔔</string>
+    <string name="notification_test_title">Test alert from Wafeer</string>
     <string name="notification_test_message">Notifications are working properly! You will receive period end and recurring payment alerts on time.</string>
-    <string name="notification_test_sent_toast">Test notification sent successfully 🔔</string>
+    <string name="notification_test_sent_toast">Test notification sent successfully</string>
     <string name="notification_permission_needed_toast">Please allow notifications to receive alerts</string>
     <string name="settings_time_picker_cancel">Cancel</string>
     <string name="settings_time_picker_confirm">OK</string>
@@ -330,8 +330,8 @@
     <string name="settings_import_csv_subtitle">Import data from a CSV file</string>
     <string name="settings_reset_tutorial_title">Reset tutorial</string>
     <string name="settings_reset_tutorial_subtitle">You will see gesture hints, info, and actions across the app again.</string>
-    <string name="settings_simulation_demo_title">Start Simulation Demo Mode</string>
-    <string name="settings_simulation_demo_subtitle">Populate the app with sample transactions to test spending and analytics hands-on.</string>
+    <string name="settings_simulation_demo_title">Demo Mode</string>
+    <string name="settings_simulation_demo_subtitle">Populate the app with sample data to test spending and explore features.</string>
     <string name="settings_theme_dialog_title">App theme</string>
     <string name="settings_theme_light_title">Light</string>
     <string name="settings_theme_light_subtitle">Always use light theme</string>
@@ -408,7 +408,7 @@
     <string name="savings_recommendation_current_savings_format">Current savings: %1$s</string>
     <string name="savings_recommendation_recurrent_expenses_label">Recurring expenses</string>
     <string name="savings_recommendation_one_time_expenses_label">One-time expenses</string>
-    <string name="savings_recommendation_six_month_example_intro" formatted="false">If you save the 20% each period for about 6 months, you could build:</string>
+    <string name="savings_recommendation_six_month_example_intro" formatted="false">If you save %1$d%% each period for about 6 months, you could build:</string>
     <string name="savings_recommendation_goal_format" formatted="false">To reach %1$s in %2$d months, save %3$s per period.</string>
     <string name="savings_recommendation_goal_disabled" formatted="false">Showing the default %1$d%% example. Set a savings goal in Settings to target a specific amount.</string>
     <string name="settings_savings_preferences_title">Savings preferences</string>
@@ -565,7 +565,7 @@
     <string name="tutorial_end_tour">End Tour</string>
     <string name="tutorial_understood">Got it</string>
     <string name="financial_tip_8_title">The Discount Trap</string>
-    <string name="financial_tip_8_body" formatted="false">A 50% discount on an item you do not need is 100% waste of your money, not savings. Never buy just because it is on sale.</string>
+    <string name="financial_tip_8_body">A 50%% discount on an item you do not need is 100%% waste of your money, not savings. Never buy just because it is on sale.</string>
     <string name="financial_tip_9_title">The 24-Hour Rule</string>
     <string name="financial_tip_9_body">When tempted by an impulse buy, wait a full 24 hours. You will find that most spontaneous impulses fade away completely.</string>
     <string name="financial_tip_10_title">Subscription Audit</string>
@@ -701,6 +701,34 @@
     <string name="settings_feature_group_categories">Categories</string>
     <string name="settings_feature_group_transactions">Transactions</string>
     <string name="settings_feature_group_budget">Budget &amp; Payments</string>
+    <string name="settings_feature_group_notifications">Notifications</string>
+    <string name="settings_feature_group_experimental">Experimental</string>
+    <string name="settings_feature_experimental_label">Experimental</string>
+
+    <string name="settings_feature_notification_scan_title">Spend reminders from notifications</string>
+    <string name="settings_feature_notification_scan_description">Watches the notifications of the apps you pick and, when one looks like a charge, reminds you to log it in Wafeer.</string>
+    <string name="notification_scan_screen_title">Spend reminders</string>
+    <string name="notification_scan_header">Wafeer reads the notifications of the apps you pick, on your device only, and looks for an amount in your currency. Nothing is stored or sent anywhere until you save it yourself.</string>
+    <string name="notification_scan_access_title">Notification access</string>
+    <string name="notification_scan_access_missing">Android needs your permission before Wafeer can read notifications. You can revoke it at any time.</string>
+    <string name="notification_scan_access_button">Open notification access</string>
+    <string name="notification_scan_enable_title">Watch notifications</string>
+    <string name="notification_scan_enable_description">Turns the reminder on. Wafeer only looks at the apps selected below and ignores every other notification.</string>
+    <string name="notification_scan_apps_title">Apps to watch</string>
+    <string name="notification_scan_apps_empty">No app matches your search.</string>
+    <string name="notification_scan_apps_none_selected">Pick at least one app, like your bank, for the reminder to do anything.</string>
+    <string name="notification_scan_search_label">Search apps</string>
+    <string name="notification_scan_selected_count">%1$d selected</string>
+    <string name="notification_channel_spend_detected_name">Spend reminders</string>
+    <string name="notification_channel_spend_detected_description">Reminders to log a charge Wafeer spotted in another app\'s notification.</string>
+    <string name="notification_scan_detected_message">Seems like you just spent %1$s. Don\'t forget to log it.</string>
+    <string name="notification_scan_action_minus_it">Log it</string>
+    <string name="notification_scan_action_quick_save">Save as is</string>
+    <string name="notification_scan_action_undo">Undo</string>
+    <string name="notification_scan_saved_title">Saved to Wafeer</string>
+    <string name="notification_scan_saved_message">%1$s saved without a category.</string>
+    <string name="notification_scan_queued_message">%1$s saved for your next period.</string>
+    <string name="notification_scan_deny_words">refund,refunded,credited,deposit,deposited,balance,cashback,otp,one-time code,verification code,discount,promo</string>
     <string name="settings_feature_experimental">Experimental</string>
     <string name="settings_feature_state_on">Enabled</string>
     <string name="settings_feature_state_off">Disabled</string>
@@ -896,16 +924,16 @@
     <string name="survey_role_individual_desc">Personal pocket money, transit, study, and daily outings.</string>
     <string name="survey_varieties_title">Suggested Expense Varieties</string>
     <string name="survey_varieties_subtitle">Pick items you regularly buy to seed them as quick categories in Wafeer</string>
-    <string name="survey_category_dairy">Dairy &amp; Cheese</string>
-    <string name="survey_category_meat">Meat, Poultry &amp; Fish</string>
-    <string name="survey_category_legumes">Legumes &amp; Pantry</string>
-    <string name="survey_category_vegetables">Vegetables &amp; Cooking</string>
-    <string name="survey_category_fruits">Fresh Fruits</string>
-    <string name="survey_category_spices">Spices &amp; Herbs</string>
-    <string name="survey_category_cleaning">Cleaning &amp; Kitchen Supplies</string>
-    <string name="survey_category_transport">Transportation &amp; Gas</string>
-    <string name="survey_category_bills">Bills &amp; Utilities</string>
-    <string name="survey_category_personal">Pocket Money &amp; Daily Cash</string>
+    <string name="survey_category_dairy">Dairy</string>
+    <string name="survey_category_meat">Meat</string>
+    <string name="survey_category_legumes">Pantry</string>
+    <string name="survey_category_vegetables">Vegetables</string>
+    <string name="survey_category_fruits">Fruits</string>
+    <string name="survey_category_spices">Spices</string>
+    <string name="survey_category_cleaning">Cleaning</string>
+    <string name="survey_category_transport">Transit</string>
+    <string name="survey_category_bills">Bills</string>
+    <string name="survey_category_personal">Personal</string>
     <string name="survey_btn_continue">Continue</string>
     <string name="survey_btn_finish">Confirm &amp; Start</string>
     <string name="survey_step_counter">Step %1$d of %2$d</string>
@@ -915,5 +943,82 @@
     <string name="tutorial_hand_hint_apply">Tap the checkmark button to save this expense</string>
     <string name="tutorial_hand_hint_pill">Tap here to view your remaining daily budget</string>
     <string name="tutorial_hand_hint_analytics">Tap here to view analytics and charts</string>
-    <string name="tutorial_hand_hint_tap_here">Tap here 👇</string>
+    <string name="tutorial_hand_hint_tap_here">Tap here</string>
+
+    <!-- Smart Saving Tools -->
+    <string name="smart_tools_title">Smart Saving Tools</string>
+    <string name="smart_tools_subtitle">Practical tools for calmer financial choices</string>
+    <string name="smart_tools_close">Close</string>
+    <string name="smart_tab_affordability">Can I Afford It?</string>
+    <string name="smart_tab_micro_goals">Goal Jars</string>
+    <string name="smart_tab_wishlist_48h">48h Cooldown</string>
+    <string name="smart_tab_fun_fund">Guilt-Free Fund</string>
+
+    <string name="smart_calc_header">Check the immediate impact on your upcoming days before paying:</string>
+    <string name="smart_calc_price_label">Item Price (%1$s)</string>
+    <string name="smart_calc_price_placeholder">e.g. 25</string>
+    <string name="smart_calc_name_label">Item Name (optional)</string>
+    <string name="smart_calc_name_placeholder">e.g. Headphones, shoes, course</string>
+    <string name="smart_calc_verdict_safe">Safe to buy with peace of mind</string>
+    <string name="smart_calc_verdict_caution">Needs a tighter belt afterwards</string>
+    <string name="smart_calc_verdict_dangerous">Will break your budget!</string>
+    <string name="smart_calc_stat_days_cost">Cost in Days</string>
+    <string name="smart_calc_stat_daily_after">Daily Allowance After</string>
+    <string name="smart_calc_btn_wishlist">Delay 48 Hours</string>
+    <string name="smart_calc_btn_jar">Save in Jar</string>
+    <string name="smart_calc_default_wishlist_item">Item for %1$s %2$s</string>
+    <string name="smart_calc_default_jar_item">Purchase %1$s %2$s</string>
+
+    <string name="smart_goals_subtitle">Small goals achieved step-by-step</string>
+    <string name="smart_goals_btn_new">New Goal</string>
+    <string name="smart_goals_empty_title">No active goals yet</string>
+    <string name="smart_goals_empty_desc">Create a mini savings jar for headphones, shoes, a trip, and save towards it step-by-step!</string>
+    <string name="smart_goal_completed_badge">Goal completed successfully!</string>
+    <string name="smart_goal_progress_text">Saved %1$s of %2$s %3$s</string>
+    <string name="smart_goal_delete_desc">Delete</string>
+    <string name="smart_goal_pace_tip">Saving %1$s %2$s daily gets you there in %3$d days.</string>
+    <string name="smart_goal_btn_deposit">Deposit</string>
+
+    <string name="smart_wishlist_savings_header">Money saved by delaying impulse buys:</string>
+    <string name="smart_wishlist_subtitle">Items under cooldown</string>
+    <string name="smart_wishlist_btn_add">Add Wish</string>
+    <string name="smart_wishlist_empty_title">No pending wishes</string>
+    <string name="smart_wishlist_empty_desc">Whenever you feel like buying a non-essential item, put it on hold for 48 hours. If you still need it then, buy it—if not, enjoy the money saved!</string>
+    <string name="smart_wishlist_ready_prompt">Cooldown finished! Do you still really need it?</string>
+    <string name="smart_wishlist_remaining_prompt">%1$d hours and %2$d mins left to think</string>
+    <string name="smart_wishlist_btn_saved">Changed My Mind &amp; Saved!</string>
+    <string name="smart_wishlist_btn_bought">Bought It</string>
+    <string name="smart_wishlist_status_saved">Great choice! You kept %1$s %2$s in your pocket.</string>
+    <string name="smart_wishlist_status_purchased">Purchased after thoughtful consideration.</string>
+
+    <string name="smart_fun_fund_title">Protected Fun Philosophy:</string>
+    <string name="smart_fun_fund_desc">To avoid feeling restricted by budgeting, allocate a fixed portion for outings, coffee, and fun—spend it freely without guilt!</string>
+    <string name="smart_fun_fund_allocated_label">Allocated for fun this period:</string>
+    <string name="smart_fun_fund_allocated_tip">Spend it comfortably—it will not affect your core obligations.</string>
+    <string name="smart_fun_fund_slider_label">Choose your fun fund percentage:</string>
+
+    <string name="smart_dialog_create_goal_title">Create New Savings Jar</string>
+    <string name="smart_dialog_goal_name">Goal Name</string>
+    <string name="smart_dialog_goal_name_hint">e.g. AirPods, Shoes, Course</string>
+    <string name="smart_dialog_goal_target">Target Amount (%1$s)</string>
+    <string name="smart_dialog_goal_target_hint">e.g. 50</string>
+    <string name="smart_dialog_cancel">Cancel</string>
+    <string name="smart_dialog_create">Create Jar</string>
+    <string name="smart_dialog_deposit_title">Deposit to: %1$s</string>
+    <string name="smart_dialog_custom_amount">Or custom amount (%1$s)</string>
+    <string name="smart_dialog_deposit_now">Deposit Now</string>
+    <string name="smart_dialog_add_wishlist_title">Add Item to 48h Cooldown</string>
+    <string name="smart_dialog_item_name">Item Name</string>
+    <string name="smart_dialog_item_name_hint">e.g. Watch, Shoes, Jacket</string>
+    <string name="smart_dialog_approx_price">Approximate Price (%1$s)</string>
+    <string name="smart_dialog_approx_price_hint">e.g. 30</string>
+    <string name="smart_dialog_start_cooldown">Start 48h Cooldown</string>
+
+    <!-- About & Credits -->
+    <string name="about_app_title">Wafeer</string>
+    <string name="about_app_version">Version: v%1$s</string>
+    <string name="about_developer">Developer: Abdelrahman Karim</string>
+    <string name="about_credits_title">Open Source Credits</string>
+    <string name="about_credits_desc">Built upon the open-source architecture of Minus by Isaac Serrano (@isaacsa51) under the Apache License 2.0.</string>
+    <string name="about_credits_link">GitHub: isaacsa51/Minus</string>
 </resources>

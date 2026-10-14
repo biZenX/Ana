@@ -89,6 +89,7 @@ class SettingsViewModel @Inject constructor(
     private val censorManager: CensorManager,
     private val notificationHelper: com.wafeer.app.presentation.notification.NotificationHelper,
     private val appUpdateManager: com.wafeer.app.data.updater.AppUpdateManager,
+    private val themeManager: com.wafeer.app.presentation.ui.theme.ThemeManager,
 ) : ViewModel() {
 
     val updateDownloadState = appUpdateManager.downloadState
@@ -112,12 +113,22 @@ class SettingsViewModel @Inject constructor(
                     if (info != null) {
                         _pendingUpdate.value = info
                     } else {
-                        _updateCheckMessage.value = "وفير محدث إلى أحدث إصدار بالفعل (v${com.wafeer.app.BuildConfig.VERSION_NAME})"
+                        val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+                        _updateCheckMessage.value = if (isAr) {
+                            "وفير محدث إلى أحدث إصدار بالفعل (v${com.wafeer.app.BuildConfig.VERSION_NAME})"
+                        } else {
+                            "Wafeer is already up to date (v${com.wafeer.app.BuildConfig.VERSION_NAME})"
+                        }
                     }
                 },
                 onFailure = { error ->
                     _isCheckingUpdate.value = false
-                    _updateCheckMessage.value = error.message ?: "تعذر التحقق: تأكد من اتصال الإنترنت"
+                    val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+                    _updateCheckMessage.value = error.message ?: if (isAr) {
+                        "تعذر التحقق: تأكد من اتصال الإنترنت"
+                    } else {
+                        "Update check failed: Please check your internet connection"
+                    }
                 }
             )
         }
@@ -128,6 +139,10 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             appUpdateManager.downloadUpdate(info)
         }
+    }
+
+    fun openDownloadsFolder() {
+        appUpdateManager.openDownloadsFolder()
     }
 
     fun dismissUpdateDialog() {
@@ -200,6 +215,9 @@ class SettingsViewModel @Inject constructor(
 
     private val _effects = MutableStateFlow<SettingsUiEffect?>(null)
     val effects: StateFlow<SettingsUiEffect?> = _effects.asStateFlow()
+
+    private val _cacheSize = MutableStateFlow("")
+    val cacheSize: StateFlow<String> = _cacheSize.asStateFlow()
 
     private var csvTransferManager: CsvTransferManager? = null
     private var importLauncher: ActivityResultLauncher<Array<String>>? = null
@@ -309,13 +327,18 @@ class SettingsViewModel @Inject constructor(
 
     fun onLanguageChange(language: String) {
         viewModelScope.launch {
+            val currentSettings = settingsRepository.getCachedSettings()
+                ?: runCatching { settingsRepository.getSettings() }.getOrNull()
             settingsRepository.setLanguage(language)
-            val appLocale: LocaleListCompat = if (language == "system") {
-                LocaleListCompat.getEmptyLocaleList()
-            } else {
-                LocaleListCompat.forLanguageTags(language)
+            val isAr = language.startsWith("ar", ignoreCase = true) ||
+                (language == "system" && java.util.Locale.getDefault().language.startsWith("ar", ignoreCase = true))
+            runCatching {
+                budgetRepository.localizeDefaultCategoriesAndDemoData(
+                    isArabic = isAr,
+                    isDemoMode = currentSettings?.demoModeActive == true,
+                )
             }
-            AppCompatDelegate.setApplicationLocales(appLocale)
+            themeManager.applyLocale(language)
         }
     }
 
@@ -498,9 +521,6 @@ class SettingsViewModel @Inject constructor(
             settingsRepository.resetDismissedFinancialTips()
         }
     }
-
-    private val _cacheSize = MutableStateFlow("")
-    val cacheSize: StateFlow<String> = _cacheSize.asStateFlow()
 
     fun updateCacheSize() {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {

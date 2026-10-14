@@ -1,3 +1,3 @@
-- تحسين عرض نصوص التحديثات وتنسيق العناوين بسلاسة.
-- فحص تلقائي ذكي في الخلفية للتنبيه عند توفر إصدارات جديدة.
-- تحسينات عامة في أداء الويدجتس واستقرار التطبيق.
+- feat: New Update Alerts: Instant notification when an update is available.
+- improve: Clear Release Summary: Review update highlights easily before upgrading.
+- fix: Accurate Widget Balance: Keep your remaining budget precise all day.

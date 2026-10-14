@@ -1,6 +1,7 @@
 package com.wafeer.app.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.compose.setContent
@@ -43,10 +44,12 @@ import com.wafeer.app.domain.model.RemainingBudgetStrategy
 import com.wafeer.app.domain.model.ThemeMode
 import com.wafeer.app.domain.model.TypographyMode
 import com.wafeer.app.domain.time.MidnightTransitionManager
+import com.wafeer.app.domain.notification.PENDING_QUICK_ADD_AMOUNT_KEY_NAME
 import com.wafeer.app.navigation.AppNavGraph
 import com.wafeer.app.navigation.Screen
 import com.wafeer.app.presentation.notification.NotificationHelper
 import com.wafeer.app.presentation.notification.NotificationScheduler
+import com.wafeer.app.presentation.notification.scan.ExpenseScanActionReceiver
 import com.wafeer.app.presentation.permission.PermissionHandler
 import com.wafeer.app.presentation.ui.theme.WafeerTheme
 import com.wafeer.app.presentation.ui.theme.ThemeManager
@@ -138,6 +141,27 @@ class MainActivity : AppCompatActivity() {
         censorManager.stop()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleQuickAddIntent(intent)
+    }
+
+    private fun handleQuickAddIntent(intent: Intent?) {
+        if (intent?.action != ExpenseScanActionReceiver.ACTION_QUICK_ADD) return
+        val amount = intent.getStringExtra(ExpenseScanActionReceiver.EXTRA_AMOUNT)
+            ?.takeIf { it.isNotBlank() } ?: return
+        val notificationId = intent.getIntExtra(ExpenseScanActionReceiver.EXTRA_NOTIFICATION_ID, 0)
+        intent.removeExtra(ExpenseScanActionReceiver.EXTRA_AMOUNT)
+        if (notificationId != 0) {
+            notificationHelper.cancelSpendNotification(notificationId)
+        }
+        lifecycleScope.launch {
+            runCatching {
+                settingsRepository.setString(PENDING_QUICK_ADD_AMOUNT_KEY_NAME, amount)
+            }.onFailure { logcat { "Could not stage quick add amount: ${it.asLog()}" } }
+        }
+    }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setKeepOnScreenCondition {
@@ -147,9 +171,48 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        handleQuickAddIntent(intent)
+
+        val initialSettings = settingsRepository.getCachedSettings() ?: kotlinx.coroutines.runBlocking {
+            kotlinx.coroutines.withTimeoutOrNull(500L) {
+                runCatching { settingsRepository.getSettings() }.getOrNull()
+            }
+        }
+        if (initialSettings != null) {
+            onboardingComplete.value = initialSettings.onboardingCompleted
+            earlyFinishPending.value = initialSettings.earlyFinishActive
+            themeManager.applyUserSettings(applicationContext, initialSettings)
+            dataStoreLoaded.value = true
+            isReady.value = true
+            isDone.value = true
+        } else if (savedInstanceState != null) {
+            dataStoreLoaded.value = true
+            isReady.value = true
+            isDone.value = true
+        }
 
         lifecycleScope.launch {
-            try {
+            if (!dataStoreLoaded.value) {
+                try {
+                    val userSettings = settingsRepository.getSettings()
+                    onboardingComplete.value = userSettings.onboardingCompleted
+                    earlyFinishPending.value = userSettings.earlyFinishActive
+                    themeManager.applyUserSettings(applicationContext, userSettings)
+
+                    dataStoreLoaded.value = true
+                    isReady.value = true
+                    isDone.value = true
+                } catch (_: Exception) {
+                    logcat("MainActivity") { "Initial settings load failed" }
+                    dataStoreLoaded.value = true
+                    isReady.value = true
+                    isDone.value = true
+                }
+            }
+
+            notificationScheduler.initializeNotifications()
+
+            launch(kotlinx.coroutines.Dispatchers.IO) {
                 runCatching {
                     val nodeIds = wearableService.getReachableSenderNodeIds()
                     logcat {
@@ -158,21 +221,7 @@ class MainActivity : AppCompatActivity() {
                 }.onFailure {
                     logcat { it.asLog() }
                 }
-
-                val userSettings = settingsRepository.getSettings()
-                onboardingComplete.value = userSettings.onboardingCompleted
-                earlyFinishPending.value = userSettings.earlyFinishActive
-                themeManager.applyUserSettings(applicationContext, userSettings)
-
-                dataStoreLoaded.value = true
-                isDone.value = true
-            } catch (_: Exception) {
-                logcat("MainActivity") { "Initial settings load failed" }
-                dataStoreLoaded.value = true
-                isDone.value = true
             }
-
-            notificationScheduler.initializeNotifications()
 
             launch(kotlinx.coroutines.Dispatchers.IO) {
                 try {
@@ -201,7 +250,7 @@ class MainActivity : AppCompatActivity() {
             themeManager.applyUserSettings(applicationContext, settings)
         }.launchIn(lifecycleScope)
 
-        ProcessLifecycleOwner.get().lifecycle.addObserver(
+        lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onStart(owner: LifecycleOwner) {
                     lifecycleScope.launch {
@@ -222,7 +271,7 @@ class MainActivity : AppCompatActivity() {
 
             val windowInsets = WindowInsets.systemBars.asPaddingValues()
 
-            if (isReady.value && dataStoreLoaded.value) {
+            if (dataStoreLoaded.value) {
                 val context = androidx.compose.ui.platform.LocalContext.current
                 val dynamicColor = context.dynamicColorEnabled
                 val isCensored by censorManager.isCensored.collectAsStateWithLifecycle()
@@ -265,20 +314,25 @@ class MainActivity : AppCompatActivity() {
                             val currentUpdateInfo by autoUpdateInfo
                             val downloadState by appUpdateManager.downloadState.collectAsStateWithLifecycle()
 
-                            currentUpdateInfo?.let { info ->
-                                com.wafeer.app.presentation.ui.updater.UpdatePromptDialog(
-                                    updateInfo = info,
-                                    downloadState = downloadState,
-                                    onStartDownload = {
-                                        lifecycleScope.launch {
-                                            appUpdateManager.downloadUpdate(info)
-                                        }
-                                    },
-                                    onDismiss = {
-                                        autoUpdateInfo.value = null
-                                        appUpdateManager.resetState()
-                                    },
-                                )
+                            if (onboardingComplete.value) {
+                                currentUpdateInfo?.let { info ->
+                                    com.wafeer.app.presentation.ui.updater.UpdatePromptDialog(
+                                        updateInfo = info,
+                                        downloadState = downloadState,
+                                        onStartDownload = {
+                                            lifecycleScope.launch {
+                                                appUpdateManager.downloadUpdate(info)
+                                            }
+                                        },
+                                        onOpenDownloads = {
+                                            appUpdateManager.openDownloadsFolder()
+                                        },
+                                        onDismiss = {
+                                            autoUpdateInfo.value = null
+                                            appUpdateManager.resetState()
+                                        },
+                                    )
+                                }
                             }
                         }
                     }

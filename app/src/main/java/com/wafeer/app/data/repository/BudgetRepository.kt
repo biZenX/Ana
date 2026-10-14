@@ -19,7 +19,8 @@ interface BudgetRepository {
 
     fun getTransactionsForPeriod(start: LocalDate, end: LocalDate): Flow<List<Transaction>>
 
-    suspend fun addTransaction(transaction: Transaction)
+    /** Inserts [transaction] and returns the id the row was given. */
+    suspend fun addTransaction(transaction: Transaction): Long
 
     suspend fun addQueuedTransaction(transaction: Transaction)
 
@@ -94,7 +95,12 @@ interface BudgetRepository {
     suspend fun deleteDemoTransactions()
 
     suspend fun seedDemoData(
-        currencyCode: String = "EGP",
-        sampleBudget: BigDecimal = BigDecimal("5000.00"),
+        currencyCode: String = "USD",
+        sampleBudget: BigDecimal = BigDecimal("900.00"),
     )
+
+    suspend fun localizeDefaultCategoriesAndDemoData(
+        isArabic: Boolean,
+        isDemoMode: Boolean = false,
+    ) {}
 }

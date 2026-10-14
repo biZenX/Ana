@@ -1,0 +1,3 @@
+- improve: Easier Notification Setup: Direct shortcut to enable alerts in system settings.
+- improve: Clearer Number Format: Comfortable reading of balances across all screens.
+- fix: Punctual Daily Reminders: Reliable budget alerts across various device models.

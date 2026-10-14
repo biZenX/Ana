@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -30,6 +31,8 @@ import com.wafeer.app.presentation.ui.settings.SettingsViewModel
 import com.wafeer.app.presentation.ui.settings.appearance.AppearanceOptionsScreen
 import com.wafeer.app.presentation.ui.settings.bugreport.BugReportScreen
 import com.wafeer.app.presentation.ui.settings.features.FeatureLabScreen
+import com.wafeer.app.presentation.ui.settings.features.NotificationScanScreen
+import com.wafeer.app.presentation.ui.settings.features.NotificationScanViewModel
 import com.wafeer.app.presentation.ui.subscriptions.SubscriptionsScreen
 import logcat.logcat
 
@@ -183,6 +186,30 @@ fun AppNavGraph(
                 onExtraNoteToggle = viewModel::onExtraNoteToggle,
                 onReserveUpcomingChargesToggle = viewModel::onReserveUpcomingChargesToggle,
                 onNewCategoryTagToggle = viewModel::onNewCategoryTagToggle,
+                onNavigateToNotificationScan = {
+                    navController.navigate(Screen.NotificationScan.route)
+                },
+                onBack = { navController.popBackStack() },
+            )
+        }
+
+        composable(Screen.NotificationScan.route) {
+            val viewModel: NotificationScanViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+            LaunchedEffect(lifecycleOwner) {
+                lifecycleOwner.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.RESUMED) {
+                    viewModel.refreshAccess()
+                }
+            }
+
+            NotificationScanScreen(
+                state = uiState,
+                onEnabledToggle = viewModel::onEnabledToggle,
+                onAppToggle = viewModel::onAppToggle,
+                onQueryChange = viewModel::onQueryChange,
+                onOpenAccessSettings = viewModel::openAccessSettings,
                 onBack = { navController.popBackStack() },
             )
         }

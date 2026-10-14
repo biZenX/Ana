@@ -1,0 +1,3 @@
+- improve: Faster Screen Loading: Instant navigation with reduced memory usage.
+- improve: Clear Financial Cards: Simplified summaries for daily and total budget.
+- fix: Exact Daily Math: Proper rollover calculations on custom active days.

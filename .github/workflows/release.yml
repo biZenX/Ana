@@ -47,13 +47,13 @@ jobs:
             echo "Using repository release keystore from secrets."
             echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
             STORE_PASS="$RELEASE_STORE_PASSWORD"
-            KEY_ALIAS="$RELEASE_KEY_ALIAS"
-            KEY_PASS="$RELEASE_KEY_PASSWORD"
+            KEY_ALIAS="${RELEASE_KEY_ALIAS:-wafeer}"
+            KEY_PASS="${RELEASE_KEY_PASSWORD:-$RELEASE_STORE_PASSWORD}"
           else
-            echo "No keystore secrets found in repository. Generating release keystore."
-            STORE_PASS="wafeer_release_pwd"
+            echo "No keystore secrets found. Generating ephemeral release keystore."
+            STORE_PASS=$(openssl rand -base64 16)
             KEY_ALIAS="wafeer"
-            KEY_PASS="wafeer_release_pwd"
+            KEY_PASS="$STORE_PASS"
             keytool -genkeypair -v \
               -keystore release-keystore.jks \
               -alias "$KEY_ALIAS" \
@@ -98,20 +98,71 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
-          TITLE: "وفير ${{ github.ref_name }}"
+          TITLE: "Wafeer ${{ github.ref_name }}"
           CHANGELOG_PATH: ${{ steps.version.outputs.changelog_path }}
         run: |
           shopt -s nullglob
           APKS=(app/build/outputs/apk/foss/release/*.apk app/build/outputs/apk/wear/release/*.apk wear/build/outputs/apk/release/*.apk)
           echo "Found APKs: ${APKS[*]}"
           
+          format_changelog_to_markdown() {
+            local src_file="$1"
+            local ver_tag="$2"
+            local out_file="$3"
+            python3 - "$src_file" "$ver_tag" "$out_file" << 'PYEOF'
+          import sys, re
+
+          src_file, ver_tag, out_file = sys.argv[1], sys.argv[2], sys.argv[3]
+          features, improvements, fixes = [], [], []
+
+          with open(src_file, "r", encoding="utf-8") as f:
+              for raw in f:
+                  line = raw.strip()
+                  if not line.startswith("- ") and not line.startswith("* "):
+                      continue
+                  content = line[2:].strip()
+                  lower = content.lower()
+                  if lower.startswith("feat:"):
+                      features.append(content[5:].strip())
+                  elif lower.startswith("improve:"):
+                      improvements.append(content[8:].strip())
+                  elif lower.startswith("fix:"):
+                      fixes.append(content[4:].strip())
+                  else:
+                      improvements.append(content)
+
+          def fmt_bullet(text):
+              if ":" in text and not text.startswith("**"):
+                  head, rest = text.split(":", 1)
+                  return f"- **{head.strip()}:** {rest.strip()}"
+              return f"- {text}"
+
+          lines = [f"# Wafeer {ver_tag}", ""]
+          if features:
+              lines.append("### Major Features")
+              lines.extend(fmt_bullet(x) for x in features)
+              lines.append("")
+          if improvements:
+              lines.append("### Improvements")
+              lines.extend(fmt_bullet(x) for x in improvements)
+              lines.append("")
+          if fixes:
+              lines.append("### Fixes")
+              lines.extend(fmt_bullet(x) for x in fixes)
+              lines.append("")
+
+          with open(out_file, "w", encoding="utf-8") as out:
+              out.write("\n".join(lines).strip() + "\n")
+          PYEOF
+          }
+
           NOTES_FILE="release_notes.md"
-          echo "## الجديد في هذا الإصدار:" > "$NOTES_FILE"
-          echo "" >> "$NOTES_FILE"
-          if [ -n "$CHANGELOG_PATH" ] && [ -f "$CHANGELOG_PATH" ]; then
-            cat "$CHANGELOG_PATH" >> "$NOTES_FILE"
+          if [ -f "RELEASE_NOTES.md" ]; then
+            cp "RELEASE_NOTES.md" "$NOTES_FILE"
+          elif [ -n "$CHANGELOG_PATH" ] && [ -f "$CHANGELOG_PATH" ]; then
+            format_changelog_to_markdown "$CHANGELOG_PATH" "$TAG" "$NOTES_FILE"
           else
-            echo "- تحسينات عامة على واجهة وتجربة المستخدم وضبط استقرار التطبيق." >> "$NOTES_FILE"
+            printf "# Wafeer %s\n\n### Improvements\n- Navigate faster and enjoy a smoother, more reliable experience across all screens.\n" "$TAG" > "$NOTES_FILE"
           fi
           
           if gh release view "$TAG" >/dev/null 2>&1; then
@@ -122,3 +173,20 @@ jobs:
             echo "Creating new release $TAG..."
             gh release create "$TAG" "${APKS[@]}" --title "$TITLE" --notes-file "$NOTES_FILE"
           fi
+
+          # Sync all previous GitHub Releases to clean English titles and structured user-focused notes
+          for cl_file in fastlane/metadata/android/en-US/changelogs/*.txt; do
+            fname=$(basename "$cl_file" .txt)
+            if [[ "$fname" =~ ^[0-9]+$ ]]; then
+              major=$(( fname / 10000 ))
+              minor=$(( (fname % 10000) / 100 ))
+              patch=$(( fname % 100 ))
+              old_tag="v${major}.${minor}.${patch}"
+              if [ "$old_tag" != "$TAG" ] && gh release view "$old_tag" >/dev/null 2>&1; then
+                tmp_notes="notes_${fname}.md"
+                format_changelog_to_markdown "$cl_file" "$old_tag" "$tmp_notes"
+                gh release edit "$old_tag" --title "Wafeer ${old_tag}" --notes-file "$tmp_notes" || true
+                rm -f "$tmp_notes"
+              fi
+            fi
+          done

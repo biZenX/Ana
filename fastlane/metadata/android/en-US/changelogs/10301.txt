@@ -1,4 +1,3 @@
-- fix: تصحيح رسم حرف الكاف وإزالة التبديل الزخرفي ليعود بشكله العربي الأصيل والواضح
-- improve: ضبط منظومة خطوط ثمانية بالكامل (ثمانية ديسبلاي للعناوين، وثمانية سانز لواجهات وعناصر التطبيق)
-- fix: إعادة هندسة نظام الإشعارات والتنبيهات المتميزة لتعمل باستقرار تام وفوري على جميع الأجهزة
-- improve: توجيه ذكي مباشر لإعدادات إشعارات النظام عند الحاجة لضمان استلام التنبيهات
+- improve: Easier Notification Setup: Direct shortcut to enable alerts in system settings.
+- improve: Clearer Number Format: Comfortable reading of balances across all screens.
+- fix: Punctual Daily Reminders: Reliable budget alerts across various device models.

@@ -46,6 +46,8 @@ data class UserSettings(
     val dismissedFinancialTipIds: Set<Int> = emptySet(),
     val demoModeActive: Boolean = false,
     val demoMissionCompleted: Boolean = false,
+    val notificationScanEnabled: Boolean = false,
+    val notificationScanPackages: Set<String> = emptySet(),
 ) {
     companion object {
         const val DEFAULT_NOTIFICATION_HOUR = 9

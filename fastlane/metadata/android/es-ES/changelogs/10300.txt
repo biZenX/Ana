@@ -1,5 +1,3 @@
-- feat: Sistema de actualización automática dentro de la app para actualizar con un toque
-- feat: Notificaciones interactivas y enriquecidas con diseño moderno y botones rápidos
-- improve: Identidad tipográfica restaurada con fuente Thmanyah para títulos y números
-- improve: Opción de probar y verificar notificaciones directamente desde ajustes
-- fix: Ajuste de recordatorios de presupuesto y estabilidad de widgets en pantalla de inicio
+- feat: Direct In-App Updates: Download and install new versions easily from settings.
+- improve: Quick Notification Actions: Log expenses directly from your notifications.
+- fix: Stable Home Widgets: Accurate reminders and reliable widget balance updates.

@@ -1,3 +1,3 @@
-- إصلاح لوجيك النصائح المالية التوجيهية وتصحيح شروط التحفيز لتجنب التنبيهات المزعجة أثناء الصرف الطبيعي
-- حفظ استبعاد وإلغاء النصائح بشكل دائم في إعدادات التطبيق لعدم تكرار ظهور النصيحة بعد إغلاقها
-- إضافة خيار في الإعدادات للتحكم بالنصائح المالية وإعادة تعيين النصائح المستبعدة عند الرغبة
+- improve: Custom Financial Tips: Toggle smart tips on or off anytime.
+- improve: Permanent Tip Dismissal: Closed tips never repeat unnecessarily.
+- fix: Distraction-Free Experience: Enjoy your budget without unexpected popups.

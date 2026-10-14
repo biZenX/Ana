@@ -1,0 +1,3 @@
+- feat: Safe Practice Mode: Explore gestures and input without touching your money.
+- feat: Sensor Test Tool: Check palm coverage response instantly on your phone.
+- improve: Haptic Privacy Feedback: Gentle vibration confirming numbers are hidden.

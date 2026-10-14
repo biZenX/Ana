@@ -165,6 +165,7 @@ fun Editor(
     onOpenHistory: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenAnalytics: () -> Unit = {},
+    onOpenSmartTools: () -> Unit = {},
     onOpenWallet: () -> Unit = {},
     onUnresolvedSurplusBannerClick: () -> Unit = {},
     onPendingLeftoverClick: () -> Unit = {},
@@ -577,6 +578,21 @@ fun Editor(
                     }
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                onOpenSmartTools()
+                                view.weakHapticFeedback()
+                            },
+                            modifier = Modifier.size(48.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Savings,
+                                contentDescription = stringResource(R.string.smart_tools_title),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(26.dp),
+                            )
+                        }
+
                         if (showAnalyticsButton) {
                             IconButton(
                                 onClick = {
@@ -768,7 +784,12 @@ private fun EditingContent(
 
     val effectiveTags = remember(isWalletIncomeEnabled, tags) {
         if (isWalletIncomeEnabled) {
-            val incomeTags = listOf("هدية", "رد دين", "مكافأة", "شغل إضافي")
+            val isAr = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
+            val incomeTags = if (isAr) {
+                listOf("هدية", "رد دين", "مكافأة", "شغل إضافي")
+            } else {
+                listOf("Gift", "Debt Returned", "Bonus", "Side Gig")
+            }
             (incomeTags + tags).distinct()
         } else {
             tags

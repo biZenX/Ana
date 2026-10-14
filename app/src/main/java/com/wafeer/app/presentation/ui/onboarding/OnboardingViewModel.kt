@@ -26,6 +26,7 @@ private const val TAG = "Onboarding"
 class OnboardingViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val budgetRepository: BudgetRepository,
+    private val themeManager: com.wafeer.app.presentation.ui.theme.ThemeManager,
 ) : ViewModel() {
 
     private val _localState = MutableStateFlow(OnboardingLocalState())
@@ -78,13 +79,14 @@ class OnboardingViewModel @Inject constructor(
                     )
                 }
 
+                val isArabic = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
                 val sampleBudget = when (intent.budgetType) {
-                    SurveyBudgetType.ALLOWANCE -> java.math.BigDecimal("1200.00")
-                    SurveyBudgetType.SALARY, SurveyBudgetType.HOUSEHOLD -> java.math.BigDecimal("5000.00")
+                    SurveyBudgetType.ALLOWANCE -> if (isArabic) java.math.BigDecimal("1200.00") else java.math.BigDecimal("300.00")
+                    SurveyBudgetType.SALARY, SurveyBudgetType.HOUSEHOLD -> if (isArabic) java.math.BigDecimal("5000.00") else java.math.BigDecimal("1200.00")
                 }
 
-                val currentTotal = existing?.totalBudget ?: sampleBudget
-                val currency = existing?.currencyCode ?: "EGP"
+                val defaultCurrency = if (isArabic) "EGP" else "USD"
+                val currency = defaultCurrency
 
                 val updatedSettings = (existing ?: com.wafeer.app.domain.model.BudgetSettings(
                     totalBudget = sampleBudget,
@@ -95,6 +97,7 @@ class OnboardingViewModel @Inject constructor(
                     totalBudget = sampleBudget,
                     period = period,
                     splitMode = splitMode,
+                    currencyCode = currency,
                 )
 
                 budgetRepository.saveBudgetSettings(updatedSettings)
@@ -121,20 +124,12 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 settingsRepository.setLanguage(language)
-                val appLocale: androidx.core.os.LocaleListCompat = if (language == "system") {
-                    androidx.core.os.LocaleListCompat.getEmptyLocaleList()
-                } else {
-                    androidx.core.os.LocaleListCompat.forLanguageTags(language)
+                val isAr = language.startsWith("ar", ignoreCase = true) ||
+                    (language == "system" && Locale.getDefault().language.startsWith("ar", ignoreCase = true))
+                runCatching {
+                    budgetRepository.localizeDefaultCategoriesAndDemoData(isArabic = isAr, isDemoMode = false)
                 }
-                androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(appLocale)
-
-                val isAr = language.startsWith("ar") || (language == "system" && Locale.getDefault().language == "ar")
-                if (isAr) {
-                    val currentSettings = budgetRepository.getBudgetSettingsSync()
-                    if (currentSettings != null && currentSettings.currencyCode == "USD") {
-                        budgetRepository.saveBudgetSettings(currentSettings.copy(currencyCode = "EGP"))
-                    }
-                }
+                themeManager.applyLocale(language)
             } catch (e: Exception) {
                 logcat(TAG) { "setLanguage failed: ${e.message}" }
             }

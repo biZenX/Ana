@@ -16,6 +16,20 @@ The Application collects minimal information necessary when you download and use
 
 ---
 
+### الوصول إلى الإشعارات (اختياري) / Notification Access (Optional)
+
+يوفر تطبيق وفير ميزة اختيارية (معطلة افتراضياً) لتذكيرك بتسجيل المصروف عند وصول إشعار دفع من تطبيقات تختارها (مثل البنوك والمحافظ):
+* يقرأ التطبيق نصوص إشعارات التطبيقات التي تحددها فقط، ويتجاهل أي إشعارات أخرى تماماً.
+* تتم المعالجة بالكامل محلياً على جهازك؛ لا يتم إرسال أو تخزين أو رفع نصوص الإشعارات إلى أي خادم خارجي.
+* يمكنك إلغاء الإذن في أي وقت من إعدادات النظام أو تعطيل الميزة داخل التطبيق.
+
+Wafeer offers an optional feature (off by default) that reminds you to log a charge when a payment notification arrives from apps you choose (such as banks or digital wallets):
+* The app reads notification text only from the apps you select, ignoring all other notifications.
+* All processing happens strictly on your device; notification text is never stored, uploaded, or transmitted to any external server.
+* You can revoke notification access at any time in system settings or disable the feature in the app.
+
+---
+
 ### حقوقك / Your Rights
 
 يحق لك في أي وقت مراجعة بياناتك، تصحيحها، أو طلب حذف أي بيانات. لممارسة أي من هذه الحقوق، يمكنك التواصل مع مقدم الخدمة عبر البريد الإلكتروني:

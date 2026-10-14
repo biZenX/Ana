@@ -1,0 +1,3 @@
+- improve: Storage Cleanup: Remove old update files to save device space.
+- improve: Smoother History Browsing: Faster navigation across transactions and logs.
+- fix: Accurate Rollover Balance: Correct allowance calculation on active days.

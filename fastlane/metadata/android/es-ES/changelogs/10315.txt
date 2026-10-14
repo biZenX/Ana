@@ -1,0 +1,2 @@
+- improve: Hands-On Privacy Mode: Test blurring sensitive numbers during setup.
+- fix: Consistent Setup Layout: Header steps display properly on all screen sizes.

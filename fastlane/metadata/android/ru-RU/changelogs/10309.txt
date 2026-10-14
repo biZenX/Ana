@@ -1,0 +1,2 @@
+- improve: Number Styling Options: Simple settings to customize text and digits.
+- fix: Standard Calculator Keypad: Familiar numeric layout for quicker input.

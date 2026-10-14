@@ -1,5 +1,3 @@
-- تحسينات عامة على واجهة وتجربة المستخدم لتكون أكثر سلاسة ووضوحاً.
-- تحسين إدارة الذاكرة المؤقتة لتقليل استهلاك المساحة وزيادة كفاءة التطبيق.
-- ضبط حسابات الميزانية للأيام المحددة وترحيل الفائض بدقة للأيام التالية.
-- تعزيز تناسق الخطوط وعرض النصوص والأرقام.
-- تحسينات عامة في استقرار التطبيق وسرعة الاستجابة.
+- improve: Smoother Transaction Logs: Browse spending comfortably with less storage.
+- improve: Clearer Spend Summaries: Easy-to-read numbers across all budget cards.
+- fix: Precise Rollover Allowance: Accurate balance handoff on scheduled active days.

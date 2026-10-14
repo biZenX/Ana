@@ -134,19 +134,20 @@ internal fun OnboardingScreenContent(
         mutableStateOf(SurveyRole.HEAD_OF_HOUSEHOLD)
     }
 
-    AnimatedContent(
+    androidx.compose.animation.Crossfade(
         targetState = currentStep,
-        transitionSpec = {
-            (slideInHorizontally { it } + fadeIn()).togetherWith(slideOutHorizontally { -it } + fadeOut())
-        },
+        animationSpec = tween(300),
         label = "onboardingStepTransition",
     ) { step ->
         when (step) {
             OnboardingStep.LANGUAGE -> {
                 LanguageStep(
-                    onLanguageConfirmed = { lang ->
+                    onLanguagePreviewSelected = { lang ->
                         onLanguageSelected(lang)
+                    },
+                    onLanguageConfirmed = { lang ->
                         currentStep = OnboardingStep.WELCOME
+                        onLanguageSelected(lang)
                     }
                 )
             }
@@ -461,6 +462,7 @@ private data class LanguageOption(
 
 @Composable
 private fun LanguageStep(
+    onLanguagePreviewSelected: (String) -> Unit = {},
     onLanguageConfirmed: (String) -> Unit,
 ) {
     val localBottomSheetScrollState = LocalBottomSheetScrollState.current
@@ -472,10 +474,21 @@ private fun LanguageStep(
     val localDensity = LocalDensity.current
     var pageSize by remember { mutableStateOf(Size(0.dp, 0.dp)) }
 
-    var selectedLanguage by androidx.compose.runtime.saveable.rememberSaveable {
-        mutableStateOf("ar-EG")
+    val initialLang = remember {
+        val tags = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags()
+        when {
+            tags.startsWith("en", ignoreCase = true) -> "en"
+            tags.equals("ar", ignoreCase = true) -> "ar"
+            tags.startsWith("ar", ignoreCase = true) -> "ar-EG"
+            else -> "ar-EG"
+        }
     }
 
+    var selectedLanguage by androidx.compose.runtime.saveable.rememberSaveable {
+        mutableStateOf(initialLang)
+    }
+
+    val isEnSelected = selectedLanguage == "en"
     val options = listOf(
         LanguageOption(
             code = "ar-EG",
@@ -498,8 +511,8 @@ private fun LanguageStep(
         LanguageOption(
             code = "system",
             flag = "⚙️",
-            title = "لغة الجهاز",
-            description = "المطابقة التلقائية للغة إعدادات هاتفك",
+            title = if (isEnSelected) "Device Language" else "لغة الجهاز",
+            description = if (isEnSelected) "Automatically match your phone's language settings" else "المطابقة التلقائية للغة إعدادات هاتفك",
         ),
     )
 
@@ -568,7 +581,10 @@ private fun LanguageStep(
                                 .fillMaxWidth()
                                 .padding(vertical = 6.dp)
                                 .clip(MaterialTheme.shapes.large)
-                                .clickable { selectedLanguage = opt.code },
+                                .clickable {
+                                    selectedLanguage = opt.code
+                                    onLanguagePreviewSelected(opt.code)
+                                },
                             shape = MaterialTheme.shapes.large,
                             color = if (isSelected) {
                                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)

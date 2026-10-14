@@ -37,6 +37,7 @@ class OnboardingViewModelTest {
     private fun newViewModel() = OnboardingViewModel(
         settingsRepository = settingsRepository,
         budgetRepository = budgetRepository,
+        themeManager = mockk(relaxed = true),
     )
 
     private suspend fun <T> ReceiveTurbine<T>.awaitCondition(predicate: (T) -> Boolean): T {

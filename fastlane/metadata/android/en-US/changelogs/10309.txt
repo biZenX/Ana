@@ -1,4 +1,2 @@
-- تبسيط أسماء خيارات الخطوط لتكون مباشرة ومحددة (ثمانية، بلكس، النظام).
-- إصلاح اتجاه لوحة الأرقام (Numpad) في الواجهة العربية لتطابق الترتيب الحسابي القياسي.
-- تحسين شاشة اختيار اللغة وتنسيق النصوص.
-- تحسينات عامة في الأداء وسرعة الاستجابة واستقرار التطبيق.
+- improve: Number Styling Options: Simple settings to customize text and digits.
+- fix: Standard Calculator Keypad: Familiar numeric layout for quicker input.

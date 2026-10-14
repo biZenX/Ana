@@ -3,6 +3,7 @@ name: Build App for PR
 on:
   pull_request:
     branches:
+      - main
       - master
   workflow_dispatch:
 
@@ -38,7 +39,7 @@ jobs:
         run: ./gradlew detekt
 
       - name: Compile App
-        run: ./gradlew :app:compileFossDebugKotlin :app:compileWearDebugKotlin :wear:compileDebugKotlin :sync-contract:compileKotlin
+        run: ./gradlew :app:compileFossDebugKotlin :wear:compileDebugKotlin :sync-contract:compileKotlin
 
       - name: Verify screenshots
         run: ./gradlew :app:verifyPaparazziFossDebug

@@ -68,8 +68,11 @@ internal fun ChangelogHistoryContent(
         return
     }
 
-    val sortedReleases = remember(releases) {
-        releases.sortedByDescending { it.versionCode }
+    val langCode = com.wafeer.app.presentation.util.LocaleHelper.currentLanguageCode()
+    val sortedReleases = remember(releases, langCode) {
+        releases
+            .map { com.wafeer.app.data.repository.ChangelogRepository.localizeReleaseForLanguage(it, langCode) }
+            .sortedByDescending { it.versionCode }
     }
 
     LazyColumn(
@@ -142,7 +145,11 @@ private fun ChangelogReleaseMeta(release: VersionRelease) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "وفير v${release.versionName}",
+            text = if (com.wafeer.app.presentation.util.LocaleHelper.isArabic()) {
+                "وفير v${release.versionName}"
+            } else {
+                "Wafeer v${release.versionName}"
+            },
             style = MaterialTheme.typography.titleMediumEmphasized.copy(
                 fontWeight = FontWeight.Bold,
             ),

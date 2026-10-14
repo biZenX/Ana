@@ -1,5 +1,3 @@
-- feat: نظام التحديث التلقائي الذكي من داخل وفير للترقية لأحدث الإصدارات بلمسة واحدة
-- feat: إشعارات وفير التفاعلية المتميزة بتصميم عصري وأزرار سريعة ومتابعة نشاط اليوم
-- improve: استعادة الهوية الطباعية الراقية بخط ثمانية للعناوين والأرقام المنسقة
-- improve: إمكانية فحص وتجربة الإشعارات مباشرة من شاشة الإعدادات
-- fix: ضبط مواعيد تنبيهات تجديد الميزانية واستقرار عمل الويدجتس على الشاشة الرئيسية
+- feat: Direct In-App Updates: Download and install new versions easily from settings.
+- improve: Quick Notification Actions: Log expenses directly from your notifications.
+- fix: Stable Home Widgets: Accurate reminders and reliable widget balance updates.
