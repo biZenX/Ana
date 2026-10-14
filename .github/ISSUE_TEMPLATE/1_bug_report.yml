@@ -1,0 +1,82 @@
+name: "🐛 Bug Report / إبلاغ عن خطأ"
+description: "Report a bug or unexpected behavior in Wafeer."
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue! Please provide as much detail as possible to help us reproduce and fix it quickly.
+        شكراً لمساعدتك في تحسين تطبيق وفير! يُرجى توضيح أكبر قدر من التفاصيل لمساعدتنا في إصلاح المشكلة بأسرع وقت.
+
+  - type: dropdown
+    id: edition
+    attributes:
+      label: "App Edition / نسخة التطبيق"
+      description: "Which distribution of Wafeer are you using?"
+      options:
+        - "FOSS / GitHub APK (Direct Download)"
+        - "Google Play Edition"
+        - "Built from source (Local Debug/Release)"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: "Wafeer Version / رقم الإصدار"
+      description: "Found in Settings -> About (e.g. v1.3.24)."
+      placeholder: "v1.3.24"
+    validations:
+      required: true
+
+  - type: input
+    id: device_info
+    attributes:
+      label: "Device & Android Version / نوع الجهاز وإصدار أندرويد"
+      description: "e.g. Samsung Galaxy S23 (Android 14) / Pixel 8 (Android 15)."
+      placeholder: "e.g., Pixel 7, Android 14"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description / وصف المشكلة"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "Describe what happened..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce / خطوات تكرار المشكلة"
+      description: "How can we reproduce the issue?"
+      placeholder: |
+        1. Open '...'
+        2. Tap on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior / السلوك المتوقع"
+      description: "What did you expect to happen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots or Screen Recordings / لقطات شاشة أو فيديو"
+      description: "Drag and drop images or videos here to illustrate the problem."
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional Context / سياق إضافي"
+      description: "Budget cycle setup, currency, language, crash logs, or any other relevant information."

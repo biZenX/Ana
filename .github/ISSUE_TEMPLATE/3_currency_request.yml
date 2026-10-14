@@ -1,0 +1,42 @@
+name: "💱 Request a Currency / طلب إضافة عملة جديدة"
+description: "Request a missing currency or format for Wafeer."
+title: "[Currency]: "
+labels: ["currency"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Wafeer supports global and local currencies. If your regional currency is missing or displays incorrectly, request it here!
+        يدعم وفير العملات المحلية والعالمية. إذا كانت عملتك غير مدعومة أو تظهر بشكل غير صحيح، اطلبها هنا!
+
+  - type: input
+    id: currency_name
+    attributes:
+      label: "Currency Name / اسم العملة"
+      placeholder: "e.g., Kuwaiti Dinar / دينار كويتي"
+    validations:
+      required: true
+
+  - type: input
+    id: currency_code
+    attributes:
+      label: "ISO Currency Code / رمز العملة (ISO 4217)"
+      placeholder: "e.g., KWD, EGP, SAR, USD"
+    validations:
+      required: true
+
+  - type: input
+    id: currency_symbol
+    attributes:
+      label: "Symbol or Abbreviation / رمز العملة أو الاختصار"
+      placeholder: "e.g., د.ك, ج.م, $, €"
+    validations:
+      required: true
+
+  - type: input
+    id: display_example
+    attributes:
+      label: "Formatting Example / مثال لطريقة العرض"
+      placeholder: "e.g., 25.500 د.ك or $10.00"
+    validations:
+      required: true

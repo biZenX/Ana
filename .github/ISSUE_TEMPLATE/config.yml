@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Community Discussions & Questions
+    url: https://github.com/biZenX/Wafeer/discussions
+    about: Ask questions, share feedback, or discuss general topics.
+  - name: 📖 Documentation & Architecture
+    url: https://github.com/biZenX/Wafeer#readme
+    about: Review feature guides, offline guarantees, and technical overview.

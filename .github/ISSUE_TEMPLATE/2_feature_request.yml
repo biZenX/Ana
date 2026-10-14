@@ -1,0 +1,40 @@
+name: "💡 Feature Request / اقتراح ميزة جديدة"
+description: "Suggest a new idea or improvement for Wafeer."
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make Wafeer better? We'd love to hear it!
+        هل لديك فكرة أو تحسين ترغب في إضافته لتطبيق وفير؟ يسعدنا سماع اقتراحك!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem or Workflow / المشكلة أو الحاجة"
+      description: "Is your feature request related to a specific problem or friction you experience?"
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution / الحل المقترح"
+      description: "Describe how you envision this feature working."
+      placeholder: "It would be great if..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternatives Considered / بدائل أخذتها في الاعتبار"
+      description: "Any alternative solutions or workarounds you've considered?"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context / سياق إضافي"
+      description: "Add any mockups, screenshots, or examples."

@@ -30,7 +30,7 @@ class AppUpdateManager @Inject constructor(
 ) {
     companion object {
         private const val TAG = "AppUpdateManager"
-        private const val GITHUB_REPO = "biZenX/Ana"
+        private const val GITHUB_REPO = "biZenX/Wafeer"
         private const val API_URL = "https://api.github.com/repos/$GITHUB_REPO/releases/latest"
 
         fun cleanOldUpdateApks(context: Context) = CacheUtils.cleanOldUpdateApks(context)

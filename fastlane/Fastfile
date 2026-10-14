@@ -193,7 +193,7 @@ platform :android do
     ].select { |path| File.exist?(path) }
     UI.user_error!("No se encontraron APKs generados por Gradle") if apk_paths.empty?
 
-    repo = ENV.fetch("GITHUB_REPOSITORY", "biZenX/Ana")
+    repo = ENV.fetch("GITHUB_REPOSITORY", "biZenX/Wafeer")
 
     # Create the Release if missing; otherwise refresh its assets. Either path
     # leaves the tagged release carrying all three signed APKs, and CI re-runs

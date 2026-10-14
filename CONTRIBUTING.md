@@ -1,36 +1,59 @@
-# Contributing to Wafeer (وفير)
+# Contributing to Wafeer (دليل المساهمة في وفير)
 
-Thanks for helping improve Wafeer (وفير). This project is an Android budget tracker built with Kotlin, Jetpack Compose, Room, Hilt, and a Wear OS companion module.
+Thanks for your interest in contributing to **Wafeer (وفير)**! We welcome contributions from bug fixes and localization to new features and UI improvements.
 
-## Getting started
+---
 
-- Use Android Studio with JDK 17.
-- Clone the repository and open the project root.
-- Let Gradle sync before making changes.
-- Do not commit local files such as `local.properties`, generated build outputs, or signing credentials.
+## Getting Started / البدء
 
-## Before opening a pull request
+1. **Prerequisites:**
+   - Android Studio Ladybug or newer.
+   - JDK 17 (or JDK 21).
+   - Android SDK with API Level 35 and Build-Tools 35.0.0+.
 
-Run the same basic checks used by CI:
+2. **Clone & Setup:**
+   ```bash
+   git clone https://github.com/biZenX/Wafeer.git
+   cd Wafeer
+   ```
+
+3. **Modules Structure:**
+   - `:app` — Main mobile Android application (Jetpack Compose, Room, Hilt, MVI).
+     - Flavor `foss`: Direct APK distribution with self-updating capabilities.
+     - Flavor `wear`: Google Play Store flavor without `INTERNET` permission.
+   - `:wear` — Wear OS standalone companion app.
+   - `:sync-contract` — Shared data contracts and serialization models between Phone and Watch.
+
+---
+
+## Verification & Pre-PR Checks / الفحص قبل إرسال المساهمة
+
+Before opening a pull request, run the CI validation suite locally:
 
 ```bash
-./gradlew :app:compileDebugKotlin :wear:compileDebugKotlin :sync-contract:compileKotlin :app:testDebugUnitTest
+# 1. Compile all Kotlin code across mobile, wear, and sync modules
+./gradlew :app:compileFossDebugKotlin :wear:compileDebugKotlin :sync-contract:compileKotlin
+
+# 2. Run static analysis with Detekt
+./gradlew detekt
+
+# 3. Run unit tests
+./gradlew :app:testFossDebugUnitTest :app:testWearDebugUnitTest
 ```
 
-If your change only affects one module, still make sure the full app compiles before requesting review.
+---
 
-## Pull request guidelines
+## Pull Request Guidelines / إرشادات المساهمة
 
-- Use commit messages that follow the [conventional commits guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
-- Keep PRs focused and small when possible.
-- Include a short description of the problem and the approach used.
-- Add screenshots or screen recordings for UI changes.
-- Mention any manual testing performed, especially for budget periods, recurring expenses, notifications, CSV import/export, and Wear OS sync.
-- Update translations in `values`, `values-es`, and `values-fr` when adding user-facing strings.
+1. **Commit Messages:** Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `ci:`).
+2. **Branch Strategy:** Create a descriptive branch from `main` (e.g. `feature/smart-saving` or `fix/numpad-decimal`).
+3. **Screenshots:** For UI changes, attach Before / After screenshots or screen recordings.
+4. **Privacy First:** Never introduce external tracking, third-party network SDKs, or cloud dependencies into the offline architecture.
+5. **Localization:** Keep user-facing strings in `res/values/strings.xml` (Arabic default) and `res/values-en/strings.xml` (English).
 
-## Code style
+---
 
-- Follow the existing Kotlin and Compose style in nearby files.
-- Prefer string resources for user-facing text.
-- Keep business/date logic out of UI code when it is reusable or testable.
-- Add or update unit tests for date, budget, recurrence, or mapping logic when possible.
+## Code of Conduct & Security
+
+- Please review our [Code of Conduct](.github/CODE_OF_CONDUCT.md).
+- To report security vulnerabilities, see our [Security Policy](.github/SECURITY.md).
