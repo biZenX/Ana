@@ -62,6 +62,7 @@ import com.wafeer.app.R
 import com.wafeer.app.presentation.LocalWindowInsets
 import com.wafeer.app.presentation.ui.analytics.Size
 import com.wafeer.app.presentation.ui.theme.WafeerTheme
+import com.wafeer.app.presentation.ui.theme.IbmPlexSansArabicFamily
 import com.wafeer.app.presentation.ui.theme.bodyMediumCondensed
 import com.wafeer.app.presentation.ui.theme.component.DescriptionButton
 import com.wafeer.app.presentation.ui.theme.component.LocalBottomSheetScrollState
@@ -458,6 +459,7 @@ private data class LanguageOption(
     val flag: String,
     val title: String,
     val description: String,
+    val isArabicText: Boolean = false,
 )
 
 @Composable
@@ -477,10 +479,10 @@ private fun LanguageStep(
     val initialLang = remember {
         val tags = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags()
         when {
+            tags.startsWith("ar-EG", ignoreCase = true) -> "ar-EG"
+            tags.startsWith("ar", ignoreCase = true) -> "ar"
             tags.startsWith("en", ignoreCase = true) -> "en"
-            tags.equals("ar", ignoreCase = true) -> "ar"
-            tags.startsWith("ar", ignoreCase = true) -> "ar-EG"
-            else -> "ar-EG"
+            else -> "en"
         }
     }
 
@@ -491,28 +493,32 @@ private fun LanguageStep(
     val isEnSelected = selectedLanguage == "en"
     val options = listOf(
         LanguageOption(
-            code = "ar-EG",
-            flag = "🇪🇬",
-            title = "عربي (مصري)",
-            description = "لهجة مصرية يومية لمتابعة مصروفك وتوفيرك بسهولة",
+            code = "en",
+            flag = "🇬🇧",
+            title = "English",
+            description = "Clean, complete English interface",
+            isArabicText = false,
         ),
         LanguageOption(
             code = "ar",
             flag = "🌍",
             title = "العربية (الفصحى)",
             description = "واجهة متكاملة باللغة العربية الفصحى",
+            isArabicText = true,
         ),
         LanguageOption(
-            code = "en",
-            flag = "🇬🇧",
-            title = "English",
-            description = "Clean, complete English interface",
+            code = "ar-EG",
+            flag = "🇪🇬",
+            title = "عربي (مصري)",
+            description = "لهجة مصرية يومية لمتابعة مصروفك وتوفيرك بسهولة",
+            isArabicText = true,
         ),
         LanguageOption(
             code = "system",
             flag = "⚙️",
             title = if (isEnSelected) "Device Language" else "لغة الجهاز",
             description = if (isEnSelected) "Automatically match your phone's language settings" else "المطابقة التلقائية للغة إعدادات هاتفك",
+            isArabicText = !isEnSelected,
         ),
     )
 
@@ -561,13 +567,17 @@ private fun LanguageStep(
                     Spacer(Modifier.height(24.dp))
                     Text(
                         text = headerTitle,
-                        style = MaterialTheme.typography.headlineLargeEmphasized,
+                        style = MaterialTheme.typography.headlineLargeEmphasized.copy(
+                            fontFamily = if (selectedLanguage.startsWith("ar")) IbmPlexSansArabicFamily else null
+                        ),
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = headerSubtitle,
-                        style = MaterialTheme.typography.bodyMediumCondensed,
+                        style = MaterialTheme.typography.bodyMediumCondensed.copy(
+                            fontFamily = if (selectedLanguage.startsWith("ar")) IbmPlexSansArabicFamily else null
+                        ),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -627,14 +637,18 @@ private fun LanguageStep(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = opt.title,
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontFamily = if (opt.isArabicText) IbmPlexSansArabicFamily else null
+                                        ),
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface,
                                     )
                                     Spacer(Modifier.height(2.dp))
                                     Text(
                                         text = opt.description,
-                                        style = MaterialTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.bodySmall.copy(
+                                            fontFamily = if (opt.isArabicText) IbmPlexSansArabicFamily else null
+                                        ),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
@@ -675,12 +689,20 @@ private fun LanguageStep(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     val buttonText = when (selectedLanguage) {
-                        "ar-EG" -> "كمّل"
                         "en" -> "Continue"
-                        else -> "متابعة"
+                        "ar-EG" -> "كمّل"
+                        "ar" -> "متابعة"
+                        else -> if (isEnSelected) "Continue" else "متابعة"
                     }
                     DescriptionButton(
-                        title = { Text(buttonText) },
+                        title = {
+                            Text(
+                                text = buttonText,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontFamily = if (selectedLanguage.startsWith("ar")) IbmPlexSansArabicFamily else null
+                                )
+                            )
+                        },
                         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
                         onClick = { onLanguageConfirmed(selectedLanguage) },
                     )

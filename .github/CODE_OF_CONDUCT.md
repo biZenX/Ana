@@ -1,16 +1,12 @@
-# Contributor Covenant Code of Conduct / ميثاق السلوك للمساهمين
+# Contributor Covenant Code of Conduct
 
-## Our Pledge / تعهدنا
+## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.
 
 We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
 
-نحن كأعضاء ومساهمين وقادة نتعهد بجعل المشاركة في مجتمع "وفير" تجربة آمنة ومرحبة ومحترمة للجميع بغض النظر عن أي اختلافات، ملتزمين بالتعاون البنّاء والاحترام المتبادل.
-
----
-
-## Our Standards / معاييرنا
+## Our Standards
 
 Examples of behavior that contributes to a positive environment:
 - Demonstrating empathy and kindness toward other people
@@ -26,20 +22,14 @@ Examples of unacceptable behavior:
 - Publishing others' private information, such as a physical or email address, without their explicit permission
 - Other conduct which could reasonably be considered inappropriate in a professional setting
 
----
-
-## Enforcement Responsibilities / مسؤوليات التطبيق
+## Enforcement Responsibilities
 
 Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
 
----
-
-## Scope / النطاق
+## Scope
 
 This Code of Conduct applies within all community spaces, including issues, pull requests, discussions, and commit messages on the Wafeer repository.
 
----
-
-## Attribution / الإسناد
+## Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.

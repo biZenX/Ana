@@ -127,11 +127,7 @@ fun SimulationDemoBanner(
                     ) {
                         Surface(
                             shape = RoundedCornerShape(8.dp),
-                            color = if (demoMissionCompleted) {
-                                Color(0xFF2E7D32).copy(alpha = 0.15f)
-                            } else {
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                            },
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -155,7 +151,7 @@ fun SimulationDemoBanner(
                                 Icon(
                                     imageVector = if (demoMissionCompleted) Icons.Rounded.CheckCircle else Icons.Rounded.Explore,
                                     contentDescription = null,
-                                    tint = if (demoMissionCompleted) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier
                                         .size(16.dp)
                                         .scale(iconScale.value),
@@ -163,7 +159,7 @@ fun SimulationDemoBanner(
                                 Text(
                                     text = stringResource(R.string.demo_banner_badge),
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = if (demoMissionCompleted) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary,
+                                    color = MaterialTheme.colorScheme.primary,
                                 )
                             }
                         }
@@ -248,6 +244,13 @@ fun SimulationDemoBanner(
                                         onClick = { isMinimized = true },
                                         modifier = Modifier.weight(1f).height(40.dp),
                                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                        colors = ButtonDefaults.outlinedButtonColors(
+                                            contentColor = MaterialTheme.colorScheme.onSurface,
+                                        ),
+                                        border = androidx.compose.foundation.BorderStroke(
+                                            1.dp,
+                                            MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                                        ),
                                     ) {
                                         Text(
                                             text = stringResource(R.string.demo_action_keep_exploring),

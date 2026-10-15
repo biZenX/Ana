@@ -357,7 +357,7 @@ fun MainScreen(
                         tutorialBoxState = tutorialBoxState,
                     )
 
-                    if (mainScreenState.demoModeActive) {
+                    if (mainScreenState.demoModeActive && !mainScreenState.showBudgetPeriodSheet) {
                         SimulationDemoBanner(
                             demoMissionCompleted = mainScreenState.demoMissionCompleted,
                             onStartRealBudget = {

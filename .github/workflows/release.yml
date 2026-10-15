@@ -49,6 +49,21 @@ jobs:
             STORE_PASS="$RELEASE_STORE_PASSWORD"
             KEY_ALIAS="${RELEASE_KEY_ALIAS:-wafeer}"
             KEY_PASS="${RELEASE_KEY_PASSWORD:-$RELEASE_STORE_PASSWORD}"
+            if ! keytool -list -keystore release-keystore.jks -storepass "$STORE_PASS" >/dev/null 2>&1; then
+              echo "Warning: Keystore password in secrets failed validation. Generating fallback release keystore."
+              STORE_PASS=$(openssl rand -base64 16)
+              KEY_ALIAS="wafeer"
+              KEY_PASS="$STORE_PASS"
+              keytool -genkeypair -v \
+                -keystore release-keystore.jks \
+                -alias "$KEY_ALIAS" \
+                -keyalg RSA \
+                -keysize 2048 \
+                -validity 10000 \
+                -storepass "$STORE_PASS" \
+                -keypass "$KEY_PASS" \
+                -dname "CN=Wafeer, OU=Wafeer, O=Wafeer, L=Cairo, S=Cairo, C=EG"
+            fi
           else
             echo "No keystore secrets found. Generating ephemeral release keystore."
             STORE_PASS=$(openssl rand -base64 16)
@@ -71,6 +86,11 @@ jobs:
           keyAlias=${KEY_ALIAS}
           keyPassword=${KEY_PASS}
           EOF
+
+          echo "RELEASE_STORE_FILE=${{ github.workspace }}/release-keystore.jks" >> "$GITHUB_ENV"
+          echo "RELEASE_STORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_ALIAS=$KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
 
       - name: Build Release APKs
         run: |

@@ -1,15 +1,15 @@
-# Contributing to Wafeer (دليل المساهمة في وفير)
+# Contributing to Wafeer
 
-Thanks for your interest in contributing to **Wafeer (وفير)**! We welcome contributions from bug fixes and localization to new features and UI improvements.
+Thanks for taking the time to contribute! Whether you're reporting bugs, improving documentation, submitting translations, or writing code, your help is appreciated.
 
 ---
 
-## Getting Started / البدء
+## Getting Started
 
 1. **Prerequisites:**
-   - Android Studio Ladybug or newer.
-   - JDK 17 (or JDK 21).
-   - Android SDK with API Level 35 and Build-Tools 35.0.0+.
+   - Android Studio Ladybug (2024.2.1+) or newer
+   - JDK 17 or JDK 21
+   - Android SDK with API Level 35
 
 2. **Clone & Setup:**
    ```bash
@@ -17,24 +17,24 @@ Thanks for your interest in contributing to **Wafeer (وفير)**! We welcome co
    cd Wafeer
    ```
 
-3. **Modules Structure:**
-   - `:app` — Main mobile Android application (Jetpack Compose, Room, Hilt, MVI).
+3. **Project Modules:**
+   - `:app` — Main mobile application (Jetpack Compose, Room, Hilt, MVI).
      - Flavor `foss`: Direct APK distribution with self-updating capabilities.
      - Flavor `wear`: Google Play Store flavor without `INTERNET` permission.
    - `:wear` — Wear OS standalone companion app.
-   - `:sync-contract` — Shared data contracts and serialization models between Phone and Watch.
+   - `:sync-contract` — Shared data models and communication contracts between Phone and Watch.
 
 ---
 
-## Verification & Pre-PR Checks / الفحص قبل إرسال المساهمة
+## Pre-PR Verification
 
-Before opening a pull request, run the CI validation suite locally:
+Before submitting a pull request, run the local verification suite:
 
 ```bash
-# 1. Compile all Kotlin code across mobile, wear, and sync modules
+# 1. Compile all Kotlin sources across modules
 ./gradlew :app:compileFossDebugKotlin :wear:compileDebugKotlin :sync-contract:compileKotlin
 
-# 2. Run static analysis with Detekt
+# 2. Run Detekt static analysis
 ./gradlew detekt
 
 # 3. Run unit tests
@@ -43,17 +43,17 @@ Before opening a pull request, run the CI validation suite locally:
 
 ---
 
-## Pull Request Guidelines / إرشادات المساهمة
+## Guidelines
 
-1. **Commit Messages:** Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `ci:`).
-2. **Branch Strategy:** Create a descriptive branch from `main` (e.g. `feature/smart-saving` or `fix/numpad-decimal`).
-3. **Screenshots:** For UI changes, attach Before / After screenshots or screen recordings.
-4. **Privacy First:** Never introduce external tracking, third-party network SDKs, or cloud dependencies into the offline architecture.
-5. **Localization:** Keep user-facing strings in `res/values/strings.xml` (Arabic default) and `res/values-en/strings.xml` (English).
+1. **Commit Messages:** Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `ci:`).
+2. **Branching:** Work on a branch off `main` (e.g., `fix/numpad-decimal` or `feat/goal-export`).
+3. **Privacy First:** Never introduce external tracking, third-party network SDKs, or cloud dependencies into the offline architecture.
+4. **UI Changes:** Attach Before / After screenshots to your pull request.
+5. **Localization:** Keep user-facing strings in `res/values/strings.xml` and `res/values-en/strings.xml`.
 
 ---
 
-## Code of Conduct & Security
+## Community
 
 - Please review our [Code of Conduct](.github/CODE_OF_CONDUCT.md).
-- To report security vulnerabilities, see our [Security Policy](.github/SECURITY.md).
+- To report security issues, see our [Security Policy](.github/SECURITY.md).

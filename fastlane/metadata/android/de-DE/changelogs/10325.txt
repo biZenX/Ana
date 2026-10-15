@@ -1,0 +1,3 @@
+- improve: Höherer Datenschutz: Keine Netzwerkberechtigungen in der Play Store-Version.
+- improve: Sichere Benachrichtigungen: Tägliche Erinnerungen vor Manipulationen geschützt.
+- fix: Zuverlässige Updates: Stabilere Versionsprüfung für reibungslose Updates.

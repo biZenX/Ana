@@ -1,0 +1,3 @@
+- improve: Confidentialité Renforcée: Aucune permission réseau sur l'édition Play Store.
+- improve: Notifications Sécurisées: Rappels quotidiens protégés contre les interférences.
+- fix: Mises à Jour Fluides: Vérification des versions plus fiable et stable.

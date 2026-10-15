@@ -1,8 +1,8 @@
-# Wafeer v1.3.24
+# Wafeer v1.3.25
 
 ### Improvements
-- **Faster Keypad Response:** Type expenses and calculations instantly with zero delay.
-- **Battery-Friendly Widgets:** Smarter and lighter home screen widget updates.
+- **Hardened Privacy:** Zero network permissions on Google Play edition, running 100% offline.
+- **Secure System Receivers:** Daily reminders and alarms protected against unauthorized broadcasts.
 
 ### Fixes
-- **Reliable Daily Alerts:** Budget reminders arrive accurately without interruptions.
+- **Smooth App Updates:** Reliable semantic version checking for updates on FOSS edition.

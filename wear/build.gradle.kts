@@ -42,16 +42,20 @@ android {
             keystorePropsFile.inputStream().use { stream -> load(stream) }
         }
     }
-    val releaseStoreFile = keystoreProps.getProperty("storeFile")?.takeIf { it.isNotBlank() }
-    val releaseStorePassword = keystoreProps.getProperty("storePassword")
-    val releaseKeyAlias = keystoreProps.getProperty("keyAlias")
-    val releaseKeyPassword = keystoreProps.getProperty("keyPassword")
+    val releaseStoreFile = System.getenv("RELEASE_STORE_FILE")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("storeFile")?.takeIf { it.isNotBlank() }
+    val releaseStorePassword = System.getenv("RELEASE_STORE_PASSWORD")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("storePassword")
+    val releaseKeyAlias = System.getenv("RELEASE_KEY_ALIAS")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("keyAlias")
+    val releaseKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("keyPassword")
     val hasReleaseSigningConfig = listOf(
         releaseStoreFile,
         releaseStorePassword,
         releaseKeyAlias,
         releaseKeyPassword,
-    ).all { v -> !v.isNullOrBlank() }
+    ).all { v -> !v.isNullOrBlank() } && releaseStoreFile?.let { File(it).exists() } == true
 
     defaultConfig {
         applicationId = "com.wafeer.app"

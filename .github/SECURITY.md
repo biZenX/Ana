@@ -1,8 +1,8 @@
-# Security Policy / سياسة الأمان
+# Security Policy
 
-## Supported Versions / الإصدارات المدعومة
+## Supported Versions
 
-We actively maintain and provide security updates for the latest production release of Wafeer:
+Security updates are provided for the latest release series:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,26 +11,26 @@ We actively maintain and provide security updates for the latest production rele
 
 ---
 
-## Reporting a Vulnerability / الإبلاغ عن ثغرة أمنية
+## Reporting a Vulnerability
 
-If you discover a security vulnerability or sensitive data leak in Wafeer, please **do not open a public issue**. 
+If you discover a security vulnerability or sensitive data issue, please **do not open a public issue**.
 
-Instead, report it responsibly via:
-1. **GitHub Private Security Advisory:** [Report a security advisory](https://github.com/biZenX/Wafeer/security/advisories/new)
-2. **Direct Contact:** Open a confidential discussion or email the maintainer via GitHub profile ([@biZenX](https://github.com/biZenX)).
+Report it responsibly via:
+- **GitHub Private Advisory:** [Report a security advisory](https://github.com/biZenX/Wafeer/security/advisories/new)
+- **Maintainer Contact:** Reach out directly through the maintainer GitHub profile ([@biZenX](https://github.com/biZenX)).
 
-Please provide:
-- A clear description of the vulnerability and its potential impact.
-- Step-by-step instructions or proof-of-concept (PoC) to reproduce the issue.
-- Your recommended solution or mitigation (if available).
+Please include:
+- A description of the issue and its potential impact.
+- Steps or proof-of-concept to reproduce the problem.
+- Any suggested fix or workaround.
 
-We will acknowledge receipt within 48 hours and work with you to remediate and publish a patch.
+Reports are acknowledged within 48 hours.
 
 ---
 
-## Offline-First Privacy Guarantee / ضمان الخصوصية الكاملة
+## Offline Privacy Guarantee
 
-Wafeer is built from the ground up as an **offline-first** budget manager:
-- Financial records, transactions, categories, and settings never leave your device.
-- The Google Play build requires zero network permissions (`android.permission.INTERNET` is omitted).
-- The FOSS release only accesses the official GitHub API to query whether an update is available when initiated by the user.
+Wafeer is designed as an offline-first budget manager:
+- All transaction records and categories are stored locally in SQLite.
+- The Google Play build includes no network permissions (`android.permission.INTERNET` is omitted).
+- The FOSS build only contacts the GitHub API when checking for newer APK releases.

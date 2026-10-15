@@ -44,6 +44,7 @@ class BudgetRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
     private val queuedTransactionDao: QueuedTransactionDao,
     private val paidRecurrentOccurrenceDao: PaidRecurrentOccurrenceDao,
+    private val settingsRepository: SettingsRepository? = null,
 ) : BudgetRepository {
     private fun TransactionEntity.toDomain(): Transaction = Transaction(
         id = this.id,
@@ -546,6 +547,16 @@ class BudgetRepositoryImpl @Inject constructor(
         currencyCode: String,
         sampleBudget: BigDecimal,
     ) {
+        val currentSettings = getBudgetSettingsSync()
+        if (currentSettings == null) {
+            val defaultSettings = BudgetSettings(
+                totalBudget = sampleBudget,
+                period = BudgetPeriod.MONTHLY,
+                startDate = LocalDate.now().withDayOfMonth(1),
+                currencyCode = currencyCode,
+            )
+            saveBudgetSettings(defaultSettings)
+        }
         val isArabic = com.wafeer.app.presentation.util.LocaleHelper.isArabic()
         seedDemoDataInternal(isArabic)
     }
@@ -562,32 +573,58 @@ class BudgetRepositoryImpl @Inject constructor(
         val transportCat = findOrCreateCategory(transportTitle)
         val billsCat = findOrCreateCategory(billsTitle)
 
+        val currentSettings = getBudgetSettingsSync()
+        val activePeriodStart = currentSettings?.startDate ?: LocalDate.now().withDayOfMonth(1)
+        val today = LocalDate.now()
         val now = LocalDateTime.now()
+
+        fun dateFor(daysAgo: Long, hoursAgoFallback: Long): Long {
+            val targetDate = today.minusDays(daysAgo)
+            val dt = if (!targetDate.isBefore(activePeriodStart)) {
+                now.minusDays(daysAgo)
+            } else {
+                val startOfDay = activePeriodStart.atStartOfDay().plusHours(hoursAgoFallback.coerceIn(1, 12))
+                if (now.isAfter(startOfDay)) {
+                    now.minusHours(hoursAgoFallback.coerceAtLeast(1))
+                        .takeIf { !it.isBefore(activePeriodStart.atStartOfDay()) }
+                        ?: startOfDay
+                } else {
+                    startOfDay
+                }
+            }
+            return dt.toEpochSecond(ZoneOffset.UTC) * 1000
+        }
+
+        val activePeriodId = settingsRepository?.getCurrentPeriodId() ?: 0L
+
         val sampleTransactions = if (isArabic) {
             listOf(
                 TransactionEntity(
                     amount = "420.00",
                     comment = groceryTitle,
                     note = "مشتريات للبيت",
-                    date = now.minusDays(2).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 2, hoursAgoFallback = 2),
                     clientGeneratedId = "demo_seed_grocery",
                     categoryId = groceryCat.id,
+                    periodId = activePeriodId,
                 ),
                 TransactionEntity(
                     amount = "120.00",
                     comment = transportTitle,
                     note = "مواصلات وبنزين",
-                    date = now.minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 1, hoursAgoFallback = 4),
                     clientGeneratedId = "demo_seed_transport",
                     categoryId = transportCat.id,
+                    periodId = activePeriodId,
                 ),
                 TransactionEntity(
                     amount = "350.00",
                     comment = billsTitle,
                     note = "فاتورة دورية",
-                    date = now.minusDays(3).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 3, hoursAgoFallback = 6),
                     clientGeneratedId = "demo_seed_bills",
                     categoryId = billsCat.id,
+                    periodId = activePeriodId,
                 ),
             )
         } else {
@@ -596,25 +633,28 @@ class BudgetRepositoryImpl @Inject constructor(
                     amount = "42.00",
                     comment = groceryTitle,
                     note = "Weekly groceries",
-                    date = now.minusDays(2).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 2, hoursAgoFallback = 2),
                     clientGeneratedId = "demo_seed_grocery",
                     categoryId = groceryCat.id,
+                    periodId = activePeriodId,
                 ),
                 TransactionEntity(
                     amount = "12.00",
                     comment = transportTitle,
                     note = "Subway commute",
-                    date = now.minusDays(1).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 1, hoursAgoFallback = 4),
                     clientGeneratedId = "demo_seed_transport",
                     categoryId = transportCat.id,
+                    periodId = activePeriodId,
                 ),
                 TransactionEntity(
                     amount = "35.00",
                     comment = billsTitle,
                     note = "Utility bill",
-                    date = now.minusDays(3).toEpochSecond(ZoneOffset.UTC) * 1000,
+                    date = dateFor(daysAgo = 3, hoursAgoFallback = 6),
                     clientGeneratedId = "demo_seed_bills",
                     categoryId = billsCat.id,
+                    periodId = activePeriodId,
                 ),
             )
         }

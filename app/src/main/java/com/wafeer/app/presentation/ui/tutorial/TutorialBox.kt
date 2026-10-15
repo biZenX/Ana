@@ -413,7 +413,7 @@ private fun TutorialOverlay(
                     style = Stroke(width = 5f),
                 )
 
-                // Dynamic Curved Directional Arrow
+                // Dynamic Directional Arrow pointing from tooltip to target
                 if (hasHole && tooltipSize.width > 0 && tooltipSize.height > 0) {
                     val tooltipRect = Rect(
                         left = animatedOffset.x.toFloat(),
@@ -421,110 +421,107 @@ private fun TutorialOverlay(
                         right = (animatedOffset.x + tooltipSize.width).toFloat(),
                         bottom = (animatedOffset.y + tooltipSize.height).toFloat(),
                     )
-                    val isBelow = tooltipRect.top >= animatedCutout.bottom - 6f
-                    val isAbove = tooltipRect.bottom <= animatedCutout.top + 6f
-                    val isLeft = tooltipRect.right <= animatedCutout.left + 6f
 
-                    val (startPt, endPt, controlPt) = when {
-                        isBelow -> {
-                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 24f, tooltipRect.right - 24f)
+                    val gapBelow = tooltipRect.top - animatedCutout.bottom
+                    val gapAbove = animatedCutout.top - tooltipRect.bottom
+                    val gapLeft = animatedCutout.left - tooltipRect.right
+                    val gapRight = tooltipRect.left - animatedCutout.right
+
+                    val minGapPx = 10.dp.toPx()
+                    val arrowData: Triple<Offset, Offset, Offset>? = when {
+                        gapBelow >= minGapPx -> {
+                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 28f, tooltipRect.right - 28f)
                             val startY = tooltipRect.top
-                            val endX = animatedCutout.center.x.coerceIn(animatedCutout.left + 12f, animatedCutout.right - 12f)
-                            val endY = animatedCutout.bottom + 8.dp.toPx()
-                            val curvature = 24.dp.toPx() * (if (startX >= endX) 1f else -1f)
-                            Triple(
-                                Offset(startX, startY),
-                                Offset(endX, endY),
-                                Offset((startX + endX) / 2f + curvature, (startY + endY) / 2f)
-                            )
+                            val endX = startX.coerceIn(animatedCutout.left + 16f, animatedCutout.right - 16f)
+                            val endY = animatedCutout.bottom + 6.dp.toPx()
+                            val ctrlX = (startX + endX) / 2f
+                            val ctrlY = (startY + endY) / 2f
+                            Triple(Offset(startX, startY), Offset(endX, endY), Offset(ctrlX, ctrlY))
                         }
-                        isAbove -> {
-                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 24f, tooltipRect.right - 24f)
+                        gapAbove >= minGapPx -> {
+                            val startX = animatedCutout.center.x.coerceIn(tooltipRect.left + 28f, tooltipRect.right - 28f)
                             val startY = tooltipRect.bottom
-                            val endX = animatedCutout.center.x.coerceIn(animatedCutout.left + 12f, animatedCutout.right - 12f)
-                            val endY = animatedCutout.top - 8.dp.toPx()
-                            val curvature = 24.dp.toPx() * (if (startX >= endX) 1f else -1f)
-                            Triple(
-                                Offset(startX, startY),
-                                Offset(endX, endY),
-                                Offset((startX + endX) / 2f + curvature, (startY + endY) / 2f)
-                            )
+                            val endX = startX.coerceIn(animatedCutout.left + 16f, animatedCutout.right - 16f)
+                            val endY = animatedCutout.top - 6.dp.toPx()
+                            val ctrlX = (startX + endX) / 2f
+                            val ctrlY = (startY + endY) / 2f
+                            Triple(Offset(startX, startY), Offset(endX, endY), Offset(ctrlX, ctrlY))
                         }
-                        isLeft -> {
+                        gapLeft >= minGapPx -> {
                             val startX = tooltipRect.right
-                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 16f, tooltipRect.bottom - 16f)
-                            val endX = animatedCutout.left - 8.dp.toPx()
-                            val endY = animatedCutout.center.y.coerceIn(animatedCutout.top + 12f, animatedCutout.bottom - 12f)
-                            Triple(
-                                Offset(startX, startY),
-                                Offset(endX, endY),
-                                Offset((startX + endX) / 2f, (startY + endY) / 2f + 20.dp.toPx())
-                            )
+                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 20f, tooltipRect.bottom - 20f)
+                            val endX = animatedCutout.left - 6.dp.toPx()
+                            val endY = startY.coerceIn(animatedCutout.top + 14f, animatedCutout.bottom - 14f)
+                            val ctrlX = (startX + endX) / 2f
+                            val ctrlY = (startY + endY) / 2f
+                            Triple(Offset(startX, startY), Offset(endX, endY), Offset(ctrlX, ctrlY))
                         }
-                        else -> {
+                        gapRight >= minGapPx -> {
                             val startX = tooltipRect.left
-                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 16f, tooltipRect.bottom - 16f)
-                            val endX = animatedCutout.right + 8.dp.toPx()
-                            val endY = animatedCutout.center.y.coerceIn(animatedCutout.top + 12f, animatedCutout.bottom - 12f)
-                            Triple(
-                                Offset(startX, startY),
-                                Offset(endX, endY),
-                                Offset((startX + endX) / 2f, (startY + endY) / 2f + 20.dp.toPx())
-                            )
+                            val startY = animatedCutout.center.y.coerceIn(tooltipRect.top + 20f, tooltipRect.bottom - 20f)
+                            val endX = animatedCutout.right + 6.dp.toPx()
+                            val endY = startY.coerceIn(animatedCutout.top + 14f, animatedCutout.bottom - 14f)
+                            val ctrlX = (startX + endX) / 2f
+                            val ctrlY = (startY + endY) / 2f
+                            Triple(Offset(startX, startY), Offset(endX, endY), Offset(ctrlX, ctrlY))
                         }
+                        else -> null
                     }
 
-                    val dist = hypot(endPt.x - startPt.x, endPt.y - startPt.y)
-                    if (dist >= 20.dp.toPx()) {
-                        val arrowPath = Path().apply {
-                            moveTo(startPt.x, startPt.y)
-                            quadraticTo(controlPt.x, controlPt.y, endPt.x, endPt.y)
+                    if (arrowData != null) {
+                        val (startPt, endPt, controlPt) = arrowData
+                        val dist = hypot(endPt.x - startPt.x, endPt.y - startPt.y)
+                        if (dist >= 14.dp.toPx()) {
+                            val arrowPath = Path().apply {
+                                moveTo(startPt.x, startPt.y)
+                                quadraticTo(controlPt.x, controlPt.y, endPt.x, endPt.y)
+                            }
+
+                            // Shadow outline
+                            drawPath(
+                                path = arrowPath,
+                                color = Color.Black.copy(alpha = 0.35f),
+                                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
+                            )
+                            // Highlight arrow curve
+                            drawPath(
+                                path = arrowPath,
+                                color = highlightStrokeColor,
+                                style = Stroke(width = 2.4.dp.toPx(), cap = StrokeCap.Round)
+                            )
+                            // Origin dot at tooltip edge
+                            drawCircle(
+                                color = highlightStrokeColor,
+                                radius = 3.dp.toPx(),
+                                center = startPt
+                            )
+
+                            // Arrowhead pointing along tangent
+                            val tangentX = endPt.x - controlPt.x
+                            val tangentY = endPt.y - controlPt.y
+                            val angle = atan2(tangentY.toDouble(), tangentX.toDouble())
+                            val arrowHeadLen = 10.dp.toPx()
+                            val spread = Math.PI / 6.0
+
+                            val tip = endPt
+                            val wing1 = Offset(
+                                (endPt.x - cos(angle - spread) * arrowHeadLen).toFloat(),
+                                (endPt.y - sin(angle - spread) * arrowHeadLen).toFloat()
+                            )
+                            val wing2 = Offset(
+                                (endPt.x - cos(angle + spread) * arrowHeadLen).toFloat(),
+                                (endPt.y - sin(angle + spread) * arrowHeadLen).toFloat()
+                            )
+
+                            val headPath = Path().apply {
+                                moveTo(tip.x, tip.y)
+                                lineTo(wing1.x, wing1.y)
+                                lineTo(wing2.x, wing2.y)
+                                close()
+                            }
+                            drawPath(path = headPath, color = Color.Black.copy(alpha = 0.35f), style = Stroke(width = 2.dp.toPx()))
+                            drawPath(path = headPath, color = highlightStrokeColor, style = Fill)
                         }
-
-                        // Shadow outline
-                        drawPath(
-                            path = arrowPath,
-                            color = Color.Black.copy(alpha = 0.4f),
-                            style = Stroke(width = 5.dp.toPx(), cap = StrokeCap.Round)
-                        )
-                        // Highlight arrow curve
-                        drawPath(
-                            path = arrowPath,
-                            color = highlightStrokeColor,
-                            style = Stroke(width = 2.8.dp.toPx(), cap = StrokeCap.Round)
-                        )
-                        // Origin dot
-                        drawCircle(
-                            color = highlightStrokeColor,
-                            radius = 3.5.dp.toPx(),
-                            center = startPt
-                        )
-
-                        // Arrowhead
-                        val tangentX = endPt.x - controlPt.x
-                        val tangentY = endPt.y - controlPt.y
-                        val angle = atan2(tangentY.toDouble(), tangentX.toDouble())
-                        val arrowHeadLen = 12.dp.toPx()
-                        val spread = Math.PI / 5.5
-
-                        val tip = endPt
-                        val wing1 = Offset(
-                            (endPt.x - cos(angle - spread) * arrowHeadLen).toFloat(),
-                            (endPt.y - sin(angle - spread) * arrowHeadLen).toFloat()
-                        )
-                        val wing2 = Offset(
-                            (endPt.x - cos(angle + spread) * arrowHeadLen).toFloat(),
-                            (endPt.y - sin(angle + spread) * arrowHeadLen).toFloat()
-                        )
-
-                        val headPath = Path().apply {
-                            moveTo(tip.x, tip.y)
-                            lineTo(wing1.x, wing1.y)
-                            lineTo(wing2.x, wing2.y)
-                            close()
-                        }
-                        drawPath(path = headPath, color = Color.Black.copy(alpha = 0.4f), style = Stroke(width = 2.dp.toPx()))
-                        drawPath(path = headPath, color = highlightStrokeColor, style = Fill)
                     }
                 }
             }

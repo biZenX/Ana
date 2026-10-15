@@ -81,10 +81,14 @@ android {
             keystorePropsFile.inputStream().use { stream -> load(stream) }
         }
     }
-    val releaseStoreFile = keystoreProps.getProperty("storeFile")?.takeIf { it.isNotBlank() }
-    val releaseStorePassword = keystoreProps.getProperty("storePassword")?.takeIf { it.isNotBlank() }
-    val releaseKeyAlias = keystoreProps.getProperty("keyAlias")?.takeIf { it.isNotBlank() }
-    val releaseKeyPassword = keystoreProps.getProperty("keyPassword")?.takeIf { it.isNotBlank() }
+    val releaseStoreFile = System.getenv("RELEASE_STORE_FILE")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("storeFile")?.takeIf { it.isNotBlank() }
+    val releaseStorePassword = System.getenv("RELEASE_STORE_PASSWORD")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("storePassword")?.takeIf { it.isNotBlank() }
+    val releaseKeyAlias = System.getenv("RELEASE_KEY_ALIAS")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("keyAlias")?.takeIf { it.isNotBlank() }
+    val releaseKeyPassword = System.getenv("RELEASE_KEY_PASSWORD")?.takeIf { it.isNotBlank() }
+        ?: keystoreProps.getProperty("keyPassword")?.takeIf { it.isNotBlank() }
     val hasReleaseSigningConfig = listOf(
         releaseStoreFile,
         releaseStorePassword,

@@ -1,0 +1,3 @@
+- improve: Hardened Privacy: Zero network permissions on Play Store edition.
+- improve: Secure Notifications: Daily reminders and alarms protected against spoofing.
+- fix: Smooth App Updates: Reliable semantic version checking for updates.

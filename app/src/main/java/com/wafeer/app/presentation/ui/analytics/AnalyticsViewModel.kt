@@ -175,7 +175,9 @@ class AnalyticsViewModel @Inject constructor(
     ): List<ArchivedBudget> {
         if (currentSettings == null) return emptyList()
 
-        val orphaned = allTransactions.filter { it.periodId <= 0L && !it.isDeleted }
+        val orphaned = allTransactions.filter { 
+            it.periodId <= 0L && !it.isDeleted && !it.clientGeneratedId.orEmpty().startsWith("demo_") 
+        }
         if (orphaned.isEmpty()) return emptyList()
 
         val currentPeriodStart = currentSettings.startDate

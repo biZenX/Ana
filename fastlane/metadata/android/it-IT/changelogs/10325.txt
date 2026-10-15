@@ -1,0 +1,3 @@
+- improve: Privacy Rafforzata: Zero permessi di rete nell'edizione Play Store.
+- improve: Notifiche Sicure: Promemoria giornalieri protetti da interferenze esterne.
+- fix: Aggiornamenti Stabili: Controllo delle nuove versioni più rapido e affidabile.

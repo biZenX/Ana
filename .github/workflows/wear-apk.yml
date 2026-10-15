@@ -59,7 +59,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ steps.target.outputs.checkout_ref }}
 
-      - name: Verify tag is reachable from master
+      - name: Verify tag is reachable from default branch
         if: steps.target.outputs.mode == 'tag'
         run: |
           DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
@@ -67,7 +67,7 @@ jobs:
           if ! git merge-base --is-ancestor \
                "${{ steps.target.outputs.tag }}" \
                "origin/$DEFAULT_BRANCH"; then
-            echo "::error::Tag ${{ steps.target.outputs.tag }} no es alcanzable desde origin/$DEFAULT_BRANCH"
+            echo "::error::Tag ${{ steps.target.outputs.tag }} is not reachable from origin/$DEFAULT_BRANCH"
             exit 1
           fi
 
@@ -126,10 +126,20 @@ jobs:
           keyPassword=${RELEASE_KEY_PASSWORD}
           EOF
 
+          echo "RELEASE_STORE_FILE=${{ github.workspace }}/release-keystore.jks" >> "$GITHUB_ENV"
+          echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> "$GITHUB_ENV"
+
       - name: Run Detekt (wear)
         run: ./gradlew :wear:detekt
 
       - name: Build signed standalone Wear OS APK
+        env:
+          RELEASE_STORE_FILE: ${{ github.workspace }}/release-keystore.jks
+          RELEASE_STORE_PASSWORD: ${{ secrets.WAFEER_RELEASE_STORE_PASSWORD || secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.WAFEER_RELEASE_KEY_ALIAS || secrets.RELEASE_KEY_ALIAS || 'wafeer' }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.WAFEER_RELEASE_KEY_PASSWORD || secrets.RELEASE_KEY_PASSWORD || secrets.WAFEER_RELEASE_STORE_PASSWORD || secrets.RELEASE_STORE_PASSWORD }}
         run: ./gradlew :wear:assembleRelease
 
       - name: Locate the APK

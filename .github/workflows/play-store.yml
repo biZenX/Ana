@@ -43,14 +43,14 @@ jobs:
           fetch-depth: 0
           ref: ${{ steps.resolve.outputs.tag }}
 
-      - name: Verify tag is reachable from master
+      - name: Verify tag is reachable from default branch
         run: |
           DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
           git fetch origin "$DEFAULT_BRANCH"
           if ! git merge-base --is-ancestor \
                "${{ steps.resolve.outputs.tag }}" \
                "origin/$DEFAULT_BRANCH"; then
-            echo "::error::Tag ${{ steps.resolve.outputs.tag }} no es alcanzable desde origin/$DEFAULT_BRANCH"
+            echo "::error::Tag ${{ steps.resolve.outputs.tag }} is not reachable from origin/$DEFAULT_BRANCH"
             exit 1
           fi
 
@@ -119,6 +119,11 @@ jobs:
           keyAlias=${RELEASE_KEY_ALIAS}
           keyPassword=${RELEASE_KEY_PASSWORD}
           EOF
+
+          echo "RELEASE_STORE_FILE=${{ github.workspace }}/release-keystore.jks" >> "$GITHUB_ENV"
+          echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> "$GITHUB_ENV"
 
       - name: Run Detekt
         run: ./gradlew detekt
