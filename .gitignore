@@ -20,6 +20,7 @@
 # Release signing artifacts
 *.jks
 *.keystore
+!config/signing/release.jks
 *.apk
 photo_*.jpg
 

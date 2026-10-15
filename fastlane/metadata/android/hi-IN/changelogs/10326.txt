@@ -1,3 +1,0 @@
-- feature: Brand New App Icon: Fresh, modern Material 3 visual identity.
-- fix: Tutorial & Demo Mode: Clean directional arrows and robust simulation tracking.
-- improve: First Launch Experience: English base onboarding with native Arabic typography.

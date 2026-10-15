@@ -43,17 +43,23 @@ jobs:
           RELEASE_KEY_ALIAS: ${{ secrets.WAFEER_RELEASE_KEY_ALIAS || secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.WAFEER_RELEASE_KEY_PASSWORD || secrets.RELEASE_KEY_PASSWORD }}
         run: |
-          if [ -n "$RELEASE_KEYSTORE_BASE64" ] && [ -n "$RELEASE_STORE_PASSWORD" ]; then
+          if [ -f "config/signing/release.jks" ]; then
+            echo "Using canonical release keystore from repository."
+            cp config/signing/release.jks release-keystore.jks
+            STORE_PASS="WafeerRelease2026Key!"
+            KEY_ALIAS="wafeer"
+            KEY_PASS="WafeerRelease2026Key!"
+          elif [ -n "$RELEASE_KEYSTORE_BASE64" ] && [ -n "$RELEASE_STORE_PASSWORD" ]; then
             echo "Using repository release keystore from secrets."
             echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > release-keystore.jks
             STORE_PASS="$RELEASE_STORE_PASSWORD"
             KEY_ALIAS="${RELEASE_KEY_ALIAS:-wafeer}"
             KEY_PASS="${RELEASE_KEY_PASSWORD:-$RELEASE_STORE_PASSWORD}"
             if ! keytool -list -keystore release-keystore.jks -storepass "$STORE_PASS" >/dev/null 2>&1; then
-              echo "Warning: Keystore password in secrets failed validation. Generating fallback release keystore."
-              STORE_PASS=$(openssl rand -base64 16)
+              echo "Warning: Keystore password in secrets failed validation. Generating fallback."
+              STORE_PASS="WafeerRelease2026Key!"
               KEY_ALIAS="wafeer"
-              KEY_PASS="$STORE_PASS"
+              KEY_PASS="WafeerRelease2026Key!"
               keytool -genkeypair -v \
                 -keystore release-keystore.jks \
                 -alias "$KEY_ALIAS" \
@@ -65,10 +71,10 @@ jobs:
                 -dname "CN=Wafeer, OU=Wafeer, O=Wafeer, L=Cairo, S=Cairo, C=EG"
             fi
           else
-            echo "No keystore secrets found. Generating ephemeral release keystore."
-            STORE_PASS=$(openssl rand -base64 16)
+            echo "Generating fallback release keystore."
+            STORE_PASS="WafeerRelease2026Key!"
             KEY_ALIAS="wafeer"
-            KEY_PASS="$STORE_PASS"
+            KEY_PASS="WafeerRelease2026Key!"
             keytool -genkeypair -v \
               -keystore release-keystore.jks \
               -alias "$KEY_ALIAS" \
@@ -107,69 +113,95 @@ jobs:
           [ "$CODE" -le 0 ] && CODE=1
           echo "code=$CODE" >> "$GITHUB_OUTPUT"
           
-          CHANGELOG_FILE="fastlane/metadata/android/en-US/changelogs/${CODE}.txt"
-          if [ -f "$CHANGELOG_FILE" ]; then
-            echo "changelog_path=$CHANGELOG_FILE" >> "$GITHUB_OUTPUT"
-          else
-            echo "changelog_path=" >> "$GITHUB_OUTPUT"
-          fi
+          AR_FILE="fastlane/metadata/android/ar/changelogs/${CODE}.txt"
+          EN_FILE="fastlane/metadata/android/en-US/changelogs/${CODE}.txt"
+          echo "ar_file=$AR_FILE" >> "$GITHUB_OUTPUT"
+          echo "en_file=$EN_FILE" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release and Upload APKs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
           TITLE: "Wafeer ${{ github.ref_name }}"
-          CHANGELOG_PATH: ${{ steps.version.outputs.changelog_path }}
+          AR_FILE: ${{ steps.version.outputs.ar_file }}
+          EN_FILE: ${{ steps.version.outputs.en_file }}
         run: |
           shopt -s nullglob
           APKS=(app/build/outputs/apk/foss/release/*.apk app/build/outputs/apk/wear/release/*.apk wear/build/outputs/apk/release/*.apk)
           echo "Found APKs: ${APKS[*]}"
           
-          format_changelog_to_markdown() {
-            local src_file="$1"
-            local ver_tag="$2"
-            local out_file="$3"
-            python3 - "$src_file" "$ver_tag" "$out_file" << 'PYEOF'
-          import sys, re
+          format_bilingual_release_notes() {
+            local ar_path="$1"
+            local en_path="$2"
+            local ver_tag="$3"
+            local out_file="$4"
+            python3 - "$ar_path" "$en_path" "$ver_tag" "$out_file" << 'PYEOF'
+          import sys, os
 
-          src_file, ver_tag, out_file = sys.argv[1], sys.argv[2], sys.argv[3]
-          features, improvements, fixes = [], [], []
+          ar_path, en_path, ver_tag, out_file = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
-          with open(src_file, "r", encoding="utf-8") as f:
-              for raw in f:
-                  line = raw.strip()
-                  if not line.startswith("- ") and not line.startswith("* "):
-                      continue
-                  content = line[2:].strip()
-                  lower = content.lower()
-                  if lower.startswith("feat:"):
-                      features.append(content[5:].strip())
-                  elif lower.startswith("improve:"):
-                      improvements.append(content[8:].strip())
-                  elif lower.startswith("fix:"):
-                      fixes.append(content[4:].strip())
-                  else:
-                      improvements.append(content)
+          def parse_items(p):
+              features, improvements, fixes = [], [], []
+              if not os.path.exists(p):
+                  return features, improvements, fixes
+              with open(p, "r", encoding="utf-8") as f:
+                  for raw in f:
+                      line = raw.strip()
+                      if not line.startswith("- ") and not line.startswith("* "):
+                          continue
+                      content = line[2:].strip()
+                      lower = content.lower()
+                      if lower.startswith("feat:") or lower.startswith("feature:"):
+                          features.append(content.split(":", 1)[1].strip())
+                      elif lower.startswith("improve:") or lower.startswith("perf:"):
+                          improvements.append(content.split(":", 1)[1].strip())
+                      elif lower.startswith("fix:") or lower.startswith("bug:"):
+                          fixes.append(content.split(":", 1)[1].strip())
+                      else:
+                          improvements.append(content)
+              return features, improvements, fixes
 
-          def fmt_bullet(text):
-              if ":" in text and not text.startswith("**"):
-                  head, rest = text.split(":", 1)
-                  return f"- **{head.strip()}:** {rest.strip()}"
-              return f"- {text}"
+          ar_f, ar_i, ar_x = parse_items(ar_path)
+          en_f, en_i, en_x = parse_items(en_path)
 
-          lines = [f"# Wafeer {ver_tag}", ""]
-          if features:
-              lines.append("### Major Features")
-              lines.extend(fmt_bullet(x) for x in features)
+          lines = [f"# Wafeer {ver_tag} • وفير {ver_tag}", ""]
+
+          if ar_f or ar_i or ar_x:
+              lines.append("## 🇪🇬 مميزات التحديث (العربية)")
               lines.append("")
-          if improvements:
-              lines.append("### Improvements")
-              lines.extend(fmt_bullet(x) for x in improvements)
+              if ar_f:
+                  lines.append("### ✨ الميزات الجديدة")
+                  lines.extend(f"- {x}" for x in ar_f)
+                  lines.append("")
+              if ar_i:
+                  lines.append("### 🚀 التحسينات العامة")
+                  lines.extend(f"- {x}" for x in ar_i)
+                  lines.append("")
+              if ar_x:
+                  lines.append("### 🛠️ الإصلاحات والاستقرار")
+                  lines.extend(f"- {x}" for x in ar_x)
+                  lines.append("")
+              lines.append("---")
               lines.append("")
-          if fixes:
-              lines.append("### Fixes")
-              lines.extend(fmt_bullet(x) for x in fixes)
+
+          lines.append("## 🇬🇧 Release Notes (English)")
+          lines.append("")
+          if en_f:
+              lines.append("### ✨ Major Features")
+              lines.extend(f"- {x}" for x in en_f)
               lines.append("")
+          if en_i:
+              lines.append("### 🚀 Improvements")
+              lines.extend(f"- {x}" for x in en_i)
+              lines.append("")
+          if en_x:
+              lines.append("### 🛠️ Fixes & Stability")
+              lines.extend(f"- {x}" for x in en_x)
+              lines.append("")
+
+          if not (en_f or en_i or en_x) and not (ar_f or ar_i or ar_x):
+              lines.append("### 🚀 Improvements")
+              lines.append("- Navigate faster and enjoy a smoother, more reliable experience across all screens.")
 
           with open(out_file, "w", encoding="utf-8") as out:
               out.write("\n".join(lines).strip() + "\n")
@@ -177,36 +209,13 @@ jobs:
           }
 
           NOTES_FILE="release_notes.md"
-          if [ -f "RELEASE_NOTES.md" ]; then
-            cp "RELEASE_NOTES.md" "$NOTES_FILE"
-          elif [ -n "$CHANGELOG_PATH" ] && [ -f "$CHANGELOG_PATH" ]; then
-            format_changelog_to_markdown "$CHANGELOG_PATH" "$TAG" "$NOTES_FILE"
-          else
-            printf "# Wafeer %s\n\n### Improvements\n- Navigate faster and enjoy a smoother, more reliable experience across all screens.\n" "$TAG" > "$NOTES_FILE"
-          fi
+          format_bilingual_release_notes "$AR_FILE" "$EN_FILE" "$TAG" "$NOTES_FILE"
           
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG exists. Uploading assets..."
             gh release upload "$TAG" "${APKS[@]}" --clobber
-            gh release edit "$TAG" --title "$TITLE" --notes-file "$NOTES_FILE"
+            gh release edit "$TAG" --title "$TITLE • وفير $TAG" --notes-file "$NOTES_FILE"
           else
             echo "Creating new release $TAG..."
-            gh release create "$TAG" "${APKS[@]}" --title "$TITLE" --notes-file "$NOTES_FILE"
+            gh release create "$TAG" "${APKS[@]}" --title "$TITLE • وفير $TAG" --notes-file "$NOTES_FILE"
           fi
-
-          # Sync all previous GitHub Releases to clean English titles and structured user-focused notes
-          for cl_file in fastlane/metadata/android/en-US/changelogs/*.txt; do
-            fname=$(basename "$cl_file" .txt)
-            if [[ "$fname" =~ ^[0-9]+$ ]]; then
-              major=$(( fname / 10000 ))
-              minor=$(( (fname % 10000) / 100 ))
-              patch=$(( fname % 100 ))
-              old_tag="v${major}.${minor}.${patch}"
-              if [ "$old_tag" != "$TAG" ] && gh release view "$old_tag" >/dev/null 2>&1; then
-                tmp_notes="notes_${fname}.md"
-                format_changelog_to_markdown "$cl_file" "$old_tag" "$tmp_notes"
-                gh release edit "$old_tag" --title "Wafeer ${old_tag}" --notes-file "$tmp_notes" || true
-                rm -f "$tmp_notes"
-              fi
-            fi
-          done

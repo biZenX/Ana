@@ -1,0 +1,4 @@
+- feat: Brand New Visual Identity: Modern Material 3 icon and polished design system.
+- feat: Smart Savings Suite: Impulse purchase filter, goal jars, and privacy shield.
+- improve: First Launch Experience: English base onboarding with native Arabic typography.
+- fix: Polished Walkthrough: Directional guidance arrows and reliable simulation sandbox.

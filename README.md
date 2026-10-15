@@ -37,7 +37,7 @@
 </table>
 
 <p align="center">
-  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v1.3.25-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
+  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v2.0.0-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
   <img src="https://img.shields.io/badge/Platform-Android_%7C_Wear_OS-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Kotlin-2.0-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin">
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License">
