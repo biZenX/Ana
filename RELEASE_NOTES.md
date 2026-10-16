@@ -1,25 +1,14 @@
-# Wafeer • وفير
+# Wafeer v2.2.0
 
-## مميزات التحديث (العربية)
-
-### التحسينات العامة
-- تحسين واجهة أدوات التوفير الذكية ودعم الحركات السلسة بنظام Material 3 Expressive.
-- ضبط تنسيق العملات بحيث تظهر علامة الجنيه (£) تلقائياً باللغة الإنجليزية وعلامة (ج.م) باللغة العربية مع مراعاة موضع الرمز.
-- تحسين ظهور شريط الوضع التجريبي (Demo Mode) وقصره على شاشة الحاسبة الرئيسية واختفائه التلقائي عند فتح السجل أو الأدوات أو القوائم.
-
-### الإصلاحات والاستقرار
-- إصلاح تعارض الرموز البرمجية وتحسين استقرار التطبيق.
-- تحسين دقة المحاكاة المالية وإصلاح بعض الأخطاء.
-
----
-
-## Release Notes (English)
+## Release Notes
 
 ### Improvements
-- Refined Smart Savings tools with Material 3 Expressive connected toggle controls and smooth animated transitions.
+- Refined Smart Savings tools with Material 3 Expressive connected toggle controls and tactile haptic feedback.
 - Localized Egyptian Pound currency formatting (£ prefix in English locale, ج.م suffix in Arabic locale).
 - Optimized simulation demo banner to strictly display on the numpad screen and dismiss when opening history or bottom sheets.
+- Completely removed non-standard emojis in favor of official Material vector icons.
 
 ### Fixes & Stability
 - Fixed shared currency parsing and resolved package conflict issues.
+- Smooth spring-physics animations for sheet expansion and tab transitions.
 - General stability improvements and bug fixes.
