@@ -274,7 +274,7 @@
     <string name="settings_section_language">اللغة</string>
     <string name="settings_language_header">اللغة</string>
     <string name="settings_language_currently_format">الحالية: %1$s</string>
-    <string name="settings_language_disclaimer">تقدر تبدل بين العربي المصري والفصحى أو الإنجليزي في أي وقت.</string>
+    <string name="settings_language_disclaimer">يمكنك التبديل بين اللغة العربية أو الإنجليزية في أي وقت.</string>
     <string name="settings_theme_system">النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
@@ -395,7 +395,7 @@
     <string name="settings_time_picker_cancel">إلغاء</string>
     <string name="settings_time_picker_confirm">تأكيد</string>
     <string name="settings_about_title">حول التطبيق</string>
-    <string name="settings_about_subtitle">تطبيق وفير — المطور عبدالرحمن كريم</string>
+    <string name="settings_about_subtitle">تطبيق وفير — المطور Arkim</string>
     <string name="settings_bug_report_title">إرسال ملاحظات أو إبلاغ عن مشكلة</string>
     <string name="settings_bug_report_subtitle">شاركنا اقتراحك أو مشكلة واجهتك وسنعمل على حلها سريعاً</string>
     <string name="settings_what_is_this_for">ما فائدة هذا الإجراء؟</string>

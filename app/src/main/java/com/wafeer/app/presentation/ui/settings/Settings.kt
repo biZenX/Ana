@@ -970,11 +970,11 @@ fun Settings(
                         )
                         TextButton(
                             onClick = {
-                                uriHandler.openUri("https://github.com/isaacsa51/Minus")
+                                uriHandler.openUri("https://github.com/biZenX/Wafeer")
                             }
                         ) {
                             Text(
-                                text = "GitHub: isaacsa51/Minus",
+                                text = stringResource(R.string.about_credits_link),
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }

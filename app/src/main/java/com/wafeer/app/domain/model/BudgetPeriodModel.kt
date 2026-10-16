@@ -42,11 +42,31 @@ enum class SymbolPosition {
     END,
 }
 
-data class SupportedCurrency(
+class SupportedCurrency(
     val code: String,
-    val symbol: String,
-    val symbolPosition: SymbolPosition = SymbolPosition.START,
+    val canonicalSymbol: String,
+    val canonicalSymbolPosition: SymbolPosition = SymbolPosition.START,
 ) {
+    val symbol: String
+        get() = localizedSymbol(Locale.getDefault())
+
+    val symbolPosition: SymbolPosition
+        get() = localizedPosition(Locale.getDefault())
+
+    fun localizedSymbol(locale: Locale = Locale.getDefault()): String {
+        if (code.equals("EGP", ignoreCase = true)) {
+            return if (locale.language == "ar") "ج.م" else "£"
+        }
+        return canonicalSymbol
+    }
+
+    fun localizedPosition(locale: Locale = Locale.getDefault()): SymbolPosition {
+        if (code.equals("EGP", ignoreCase = true)) {
+            return if (locale.language == "ar") SymbolPosition.END else SymbolPosition.START
+        }
+        return canonicalSymbolPosition
+    }
+
     fun displayName(locale: Locale = Locale.getDefault()): String =
         runCatching { Currency.getInstance(code).getDisplayName(locale) }
             .getOrDefault(code)
@@ -65,6 +85,16 @@ data class SupportedCurrency(
 
     val shouldShowThousandsShortcut: Boolean
         get() = SupportedCurrencyData.BY_CODE[code]?.shouldShowThousandsShortcut ?: !hasDecimals
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SupportedCurrency) return false
+        return code.equals(other.code, ignoreCase = true)
+    }
+
+    override fun hashCode(): Int = code.uppercase().hashCode()
+
+    override fun toString(): String = "SupportedCurrency(code='$code', symbol='$symbol', symbolPosition=$symbolPosition)"
 
     companion object {
         val ALL = listOf(

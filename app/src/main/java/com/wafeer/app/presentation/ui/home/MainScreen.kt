@@ -82,6 +82,8 @@ fun MainScreen(
     val censorDiagnosticState by mainScreenViewModel.censorDiagnosticState.collectAsStateWithLifecycle()
     val smartToolsState by smartToolsViewModel.uiState.collectAsStateWithLifecycle()
     var showSmartToolsBottomSheet by remember { mutableStateOf(false) }
+    var isHistoryVisible by remember { mutableStateOf(false) }
+    var isCategoryGridVisible by remember { mutableStateOf(false) }
 
     val tutorialStage = mainScreenState.tutorialStage
     val tutorialBoxCompleted = mainScreenState.tutorialBoxCompleted
@@ -347,6 +349,8 @@ fun MainScreen(
                                 onUnresolvedSurplusBannerClick = budgetViewModel::onUnresolvedSurplusBannerClicked,
                                 onLeftoverChoice = budgetViewModel::onLeftoverChoice,
                                 onCreateCategory = budgetViewModel::createCategory,
+                                onHistoryVisibilityChanged = { isHistoryVisible = it },
+                                onCategoryGridVisibilityChanged = { isCategoryGridVisible = it },
                                 onPeriodSelected = { period ->
                                     mainScreenViewModel.processIntent(
                                         MainScreenUiIntent.SetSelectedPeriod(period), tutorialStage
@@ -357,7 +361,25 @@ fun MainScreen(
                         tutorialBoxState = tutorialBoxState,
                     )
 
-                    if (mainScreenState.demoModeActive && !mainScreenState.showBudgetPeriodSheet) {
+                    val showDemoBanner = mainScreenState.demoModeActive &&
+                        !mainScreenState.showBudgetPeriodSheet &&
+                        !showSmartToolsBottomSheet &&
+                        !showSensorDiagnostic &&
+                        !isHistoryVisible &&
+                        !isCategoryGridVisible
+
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = showDemoBanner,
+                        enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandVertically(),
+                        exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkVertically(),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(
+                                top = LocalWindowInsets.current.calculateTopPadding() + 74.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                            ),
+                    ) {
                         SimulationDemoBanner(
                             demoMissionCompleted = mainScreenState.demoMissionCompleted,
                             onStartRealBudget = {
@@ -366,23 +388,31 @@ fun MainScreen(
                                     tutorialStage,
                                 )
                             },
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .padding(
-                                    top = LocalWindowInsets.current.calculateTopPadding() + 74.dp,
-                                    start = 16.dp,
-                                    end = 16.dp,
-                                ),
                         )
-                    } else if (!tutorialBoxCompleted && isFreePracticeActive) {
+                    }
+
+                    val showPracticeBanner = !mainScreenState.demoModeActive &&
+                        !tutorialBoxCompleted &&
+                        isFreePracticeActive &&
+                        !mainScreenState.showBudgetPeriodSheet &&
+                        !showSmartToolsBottomSheet &&
+                        !showSensorDiagnostic &&
+                        !isHistoryVisible &&
+                        !isCategoryGridVisible
+
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = showPracticeBanner,
+                        enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.expandVertically(),
+                        exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.shrinkVertically(),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(
+                                top = LocalWindowInsets.current.calculateTopPadding() + 74.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                            ),
+                    ) {
                         Surface(
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .padding(
-                                    top = LocalWindowInsets.current.calculateTopPadding() + 74.dp,
-                                    start = 16.dp,
-                                    end = 16.dp,
-                                ),
                             shape = RoundedCornerShape(16.dp),
                             color = MaterialTheme.colorScheme.primaryContainer,
                             tonalElevation = 6.dp,

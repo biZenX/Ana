@@ -2,120 +2,128 @@
   <img src="assets/banner.png" alt="Wafeer Banner" width="100%">
 </p>
 
-# Wafeer - Simple, private, offline budget manager
+# Wafeer
 
 <p align="center">
-  <strong>Wafeer</strong> is an easy to use, offline-first personal budget and expense tracking app for Android and Wear OS.<br/>
-  Register expenses instantly using a calculator numpad, organize flexible budget cycles, track recurring bills, and save towards your goals.
+  <strong>Mindful, offline-first personal budget and expense tracking for Android and Wear OS.</strong><br/>
+  Built with Google Material 3 Expressive. Log expenses instantly, calculate on the fly, and achieve financial calm.
+</p>
+
+<p align="center">
+  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v2.2.0-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
+  <img src="https://img.shields.io/badge/Platform-Android_%7C_Wear_OS-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/Architecture-Material_3_Expressive-7F52FF?style=flat-square" alt="Material 3 Expressive">
+  <img src="https://img.shields.io/badge/Offline-100%25_Local-blue?style=flat-square" alt="Offline">
+  <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License">
+</p>
+
+<p align="center">
+  <a href="https://github.com/biZenX/Wafeer/releases/latest">
+    <img src="assets/badge_github.png" height="58" alt="Download on GitHub">
+  </a>
 </p>
 
 <div align="center">
   <h4>
     <a href="#features">Features</a>
     <span> &bull; </span>
-    <a href="PROJECT_OVERVIEW.md">Project Overview</a>
+    <a href="#screenshots">Screenshots</a>
     <span> &bull; </span>
-    <a href="https://github.com/biZenX/Wafeer/issues/new?template=1_bug_report.yml">Report Bug</a>
+    <a href="#installation">Installation</a>
     <span> &bull; </span>
-    <a href="https://github.com/biZenX/Wafeer/issues/new?template=2_feature_request.yml">Request a Feature</a>
+    <a href="PROJECT_OVERVIEW.md">Architecture</a>
+    <span> &bull; </span>
+    <a href="CONTRIBUTING.md">Contributing</a>
+    <span> &bull; </span>
+    <a href="https://github.com/biZenX/Wafeer/issues">Issues</a>
   </h4>
 </div>
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <a href="https://github.com/biZenX/Wafeer/releases/latest">
-        <img src="assets/badge_github.png" height="70" alt="Get it on GitHub">
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://play.google.com/store/apps/details?id=com.wafeer.app">
-        <img src="assets/badge_playstore.png" height="70" alt="Get it on Google Play">
-      </a>
-    </td>
-  </tr>
-</table>
+---
 
-<p align="center">
-  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v2.0.0-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
-  <img src="https://img.shields.io/badge/Platform-Android_%7C_Wear_OS-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
-  <img src="https://img.shields.io/badge/Kotlin-2.0-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin">
-  <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License">
-</p>
+## Overview
 
-<table align="center">
-  <tr>
-    <td><img src="assets/screenshot_1.png" alt="Calculator Numpad" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_2.png" alt="Budget Overview" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_3.png" alt="Analytics and History" width="200" style="border-radius:26px;"/></td>
-  </tr>
-  <tr>
-    <td><img src="assets/screenshot_4.png" alt="Subscriptions and Settings" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_5.png" alt="Savings Goals" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_6.png" alt="Customization" width="200" style="border-radius:26px;"/></td>
-  </tr>
-</table>
+**Wafeer** is an easy-to-use, privacy-first personal budgeting and daily expense tracking app. Instead of complicated spreadsheets, monthly subscriptions, or slow banking tools, Wafeer focuses on answering the single most important financial question every day:
+
+> **How much can I comfortably spend today without running short at the end of the cycle?**
+
+Everything runs **100% locally on your device** with zero accounts, no cloud dependencies, and zero advertisements.
 
 ---
 
 ## Features
 
-| Feature | Description |
-|:---|:---|
-| **Save, Edit & Calculate on the Fly** <br/> Log expenses in seconds using a familiar calculator-style numpad. No complex multi-step forms — tap the amount and save. Swipe up to reveal math operators and make calculations directly before logging. | <img src="assets/screenshot_1.png" alt="Numpad" width="480" style="border-radius:22px;"/> |
-| **Smart Budget Periods** <br/> Configure your budget cycles to match your real cashflow. Choose between Daily, Weekly, Bi-weekly, or Monthly periods with automatic calculation of daily spending limits and rollover surplus. | <img src="assets/split_budget.png" alt="Budget Periods" width="480" style="border-radius:22px;"/> |
-| **Recurring Expenses & Subscriptions** <br/> Track recurring subscriptions, bills, and credit card payments. Set advance reminders and let the app automatically deduct scheduled payments on due dates. | <img src="assets/recurrent_payment.png" alt="Recurring Payments" width="480" style="border-radius:22px;"/> |
-| **Smart Savings Tools** <br/> Built-in behavioral tools to curb impulse spending: a 48-Hour Wishlist Filter with total money saved counter, an Affordability Simulator to preview purchase impacts, a Micro-Goal Jar, and a Guilt-Free Fun Fund. | <img src="assets/screenshot_5.png" alt="Savings Tools" width="480" style="border-radius:22px;"/> |
-| **Spending Analytics & Insights** <br/> Group expenses by date, category, and payment method. Visual charts and breakdown metrics help you identify spending habits and spot where you can save. | <img src="assets/screenshot_3.png" alt="Analytics" width="480" style="border-radius:22px;"/> |
-| **100% Offline & Private** <br/> All financial data stays strictly on your device in a local encrypted database. No user accounts, no cloud sync, and zero third-party analytics. The Google Play edition contains zero internet permissions. | <img src="assets/screenshot_4.png" alt="Settings" width="480" style="border-radius:22px;"/> |
-| **Wear OS Companion App** <br/> Log expenses and check remaining balance directly from your smartwatch. Full numpad interface optimized for circular and square displays, with local sync to the phone app. | <img src="assets/wear_1.png" alt="Wear OS" width="480" style="border-radius:22px;"/> |
+- **Fluid Calculator Numpad**  
+  Log expenses in seconds with a familiar calculator numpad. Perform math calculations directly on the fly before saving — no complex multi-step forms.
+
+- **Dynamic Budget Periods & Surplus Rollover**  
+  Flexible budget cycles (Daily, Weekly, Bi-weekly, or Monthly). If you spend less today, your daily limit dynamically expands for tomorrow without manual adjustments.
+
+- **Smart Savings Suite**  
+  Built-in behavioral tools to curb impulse spending:
+  - **48-Hour Wishlist Delay**: Cool-off timer before making discretionary purchases.
+  - **Affordability Simulator**: Preview how any purchase impacts your daily spending capacity.
+  - **Micro-Goal Jars**: Visual savings buckets for specific targets.
+  - **Fun Fund Allocation**: Dedicated guilt-free entertainment budget.
+
+- **Wear OS Smartwatch Companion**  
+  Standalone module for Wear OS watches with Wear Compose. View remaining allowance and log transactions directly from your wrist via custom Tiles and complications.
+
+- **Recurring Payments & Subscriptions**  
+  Track recurring bills, monthly subscriptions, and installment reminders with advance due-date notifications.
+
+- **Home Screen Widgets**  
+  Check your remaining daily limit and record quick expenses directly from your home screen via Jetpack Glance.
+
+- **100% Offline & Private**  
+  All data is stored locally in an encrypted SQLite database. Zero network requests, zero analytics, and zero external trackers.
 
 ---
 
-## Building from Source
+## Screenshots
 
-### Prerequisites
-- Android Studio Ladybug (2024.2.1+) or newer
-- JDK 17 or JDK 21
-- Android SDK API Level 35
-
-### Commands
-```bash
-# Clone the repository
-git clone https://github.com/biZenX/Wafeer.git
-cd Wafeer
-
-# Build FOSS Debug APK
-./gradlew :app:assembleFossDebug
-
-# Build Wear OS APK
-./gradlew :wear:assembleDebug
-
-# Run static analysis and unit tests
-./gradlew detekt :app:testFossDebugUnitTest :app:testWearDebugUnitTest
-```
-
-The compiled APK will be at:
-`app/build/outputs/apk/foss/debug/app-foss-debug.apk`
+<table align="center">
+  <tr>
+    <td align="center"><img src="assets/screenshot_1.png" alt="Calculator Numpad" width="220" style="border-radius:24px;"/><br/><sub><b>Calculator Numpad</b></sub></td>
+    <td align="center"><img src="assets/screenshot_2.png" alt="Budget Overview" width="220" style="border-radius:24px;"/><br/><sub><b>Clover Budget Card</b></sub></td>
+    <td align="center"><img src="assets/screenshot_3.png" alt="Analytics and Trends" width="220" style="border-radius:24px;"/><br/><sub><b>Spending Trends</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="assets/screenshot_4.png" alt="Subscriptions" width="220" style="border-radius:24px;"/><br/><sub><b>Subscriptions & Bills</b></sub></td>
+    <td align="center"><img src="assets/screenshot_5.png" alt="Theme Settings" width="220" style="border-radius:24px;"/><br/><sub><b>Material 3 Expressive</b></sub></td>
+    <td align="center"><img src="assets/screenshot_6.png" alt="OLED Dark Mode" width="220" style="border-radius:24px;"/><br/><sub><b>OLED Dark Mode</b></sub></td>
+  </tr>
+</table>
 
 ---
 
-## Contributing
+## Installation
 
-Contributions are welcome! Please check our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](.github/CODE_OF_CONDUCT.md).
+Download the official signed release package directly from GitHub:
 
-To report bugs or request features, use our [Issue Templates](https://github.com/biZenX/Wafeer/issues/new/choose).
+1. Go to the [**Latest Release**](https://github.com/biZenX/Wafeer/releases/latest).
+2. Download `Wafeer-v2.2.0.apk`.
+3. Open the APK on your Android device (Android 8.0+ / API 26+) and confirm installation.
+
+> [!NOTE]
+> **Upgrading from older builds (v1.x or earlier):**  
+> Release v2.2.0 uses a hardened cryptographic release signing key. If Android displays `App not installed`, export your data via **Settings > Data > Export Backup**, uninstall the older build, install v2.2.0, and import your backup with one click.
 
 ---
 
-## Credits & License
+## Contributing & Development
 
-- **Wafeer**: Maintained by **Abdelrahman Karim ([@biZenX](https://github.com/biZenX))**.
-- **Original Architecture**: Based on **[Minus](https://github.com/isaacsa51/Minus)** by **[Isaac Serrano (@isaacsa51)](https://github.com/isaacsa51)**.
-- **Typography**: Native support for **Thmanyah** and **IBM Plex Sans Arabic** fonts.
+Interested in contributing or building the app from source?  
+Please check out our developer guides:
 
-Licensed under the **[Apache License 2.0](LICENSE)**. See [LICENSE.md](LICENSE.md) for full terms.
+- [**Contributing Guidelines**](CONTRIBUTING.md) — Prerequisites, build commands, and testing instructions.
+- [**Project Architecture Overview**](PROJECT_OVERVIEW.md) — Deep dive into MVI architecture, Room, and the Wear OS sync layer.
+- [**Code of Conduct**](.github/CODE_OF_CONDUCT.md) — Community standards.
+- [**Security Policy**](.github/SECURITY.md) — Vulnerability reporting guidelines.
 
-<div align="center">
-  <p>Made with &hearts; by <a href="https://github.com/biZenX">Abdelrahman Karim</a></p>
-</div>
+---
+
+## License
+
+Wafeer is free and open-source software maintained by **Arkim ([@biZenX](https://github.com/biZenX))**.  
+Released under the terms of the **[Apache License 2.0](LICENSE)**.

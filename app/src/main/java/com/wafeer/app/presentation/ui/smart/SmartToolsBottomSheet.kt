@@ -43,9 +43,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.style.TextOverflow
+import com.wafeer.app.presentation.util.haptic.HapticUtil.performUIHaptic
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -72,7 +86,7 @@ import com.wafeer.app.domain.model.smart.WishlistItem
 import com.wafeer.app.domain.model.smart.WishlistStatus
 import java.math.BigDecimal
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SmartToolsBottomSheet(
     uiState: SmartToolsUiState,
@@ -93,6 +107,7 @@ fun SmartToolsBottomSheet(
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val view = LocalView.current
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -138,137 +153,207 @@ fun SmartToolsBottomSheet(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Tabs
-            ScrollableTabRow(
-                selectedTabIndex = uiState.selectedTab.ordinal,
-                edgePadding = 16.dp,
-                divider = {},
-                containerColor = MaterialTheme.colorScheme.surface,
+            // Expressive M3 Connected Toggle Buttons
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                TabItem(
-                    selected = uiState.selectedTab == SmartToolTab.CALCULATOR,
-                    title = stringResource(R.string.smart_tab_affordability),
-                    icon = Icons.Rounded.Calculate,
-                    onClick = { onTabSelected(SmartToolTab.CALCULATOR) },
-                )
-                TabItem(
-                    selected = uiState.selectedTab == SmartToolTab.MICRO_GOALS,
-                    title = stringResource(R.string.smart_tab_micro_goals),
-                    icon = Icons.Rounded.Savings,
-                    onClick = { onTabSelected(SmartToolTab.MICRO_GOALS) },
-                )
-                TabItem(
-                    selected = uiState.selectedTab == SmartToolTab.WISHLIST_48H,
-                    title = stringResource(R.string.smart_tab_wishlist_48h),
-                    icon = Icons.Rounded.Timer,
-                    onClick = { onTabSelected(SmartToolTab.WISHLIST_48H) },
-                )
-                TabItem(
-                    selected = uiState.selectedTab == SmartToolTab.FUN_FUND,
-                    title = stringResource(R.string.smart_tab_fun_fund),
-                    icon = Icons.Rounded.LocalCafe,
-                    onClick = { onTabSelected(SmartToolTab.FUN_FUND) },
-                )
+                // Row 1: Can I Afford It? | Goal Jars
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                ) {
+                    val isCalcSelected = uiState.selectedTab == SmartToolTab.CALCULATOR
+                    ToggleButton(
+                        checked = isCalcSelected,
+                        onCheckedChange = {
+                            onTabSelected(SmartToolTab.CALCULATOR)
+                            performUIHaptic(view)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(42.dp),
+                        colors = ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Calculate,
+                            contentDescription = null,
+                            modifier = Modifier.size(ToggleButtonDefaults.IconSize),
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(
+                            text = stringResource(R.string.smart_tab_affordability),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+                        )
+                    }
+
+                    val isGoalsSelected = uiState.selectedTab == SmartToolTab.MICRO_GOALS
+                    ToggleButton(
+                        checked = isGoalsSelected,
+                        onCheckedChange = {
+                            onTabSelected(SmartToolTab.MICRO_GOALS)
+                            performUIHaptic(view)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(42.dp),
+                        colors = ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Savings,
+                            contentDescription = null,
+                            modifier = Modifier.size(ToggleButtonDefaults.IconSize),
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(
+                            text = stringResource(R.string.smart_tab_micro_goals),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+                        )
+                    }
+                }
+
+                // Row 2: 48h Cooldown | Fun Fund
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                ) {
+                    val isWishlistSelected = uiState.selectedTab == SmartToolTab.WISHLIST_48H
+                    ToggleButton(
+                        checked = isWishlistSelected,
+                        onCheckedChange = {
+                            onTabSelected(SmartToolTab.WISHLIST_48H)
+                            performUIHaptic(view)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(42.dp),
+                        colors = ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Timer,
+                            contentDescription = null,
+                            modifier = Modifier.size(ToggleButtonDefaults.IconSize),
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(
+                            text = stringResource(R.string.smart_tab_wishlist_48h),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+                        )
+                    }
+
+                    val isFunFundSelected = uiState.selectedTab == SmartToolTab.FUN_FUND
+                    ToggleButton(
+                        checked = isFunFundSelected,
+                        onCheckedChange = {
+                            onTabSelected(SmartToolTab.FUN_FUND)
+                            performUIHaptic(view)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(42.dp),
+                        colors = ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.LocalCafe,
+                            contentDescription = null,
+                            modifier = Modifier.size(ToggleButtonDefaults.IconSize),
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(
+                            text = stringResource(R.string.smart_tab_fun_fund),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Tab Content
-            when (uiState.selectedTab) {
-                SmartToolTab.CALCULATOR -> {
-                    AffordabilityCalculatorTab(
-                        uiState = uiState,
-                        currentDailyAllowance = currentDailyAllowance,
-                        remainingBudget = remainingBudget,
-                        remainingDays = remainingDays,
-                        currencyCode = currencyCode,
-                        onPriceInputChanged = onPriceInputChanged,
-                        onAddToWishlist = { title, price ->
-                            onAddWishlistItem(title, price, 48)
-                            onTabSelected(SmartToolTab.WISHLIST_48H)
-                        },
-                        onAddToJar = { title, target ->
-                            onAddGoal(title, target)
-                            onTabSelected(SmartToolTab.MICRO_GOALS)
-                        },
-                    )
+            // Animated Tab Content with Expressive scale + fade morphing
+            AnimatedContent(
+                targetState = uiState.selectedTab,
+                transitionSpec = {
+                    (fadeIn(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) +
+                            scaleIn(initialScale = 0.95f, animationSpec = spring(stiffness = Spring.StiffnessMediumLow)))
+                        .togetherWith(
+                            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)) +
+                                    scaleOut(targetScale = 0.95f, animationSpec = spring(stiffness = Spring.StiffnessMediumLow))
+                        )
+                },
+                label = "smartToolsTabTransition",
+                modifier = Modifier.animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)),
+            ) { selectedTab ->
+                when (selectedTab) {
+                    SmartToolTab.CALCULATOR -> {
+                        AffordabilityCalculatorTab(
+                            uiState = uiState,
+                            currentDailyAllowance = currentDailyAllowance,
+                            remainingBudget = remainingBudget,
+                            remainingDays = remainingDays,
+                            currencyCode = currencyCode,
+                            onPriceInputChanged = onPriceInputChanged,
+                            onAddToWishlist = { title, price ->
+                                onAddWishlistItem(title, price, 48)
+                                onTabSelected(SmartToolTab.WISHLIST_48H)
+                            },
+                            onAddToJar = { title, target ->
+                                onAddGoal(title, target)
+                                onTabSelected(SmartToolTab.MICRO_GOALS)
+                            },
+                        )
+                    }
+                    SmartToolTab.MICRO_GOALS -> {
+                        MicroGoalsTab(
+                            goals = uiState.goals,
+                            currencyCode = currencyCode,
+                            dailyAllowance = currentDailyAllowance,
+                            onAddGoal = onAddGoal,
+                            onDepositToGoal = onDepositToGoal,
+                            onDeleteGoal = onDeleteGoal,
+                        )
+                    }
+                    SmartToolTab.WISHLIST_48H -> {
+                        Wishlist48HTab(
+                            wishlist = uiState.wishlist,
+                            totalSavings = uiState.totalWishlistSavings,
+                            currencyCode = currencyCode,
+                            onAddItem = { title, price, hours -> onAddWishlistItem(title, price, hours) },
+                            onMarkSaved = onMarkWishlistSaved,
+                            onMarkPurchased = onMarkWishlistPurchased,
+                            onDeleteItem = onDeleteWishlistItem,
+                        )
+                    }
+                    SmartToolTab.FUN_FUND -> {
+                        FunFundTab(
+                            ratioPercent = uiState.funFundRatio,
+                            remainingBudget = remainingBudget,
+                            currencyCode = currencyCode,
+                            onSetRatio = onSetFunFundRatio,
+                        )
+                    }
                 }
-                SmartToolTab.MICRO_GOALS -> {
-                    MicroGoalsTab(
-                        goals = uiState.goals,
-                        currencyCode = currencyCode,
-                        dailyAllowance = currentDailyAllowance,
-                        onAddGoal = onAddGoal,
-                        onDepositToGoal = onDepositToGoal,
-                        onDeleteGoal = onDeleteGoal,
-                    )
-                }
-                SmartToolTab.WISHLIST_48H -> {
-                    Wishlist48HTab(
-                        wishlist = uiState.wishlist,
-                        totalSavings = uiState.totalWishlistSavings,
-                        currencyCode = currencyCode,
-                        onAddItem = { title, price, hours -> onAddWishlistItem(title, price, hours) },
-                        onMarkSaved = onMarkWishlistSaved,
-                        onMarkPurchased = onMarkWishlistPurchased,
-                        onDeleteItem = onDeleteWishlistItem,
-                    )
-                }
-                SmartToolTab.FUN_FUND -> {
-                    FunFundTab(
-                        ratioPercent = uiState.funFundRatio,
-                        remainingBudget = remainingBudget,
-                        currencyCode = currencyCode,
-                        onSetRatio = onSetFunFundRatio,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TabItem(
-    selected: Boolean,
-    title: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
-    val bgColor by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        label = "tabBg",
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-        label = "tabText",
-    )
-
-    Tab(
-        selected = selected,
-        onClick = onClick,
-        modifier = Modifier.padding(horizontal = 4.dp),
-    ) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = bgColor,
-            modifier = Modifier.padding(vertical = 4.dp),
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(18.dp),
-                )
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = contentColor,
-                )
             }
         }
     }

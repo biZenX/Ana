@@ -341,7 +341,7 @@
     <string name="settings_section_language">اللغة</string>
     <string name="settings_language_header">لغة التطبيق</string>
     <string name="settings_language_currently_format">الحالية: %1$s</string>
-    <string name="settings_language_disclaimer">يمكنك التبديل بين العربية الفصحى أو المصرية أو الإنجليزية في أي وقت.</string>
+    <string name="settings_language_disclaimer">يمكنك التبديل بين اللغة العربية أو الإنجليزية في أي وقت.</string>
     <string name="settings_theme_system">النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
@@ -463,7 +463,7 @@
     <string name="settings_time_picker_cancel">إلغاء</string>
     <string name="settings_time_picker_confirm">تأكيد</string>
     <string name="settings_about_title">حول التطبيق</string>
-    <string name="settings_about_subtitle">تطبيق وفير — المطور عبدالرحمن كريم</string>
+    <string name="settings_about_subtitle">تطبيق وفير — المطور Arkim</string>
     <string name="settings_bug_report_title">إرسال ملاحظات أو إبلاغ عن مشكلة</string>
     <string name="settings_bug_report_subtitle">شاركنا اقتراحك أو مشكلة واجهتك وسنعمل على حلها سريعاً</string>
     <string name="settings_what_is_this_for">ما فائدة هذا الإجراء؟</string>
@@ -1044,8 +1044,8 @@
     <!-- About & Credits -->
     <string name="about_app_title">تطبيق وفير</string>
     <string name="about_app_version">الإصدار: v%1$s</string>
-    <string name="about_developer">المطور: عبدالرحمن كريم</string>
+    <string name="about_developer">المطور: Arkim</string>
     <string name="about_credits_title">شكر وتقدير لمشروع مفتوح المصدر</string>
     <string name="about_credits_desc">مبني استناداً إلى النواة المعمارية لتطبيق Minus مفتوح المصدر للمطور Isaac Serrano (@isaacsa51) تحت ترخيص Apache License 2.0.</string>
-    <string name="about_credits_link">GitHub: isaacsa51/Minus</string>
+    <string name="about_credits_link">GitHub: biZenX/Wafeer</string>
 </resources>

@@ -21,7 +21,7 @@ object ExpenseNotificationParser {
      */
     private val SHARED_SYMBOLS: Set<String> by lazy {
         SupportedCurrency.ALL
-            .groupingBy { it.symbol.trim().lowercase() }
+            .groupingBy { it.canonicalSymbol.trim().lowercase() }
             .eachCount()
             .filterValues { it > 1 }
             .keys
@@ -69,9 +69,14 @@ object ExpenseNotificationParser {
         val ranges = mutableListOf<IntRange>()
         if (code.isNotEmpty()) ranges += occurrencesOf(haystack, code)
 
-        val symbol = SupportedCurrency.findByCode(currencyCode)?.symbol?.trim()?.lowercase()
-        if (!symbol.isNullOrEmpty() && symbol != code && symbol !in SHARED_SYMBOLS) {
-            ranges += occurrencesOf(haystack, symbol)
+        val supported = SupportedCurrency.findByCode(currencyCode)
+        val canonicalSymbol = supported?.canonicalSymbol?.trim()?.lowercase()
+        if (!canonicalSymbol.isNullOrEmpty() && canonicalSymbol != code && canonicalSymbol !in SHARED_SYMBOLS) {
+            ranges += occurrencesOf(haystack, canonicalSymbol)
+        }
+        val localizedSymbol = supported?.symbol?.trim()?.lowercase()
+        if (!localizedSymbol.isNullOrEmpty() && localizedSymbol != code && localizedSymbol != canonicalSymbol && localizedSymbol !in SHARED_SYMBOLS) {
+            ranges += occurrencesOf(haystack, localizedSymbol)
         }
         return ranges
     }

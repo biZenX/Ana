@@ -1035,8 +1035,8 @@
     <string name="smart_dialog_start_cooldown">Start 48h Cooldown</string>
     <string name="about_app_title">Wafeer</string>
     <string name="about_app_version">Version: v%1$s</string>
-    <string name="about_developer">Developer: Abdelrahman Karim</string>
+    <string name="about_developer">Developer: Arkim</string>
     <string name="about_credits_title">Open Source Credits</string>
     <string name="about_credits_desc">Built upon the open-source architecture of Minus by Isaac Serrano (@isaacsa51) under the Apache License 2.0.</string>
-    <string name="about_credits_link">GitHub: isaacsa51/Minus</string>
+    <string name="about_credits_link">GitHub: biZenX/Wafeer</string>
 </resources>

@@ -661,7 +661,7 @@
     <string name="settings_section_language">Language</string>
     <string name="settings_language_header">App Language</string>
     <string name="settings_language_currently_format">Current: %1$s</string>
-    <string name="settings_language_disclaimer">You can switch between Modern Standard Arabic, Egyptian Arabic, or English at any time.</string>
+    <string name="settings_language_disclaimer">You can switch between Arabic and English at any time.</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
@@ -1017,8 +1017,8 @@
     <!-- About & Credits -->
     <string name="about_app_title">Wafeer</string>
     <string name="about_app_version">Version: v%1$s</string>
-    <string name="about_developer">Developer: Abdelrahman Karim</string>
+    <string name="about_developer">Developer: Arkim</string>
     <string name="about_credits_title">Open Source Credits</string>
     <string name="about_credits_desc">Built upon the open-source architecture of Minus by Isaac Serrano (@isaacsa51) under the Apache License 2.0.</string>
-    <string name="about_credits_link">GitHub: isaacsa51/Minus</string>
+    <string name="about_credits_link">GitHub: biZenX/Wafeer</string>
 </resources>

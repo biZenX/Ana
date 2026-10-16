@@ -167,41 +167,41 @@ jobs:
           lines = [f"# Wafeer {ver_tag} • وفير {ver_tag}", ""]
 
           if ar_f or ar_i or ar_x:
-              lines.append("## 🇪🇬 مميزات التحديث (العربية)")
+              lines.append("## مميزات التحديث (العربية)")
               lines.append("")
               if ar_f:
-                  lines.append("### ✨ الميزات الجديدة")
+                  lines.append("### الميزات الجديدة")
                   lines.extend(f"- {x}" for x in ar_f)
                   lines.append("")
               if ar_i:
-                  lines.append("### 🚀 التحسينات العامة")
+                  lines.append("### التحسينات العامة")
                   lines.extend(f"- {x}" for x in ar_i)
                   lines.append("")
               if ar_x:
-                  lines.append("### 🛠️ الإصلاحات والاستقرار")
+                  lines.append("### الإصلاحات والاستقرار")
                   lines.extend(f"- {x}" for x in ar_x)
                   lines.append("")
               lines.append("---")
               lines.append("")
 
-          lines.append("## 🇬🇧 Release Notes (English)")
+          lines.append("## Release Notes (English)")
           lines.append("")
           if en_f:
-              lines.append("### ✨ Major Features")
+              lines.append("### Major Features")
               lines.extend(f"- {x}" for x in en_f)
               lines.append("")
           if en_i:
-              lines.append("### 🚀 Improvements")
+              lines.append("### Improvements")
               lines.extend(f"- {x}" for x in en_i)
               lines.append("")
           if en_x:
-              lines.append("### 🛠️ Fixes & Stability")
+              lines.append("### Fixes & Stability")
               lines.extend(f"- {x}" for x in en_x)
               lines.append("")
 
           if not (en_f or en_i or en_x) and not (ar_f or ar_i or ar_x):
-              lines.append("### 🚀 Improvements")
-              lines.append("- Navigate faster and enjoy a smoother, more reliable experience across all screens.")
+              lines.append("### Improvements")
+              lines.append("- General improvements and bug fixes.")
 
           with open(out_file, "w", encoding="utf-8") as out:
               out.write("\n".join(lines).strip() + "\n")
