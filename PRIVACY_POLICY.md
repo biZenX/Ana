@@ -2,9 +2,9 @@
 
 **تطبيق وفير (Wafeer)**
 
-تنطبق سياسة الخصوصية هذه على تطبيق **وفير (Wafeer)** وجميع الخدمات ذات الصلة التي يديرها المطور **عبدالرحمن كريم (Abdelrahman Karim)** (المشار إليه هنا بـ "مقدم الخدمة").
+تنطبق سياسة الخصوصية هذه على تطبيق **وفير (Wafeer)** وجميع الخدمات ذات الصلة التي يديرها المطور **Arkim** (المشار إليه هنا بـ "مقدم الخدمة").
 
-This privacy policy applies to the **Wafeer (وفير)** app and any related services operated by developer **Abdelrahman Karim (عبدالرحمن كريم)** (collectively, the "Application"). Abdelrahman Karim is hereby referred to as the "Service Provider".
+This privacy policy applies to the **Wafeer (وفير)** app and any related services operated by developer **Arkim** (collectively, the "Application"). Arkim is hereby referred to as the "Service Provider".
 
 ---
 

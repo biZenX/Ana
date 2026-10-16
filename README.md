@@ -37,7 +37,7 @@
 </table>
 
 <p align="center">
-  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v2.0.0-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
+  <a href="https://github.com/biZenX/Wafeer/releases/latest"><img src="https://img.shields.io/badge/Release-v2.2.0-4CAF50?style=flat-square&logo=github" alt="Latest Release"></a>
   <img src="https://img.shields.io/badge/Platform-Android_%7C_Wear_OS-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Kotlin-2.0-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin">
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License">
@@ -46,13 +46,13 @@
 <table align="center">
   <tr>
     <td><img src="assets/screenshot_1.png" alt="Calculator Numpad" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_2.png" alt="Budget Overview" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_3.png" alt="Analytics and History" width="200" style="border-radius:26px;"/></td>
+    <td><img src="assets/screenshot_2.png" alt="Budget Overview & Clover Card" width="200" style="border-radius:26px;"/></td>
+    <td><img src="assets/screenshot_3.png" alt="Analytics and Trends" width="200" style="border-radius:26px;"/></td>
   </tr>
   <tr>
-    <td><img src="assets/screenshot_4.png" alt="Subscriptions and Settings" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_5.png" alt="Savings Goals" width="200" style="border-radius:26px;"/></td>
-    <td><img src="assets/screenshot_6.png" alt="Customization" width="200" style="border-radius:26px;"/></td>
+    <td><img src="assets/screenshot_4.png" alt="Subscriptions and Commitments" width="200" style="border-radius:26px;"/></td>
+    <td><img src="assets/screenshot_5.png" alt="Material 3 Expressive Theming" width="200" style="border-radius:26px;"/></td>
+    <td><img src="assets/screenshot_6.png" alt="Dark Theme" width="200" style="border-radius:26px;"/></td>
   </tr>
 </table>
 
@@ -110,12 +110,12 @@ To report bugs or request features, use our [Issue Templates](https://github.com
 
 ## Credits & License
 
-- **Wafeer**: Maintained by **Abdelrahman Karim ([@biZenX](https://github.com/biZenX))**.
-- **Original Architecture**: Based on **[Minus](https://github.com/isaacsa51/Minus)** by **[Isaac Serrano (@isaacsa51)](https://github.com/isaacsa51)**.
+- **Wafeer**: Maintained by **Arkim ([@biZenX](https://github.com/biZenX))**.
+- **Repository**: [https://github.com/biZenX/Wafeer](https://github.com/biZenX/Wafeer)
 - **Typography**: Native support for **Thmanyah** and **IBM Plex Sans Arabic** fonts.
 
 Licensed under the **[Apache License 2.0](LICENSE)**. See [LICENSE.md](LICENSE.md) for full terms.
 
 <div align="center">
-  <p>Made with &hearts; by <a href="https://github.com/biZenX">Abdelrahman Karim</a></p>
+  <p>Made with &hearts; by <a href="https://github.com/biZenX">Arkim</a></p>
 </div>

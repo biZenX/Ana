@@ -30,6 +30,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -456,7 +459,7 @@ private fun StepCard(
 
 private data class LanguageOption(
     val code: String,
-    val flag: String,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val title: String,
     val description: String,
     val isArabicText: Boolean = false,
@@ -479,7 +482,6 @@ private fun LanguageStep(
     val initialLang = remember {
         val tags = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags()
         when {
-            tags.startsWith("ar-EG", ignoreCase = true) -> "ar-EG"
             tags.startsWith("ar", ignoreCase = true) -> "ar"
             tags.startsWith("en", ignoreCase = true) -> "en"
             else -> "en"
@@ -494,28 +496,21 @@ private fun LanguageStep(
     val options = listOf(
         LanguageOption(
             code = "en",
-            flag = "🇬🇧",
+            icon = androidx.compose.material.icons.Icons.Rounded.Translate,
             title = "English",
             description = "Clean, complete English interface",
             isArabicText = false,
         ),
         LanguageOption(
             code = "ar",
-            flag = "🌍",
-            title = "العربية (الفصحى)",
-            description = "واجهة متكاملة باللغة العربية الفصحى",
-            isArabicText = true,
-        ),
-        LanguageOption(
-            code = "ar-EG",
-            flag = "🇪🇬",
-            title = "عربي (مصري)",
-            description = "لهجة مصرية يومية لمتابعة مصروفك وتوفيرك بسهولة",
+            icon = androidx.compose.material.icons.Icons.Rounded.Language,
+            title = "العربية",
+            description = "واجهة متكاملة باللغة العربية القياسية",
             isArabicText = true,
         ),
         LanguageOption(
             code = "system",
-            flag = "⚙️",
+            icon = androidx.compose.material.icons.Icons.Rounded.Tune,
             title = if (isEnSelected) "Device Language" else "لغة الجهاز",
             description = if (isEnSelected) "Automatically match your phone's language settings" else "المطابقة التلقائية للغة إعدادات هاتفك",
             isArabicText = !isEnSelected,
@@ -553,15 +548,14 @@ private fun LanguageStep(
                         .padding(horizontal = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val headerTitle = when (selectedLanguage) {
-                        "ar-EG", "ar" -> "اختر لغة التطبيق"
-                        "en" -> "Choose your language"
+                    val headerTitle = when {
+                        selectedLanguage.startsWith("ar") -> "اختر لغة التطبيق"
+                        selectedLanguage == "en" -> "Choose your language"
                         else -> stringResource(R.string.onboarding_language_title)
                     }
-                    val headerSubtitle = when (selectedLanguage) {
-                        "ar-EG" -> "حدد اللغة المناسبة لك، وتقدر تغيرها في أي وقت من الإعدادات."
-                        "ar" -> "حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات."
-                        "en" -> "Select your preferred language. You can change this anytime in Settings."
+                    val headerSubtitle = when {
+                        selectedLanguage.startsWith("ar") -> "حدد اللغة المناسبة لك، ويمكنك تغييرها في أي وقت من الإعدادات."
+                        selectedLanguage == "en" -> "Select your preferred language. You can change this anytime in Settings."
                         else -> stringResource(R.string.onboarding_language_subtitle)
                     }
                     Spacer(Modifier.height(24.dp))
@@ -626,9 +620,11 @@ private fun LanguageStep(
                                         ),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    Text(
-                                        text = opt.flag,
-                                        style = MaterialTheme.typography.titleMedium,
+                                    Icon(
+                                        imageVector = opt.icon,
+                                        contentDescription = null,
+                                        tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(22.dp),
                                     )
                                 }
 

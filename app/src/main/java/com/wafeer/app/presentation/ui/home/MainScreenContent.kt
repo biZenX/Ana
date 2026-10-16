@@ -180,7 +180,17 @@ fun MainScreenContent(
         windowSizeClass == WindowWidthSizeClass.Expanded && configuration.screenWidthDp > configuration.screenHeightDp
 
     val isHistoryVisible =
-        windowSizeClass != WindowWidthSizeClass.Compact || topSheetState.currentValue == TopSheetValue.Expanded
+        windowSizeClass != WindowWidthSizeClass.Compact ||
+            topSheetState.currentValue == TopSheetValue.Expanded ||
+            topSheetState.targetValue == TopSheetValue.Expanded
+
+    LaunchedEffect(isHistoryVisible) {
+        actions.onHistoryVisibilityChanged(isHistoryVisible)
+    }
+
+    LaunchedEffect(showCategoryGrid) {
+        actions.onCategoryGridVisibilityChanged(showCategoryGrid)
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
 

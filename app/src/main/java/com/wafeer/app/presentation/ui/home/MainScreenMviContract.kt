@@ -91,6 +91,8 @@ data class MainScreenActions(
     val onUnresolvedSurplusBannerClick: () -> Unit = {},
     val onLeftoverChoice: (LeftoverChoice) -> Unit = {},
     val onCreateCategory: suspend (String) -> Boolean = { false },
+    val onHistoryVisibilityChanged: (Boolean) -> Unit = {},
+    val onCategoryGridVisibilityChanged: (Boolean) -> Unit = {},
 )
 
 data class MainScreenFeatureFlags(

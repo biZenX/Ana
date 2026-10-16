@@ -95,10 +95,18 @@ class CurrencyFormatTest {
     }
 
     @Test
-    fun `EGP formats with symbol at end and space`() {
+    fun `EGP formats with pound symbol in English locale and Arabic symbol in Arabic locale`() {
+        // English locale (US)
         assertThat(formatCurrencySymbolOnly(BigDecimal("100"), "EGP"))
-            .isEqualTo("100 ج.م")
+            .isEqualTo("£100")
         assertThat(symbolOnlyCurrencyFormat("EGP").format(BigDecimal("100")))
-            .isEqualTo("100 ج.م")
+            .isEqualTo("£100")
+
+        // Arabic locale
+        val arabicLocale = Locale.forLanguageTag("ar")
+        assertThat(formatCurrencySymbolOnly(BigDecimal("100"), "EGP", locale = arabicLocale))
+            .isEqualTo("١٠٠ ج.م")
+        assertThat(symbolOnlyCurrencyFormat("EGP", locale = arabicLocale).format(BigDecimal("100")))
+            .isEqualTo("١٠٠ ج.م")
     }
 }

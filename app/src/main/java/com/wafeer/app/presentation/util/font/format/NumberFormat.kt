@@ -30,6 +30,7 @@ fun formatCurrencySymbolOnly(
     currencyCode: String,
     maximumFractionDigits: Int = -1, // -1 means use currency's default
     minimumFractionDigits: Int = 0,
+    locale: Locale = Locale.getDefault(),
 ): String {
     val supported = SupportedCurrency.findByCode(currencyCode)
     val resolvedMaxDigits = if (maximumFractionDigits < 0) {
@@ -37,29 +38,30 @@ fun formatCurrencySymbolOnly(
     } else {
         maximumFractionDigits
     }
-    val symbol = supported?.symbol
+    val symbol = supported?.localizedSymbol(locale)
+    val symbolPos = supported?.localizedPosition(locale) ?: SymbolPosition.START
     if (symbol != null) {
-        val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+        val numberFormatter = NumberFormat.getNumberInstance(locale).apply {
             this.maximumFractionDigits = resolvedMaxDigits
             this.minimumFractionDigits = minimumFractionDigits
         }
         val separator = if (symbol.any { it.isLetter() }) " " else ""
         val formatted = numberFormatter.format(value)
-        return if (supported.symbolPosition == SymbolPosition.END) {
+        return if (symbolPos == SymbolPosition.END) {
             "$formatted$separator$symbol"
         } else {
             "$symbol$formatted"
         }
     }
     return try {
-        val formatter = NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
+        val formatter = NumberFormat.getCurrencyInstance(locale).apply {
             currency = Currency.getInstance(currencyCode)
             this.maximumFractionDigits = resolvedMaxDigits
             this.minimumFractionDigits = minimumFractionDigits
         }
         formatter.format(value)
     } catch (e: Exception) {
-        val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+        val numberFormatter = NumberFormat.getNumberInstance(locale).apply {
             this.maximumFractionDigits = resolvedMaxDigits
             this.minimumFractionDigits = minimumFractionDigits
         }
@@ -75,6 +77,7 @@ fun symbolOnlyCurrencyFormat(
     currencyCode: String,
     maximumFractionDigits: Int = -1,  // -1 means use currency's default
     minimumFractionDigits: Int = 0,
+    locale: Locale = Locale.getDefault(),
 ): NumberFormat {
     val supported = SupportedCurrency.findByCode(currencyCode)
     val resolvedMaxDigits = if (maximumFractionDigits < 0) {
@@ -82,10 +85,10 @@ fun symbolOnlyCurrencyFormat(
     } else {
         maximumFractionDigits
     }
-    val currencySymbol = supported?.symbol ?: "$"
-    val symbolAtEnd = supported?.symbolPosition == SymbolPosition.END
+    val currencySymbol = supported?.localizedSymbol(locale) ?: "$"
+    val symbolAtEnd = (supported?.localizedPosition(locale) ?: SymbolPosition.START) == SymbolPosition.END
     val separator = if (currencySymbol.any { it.isLetter() }) " " else ""
-    return (NumberFormat.getNumberInstance(Locale.getDefault()) as DecimalFormat).apply {
+    return (NumberFormat.getNumberInstance(locale) as DecimalFormat).apply {
         this.maximumFractionDigits = resolvedMaxDigits
         this.minimumFractionDigits = minimumFractionDigits
         if (symbolAtEnd) {
