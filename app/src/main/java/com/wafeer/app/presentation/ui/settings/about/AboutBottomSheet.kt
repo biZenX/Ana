@@ -92,19 +92,19 @@ fun AboutBottomSheet(
         label = "avatarScale"
     )
 
-    val infiniteTransition = rememberInfiniteTransition(label = "avatar_swirl")
-    val rotationAngle by infiniteTransition.animateFloat(
+    val infiniteTransition = rememberInfiniteTransition(label = "avatar_lava")
+    val lavaPhase by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 360f,
+        targetValue = 2f * PI.toFloat(),
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 16000, easing = LinearEasing),
+            animation = tween(durationMillis = 9000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "swirl_rotation"
+        label = "lava_phase"
     )
 
-    val swirlFillColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.65f)
-    val swirlStrokeColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+    val sageGreenPrimary = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.90f)
+    val sageGreenAura = MaterialTheme.colorScheme.primary.copy(alpha = 0.22f)
 
     LaunchedEffect(Unit) {
         sheetState.show()
@@ -126,11 +126,11 @@ fun AboutBottomSheet(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Developer Avatar with infinite swirling wavy shape
+            // Developer Avatar with organic circulating lava blob
             Box(
                 modifier = Modifier
                     .scale(avatarScale)
-                    .size(132.dp)
+                    .size(136.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -140,42 +140,46 @@ fun AboutBottomSheet(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                // Infinite rotating scalloped swirl badge
+                // Smooth organic liquid lava blob circulating softly behind the avatar
                 Canvas(
-                    modifier = Modifier
-                        .size(132.dp)
-                        .rotate(rotationAngle)
+                    modifier = Modifier.size(136.dp)
                 ) {
                     val center = Offset(size.width / 2f, size.height / 2f)
-                    val numLobes = 12
-                    val r0 = size.width * 0.37f
-                    val amp = size.width * 0.055f
+                    val r0 = size.width * 0.38f
+                    val amp1 = size.width * 0.046f
+                    val amp2 = size.width * 0.026f
 
-                    val path = Path()
+                    val lavaPath = Path()
+                    val auraPath = Path()
                     val steps = 180
+
                     for (i in 0..steps) {
                         val theta = (i.toFloat() / steps) * (2f * PI.toFloat())
-                        val r = r0 + amp * sin(numLobes * theta)
+                        // Smooth organic fluid harmonics (lava-lamp motion, zero sharp points)
+                        val r = r0 + amp1 * sin(3f * theta - lavaPhase) + amp2 * cos(2f * theta + lavaPhase)
                         val x = center.x + r * cos(theta)
                         val y = center.y + r * sin(theta)
-                        if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
-                    }
-                    path.close()
 
-                    drawPath(path = path, color = swirlFillColor)
-                    drawPath(
-                        path = path,
-                        color = swirlStrokeColor,
-                        style = Stroke(width = 2.dp.toPx())
-                    )
+                        if (i == 0) lavaPath.moveTo(x, y) else lavaPath.lineTo(x, y)
+
+                        val ra = r + 7.dp.toPx() + 3.dp.toPx() * sin(2f * theta - lavaPhase)
+                        val ax = center.x + ra * cos(theta)
+                        val ay = center.y + ra * sin(theta)
+                        if (i == 0) auraPath.moveTo(ax, ay) else auraPath.lineTo(ax, ay)
+                    }
+                    lavaPath.close()
+                    auraPath.close()
+
+                    drawPath(path = auraPath, color = sageGreenAura)
+                    drawPath(path = lavaPath, color = sageGreenPrimary)
                 }
 
-                // Developer Avatar illustration on top
+                // Developer Avatar character on top
                 Image(
                     painter = painterResource(id = R.drawable.img_developer_avatar),
                     contentDescription = stringResource(R.string.about_developer),
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(114.dp)
+                    modifier = Modifier.size(118.dp)
                 )
             }
 
