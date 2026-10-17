@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="splash_background">#FAFAEE</color>
 
     <!-- Heatmap widget colors -->
     <color name="widget_heatmap_neutral">#40FFFFFF</color>

@@ -1,13 +1,17 @@
 package com.wafeer.app.presentation
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
+import android.view.animation.PathInterpolator
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -164,9 +168,36 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition {
-            val keepOn = !dataStoreLoaded.value || !isDone.value
-            keepOn
+        val splashScreen = installSplashScreen()
+        val minSplashDurationMs = resources.getInteger(R.integer.splash_icon_animation_duration).toLong()
+        val splashStartTime = SystemClock.uptimeMillis()
+
+        splashScreen.setKeepOnScreenCondition {
+            val loading = !dataStoreLoaded.value || !isDone.value
+            val minTimeElapsed = (SystemClock.uptimeMillis() - splashStartTime) >= minSplashDurationMs
+            loading || !minTimeElapsed
+        }
+
+        splashScreen.setOnExitAnimationListener { provider ->
+            val emphasizedAccelerate = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
+            val fadeOut = ObjectAnimator.ofFloat(provider.view, "alpha", 1f, 0f).apply {
+                interpolator = emphasizedAccelerate
+                duration = 500L
+            }
+            fadeOut.doOnEnd { provider.remove() }
+
+            provider.iconView?.let { icon ->
+                val scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 1f, 1.4f)
+                val scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 1f, 1.4f)
+                val scaleInterpolator = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
+                scaleX.interpolator = scaleInterpolator
+                scaleY.interpolator = scaleInterpolator
+                scaleX.duration = 500L
+                scaleY.duration = 500L
+                scaleX.start()
+                scaleY.start()
+            }
+            fadeOut.start()
         }
 
         super.onCreate(savedInstanceState)

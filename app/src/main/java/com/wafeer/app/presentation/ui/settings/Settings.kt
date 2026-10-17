@@ -122,6 +122,7 @@ import com.wafeer.app.presentation.ui.settings.bugreport.buildAppEnvironmentMeta
 import com.wafeer.app.presentation.ui.settings.components.NotificationPermissionItem
 import com.wafeer.app.presentation.ui.settings.savings.SavingsPreferencesEditor
 import com.wafeer.app.presentation.ui.settings.savings.savingsPreferencesSummary
+import com.wafeer.app.presentation.ui.settings.about.AboutBottomSheet
 import com.wafeer.app.presentation.ui.settings.widgets.WidgetGallerySheet
 import com.wafeer.app.presentation.ui.theme.WafeerTheme
 import com.wafeer.app.presentation.ui.theme.bodySmallCondensed
@@ -798,6 +799,11 @@ fun Settings(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
 
                     CustomPaddedListItem(
@@ -932,59 +938,8 @@ fun Settings(
         }
 
         if (showAboutDialog) {
-            val uriHandler = LocalUriHandler.current
-            AlertDialog(
-                onDismissRequest = { showAboutDialog = false },
-                title = {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                },
-                text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = stringResource(R.string.about_app_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = stringResource(R.string.about_app_version, BuildConfig.VERSION_NAME),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = stringResource(R.string.about_developer),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                        Text(
-                            text = stringResource(R.string.about_credits_title),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = stringResource(R.string.about_credits_desc),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        TextButton(
-                            onClick = {
-                                uriHandler.openUri("https://github.com/biZenX/Wafeer")
-                            }
-                        ) {
-                            Text(
-                                text = stringResource(R.string.about_credits_link),
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showAboutDialog = false }) {
-                        Text(stringResource(R.string.ok))
-                    }
-                }
+            AboutBottomSheet(
+                onDismiss = { showAboutDialog = false }
             )
         }
 
