@@ -182,21 +182,9 @@ class MainActivity : AppCompatActivity() {
             val emphasizedAccelerate = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
             val fadeOut = ObjectAnimator.ofFloat(provider.view, "alpha", 1f, 0f).apply {
                 interpolator = emphasizedAccelerate
-                duration = 500L
+                duration = 350L
             }
             fadeOut.doOnEnd { provider.remove() }
-
-            provider.iconView?.let { icon ->
-                val scaleX = ObjectAnimator.ofFloat(icon, "scaleX", 1f, 1.4f)
-                val scaleY = ObjectAnimator.ofFloat(icon, "scaleY", 1f, 1.4f)
-                val scaleInterpolator = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
-                scaleX.interpolator = scaleInterpolator
-                scaleY.interpolator = scaleInterpolator
-                scaleX.duration = 500L
-                scaleY.duration = 500L
-                scaleX.start()
-                scaleY.start()
-            }
             fadeOut.start()
         }
 

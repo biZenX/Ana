@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_wafeer_splash_logo">
+
+    <target
+        android:name="coin_group"
+        android:animation="@animator/splash_coin_jump" />
+
+    <target
+        android:name="pot_group"
+        android:animation="@animator/splash_pot_bounce" />
+
+    <target
+        android:name="sparkles_group"
+        android:animation="@animator/splash_sparkles_appear" />
+
+</animated-vector>

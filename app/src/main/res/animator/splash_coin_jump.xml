@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+
+    <!-- Step 1: Anticipation lift -->
+    <objectAnimator
+        android:duration="120"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:propertyName="translateY"
+        android:valueFrom="0"
+        android:valueTo="-8"
+        android:valueType="floatType" />
+
+    <!-- Step 2: Dive down into pot opening -->
+    <objectAnimator
+        android:duration="260"
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:propertyName="translateY"
+        android:valueFrom="-8"
+        android:valueTo="55"
+        android:valueType="floatType" />
+
+    <!-- Step 3: Brief impact inside pot -->
+    <objectAnimator
+        android:duration="100"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:propertyName="translateY"
+        android:valueFrom="55"
+        android:valueTo="45"
+        android:valueType="floatType" />
+
+    <!-- Step 4: Leap up out of pot with overshoot -->
+    <objectAnimator
+        android:duration="280"
+        android:interpolator="@android:interpolator/overshoot"
+        android:propertyName="translateY"
+        android:valueFrom="45"
+        android:valueTo="-15"
+        android:valueType="floatType" />
+
+    <!-- Step 5: Settle cleanly at resting logo position -->
+    <objectAnimator
+        android:duration="180"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:propertyName="translateY"
+        android:valueFrom="-15"
+        android:valueTo="0"
+        android:valueType="floatType" />
+
+</set>
