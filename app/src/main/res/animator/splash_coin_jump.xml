@@ -1,50 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:ordering="sequentially">
+    android:ordering="together">
 
-    <!-- Step 1: Anticipation lift -->
-    <objectAnimator
-        android:duration="120"
-        android:interpolator="@android:interpolator/decelerate_quad"
-        android:propertyName="translateY"
-        android:valueFrom="0"
-        android:valueTo="-8"
-        android:valueType="floatType" />
+    <!-- Vertical motion: jumps up, dives down into pot (clipped at y=92), launches out, settles -->
+    <set android:ordering="sequentially">
+        <!-- 1. Anticipation lift (0 - 90ms) -->
+        <objectAnimator
+            android:duration="90"
+            android:interpolator="@android:interpolator/decelerate_quad"
+            android:propertyName="translateY"
+            android:valueFrom="0"
+            android:valueTo="-8"
+            android:valueType="floatType" />
 
-    <!-- Step 2: Dive down into pot opening -->
-    <objectAnimator
-        android:duration="260"
-        android:interpolator="@android:interpolator/accelerate_quad"
-        android:propertyName="translateY"
-        android:valueFrom="-8"
-        android:valueTo="55"
-        android:valueType="floatType" />
+        <!-- 2. Smooth dive into pot opening (90 - 400ms): passes behind y=92 clip plane and vanishes -->
+        <objectAnimator
+            android:duration="310"
+            android:interpolator="@android:interpolator/accelerate_cubic"
+            android:propertyName="translateY"
+            android:valueFrom="-8"
+            android:valueTo="95"
+            android:valueType="floatType" />
 
-    <!-- Step 3: Brief impact inside pot -->
-    <objectAnimator
-        android:duration="100"
-        android:interpolator="@android:interpolator/decelerate_quad"
-        android:propertyName="translateY"
-        android:valueFrom="55"
-        android:valueTo="45"
-        android:valueType="floatType" />
+        <!-- 3. Hold inside pot while pot squashes (400 - 560ms) -->
+        <objectAnimator
+            android:duration="160"
+            android:propertyName="translateY"
+            android:valueFrom="95"
+            android:valueTo="95"
+            android:valueType="floatType" />
 
-    <!-- Step 4: Leap up out of pot with overshoot -->
-    <objectAnimator
-        android:duration="280"
-        android:interpolator="@android:interpolator/overshoot"
-        android:propertyName="translateY"
-        android:valueFrom="45"
-        android:valueTo="-15"
-        android:valueType="floatType" />
+        <!-- 4. Launch back up out of pot opening with spring (560 - 880ms) -->
+        <objectAnimator
+            android:duration="320"
+            android:interpolator="@android:interpolator/decelerate_cubic"
+            android:propertyName="translateY"
+            android:valueFrom="95"
+            android:valueTo="-14"
+            android:valueType="floatType" />
 
-    <!-- Step 5: Settle cleanly at resting logo position -->
-    <objectAnimator
-        android:duration="180"
-        android:interpolator="@android:interpolator/decelerate_quad"
-        android:propertyName="translateY"
-        android:valueFrom="-15"
-        android:valueTo="0"
-        android:valueType="floatType" />
+        <!-- 5. Settle cleanly into iconic logo position (880 - 1080ms) -->
+        <objectAnimator
+            android:duration="200"
+            android:interpolator="@android:interpolator/overshoot"
+            android:propertyName="translateY"
+            android:valueFrom="-14"
+            android:valueTo="0"
+            android:valueType="floatType" />
+    </set>
+
+    <!-- Scale X: subtle perspective contraction as it enters depth of pot -->
+    <set android:ordering="sequentially">
+        <objectAnimator
+            android:duration="90"
+            android:propertyName="scaleX"
+            android:valueFrom="1.0"
+            android:valueTo="1.0"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="310"
+            android:interpolator="@android:interpolator/accelerate_quad"
+            android:propertyName="scaleX"
+            android:valueFrom="1.0"
+            android:valueTo="0.80"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="160"
+            android:propertyName="scaleX"
+            android:valueFrom="0.80"
+            android:valueTo="0.80"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="320"
+            android:interpolator="@android:interpolator/decelerate_quad"
+            android:propertyName="scaleX"
+            android:valueFrom="0.80"
+            android:valueTo="1.06"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="200"
+            android:interpolator="@android:interpolator/decelerate_quad"
+            android:propertyName="scaleX"
+            android:valueFrom="1.06"
+            android:valueTo="1.0"
+            android:valueType="floatType" />
+    </set>
+
+    <!-- Scale Y: matches Scale X -->
+    <set android:ordering="sequentially">
+        <objectAnimator
+            android:duration="90"
+            android:propertyName="scaleY"
+            android:valueFrom="1.0"
+            android:valueTo="1.0"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="310"
+            android:interpolator="@android:interpolator/accelerate_quad"
+            android:propertyName="scaleY"
+            android:valueFrom="1.0"
+            android:valueTo="0.80"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="160"
+            android:propertyName="scaleY"
+            android:valueFrom="0.80"
+            android:valueTo="0.80"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="320"
+            android:interpolator="@android:interpolator/decelerate_quad"
+            android:propertyName="scaleY"
+            android:valueFrom="0.80"
+            android:valueTo="1.06"
+            android:valueType="floatType" />
+        <objectAnimator
+            android:duration="200"
+            android:interpolator="@android:interpolator/decelerate_quad"
+            android:propertyName="scaleY"
+            android:valueFrom="1.06"
+            android:valueTo="1.0"
+            android:valueType="floatType" />
+    </set>
 
 </set>

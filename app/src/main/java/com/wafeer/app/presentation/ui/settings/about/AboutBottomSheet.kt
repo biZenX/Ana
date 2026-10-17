@@ -8,7 +8,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,16 +32,20 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Verified
+import androidx.compose.foundation.background
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,11 +54,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalView
@@ -92,19 +95,16 @@ fun AboutBottomSheet(
         label = "avatarScale"
     )
 
-    val infiniteTransition = rememberInfiniteTransition(label = "avatar_lava")
-    val lavaPhase by infiniteTransition.animateFloat(
+    val infiniteTransition = rememberInfiniteTransition(label = "avatar_cookie_rotation")
+    val rotationDegrees by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 2f * PI.toFloat(),
+        targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 9000, easing = LinearEasing),
+            animation = tween(durationMillis = 30000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "lava_phase"
+        label = "cookie_rotation"
     )
-
-    val sageGreenPrimary = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.90f)
-    val sageGreenAura = MaterialTheme.colorScheme.primary.copy(alpha = 0.22f)
 
     LaunchedEffect(Unit) {
         sheetState.show()
@@ -126,11 +126,14 @@ fun AboutBottomSheet(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Developer Avatar with organic circulating lava blob
+            // Developer Avatar with rotating Material Expressive 12-sided cookie badge
             Box(
                 modifier = Modifier
                     .scale(avatarScale)
-                    .size(136.dp)
+                    .size(160.dp)
+                    .graphicsLayer { rotationZ = rotationDegrees }
+                    .clip(MaterialShapes.Cookie12Sided.toShape())
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -140,46 +143,13 @@ fun AboutBottomSheet(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                // Smooth organic liquid lava blob circulating softly behind the avatar
-                Canvas(
-                    modifier = Modifier.size(136.dp)
-                ) {
-                    val center = Offset(size.width / 2f, size.height / 2f)
-                    val r0 = size.width * 0.38f
-                    val amp1 = size.width * 0.046f
-                    val amp2 = size.width * 0.026f
-
-                    val lavaPath = Path()
-                    val auraPath = Path()
-                    val steps = 180
-
-                    for (i in 0..steps) {
-                        val theta = (i.toFloat() / steps) * (2f * PI.toFloat())
-                        // Smooth organic fluid harmonics (lava-lamp motion, zero sharp points)
-                        val r = r0 + amp1 * sin(3f * theta - lavaPhase) + amp2 * cos(2f * theta + lavaPhase)
-                        val x = center.x + r * cos(theta)
-                        val y = center.y + r * sin(theta)
-
-                        if (i == 0) lavaPath.moveTo(x, y) else lavaPath.lineTo(x, y)
-
-                        val ra = r + 7.dp.toPx() + 3.dp.toPx() * sin(2f * theta - lavaPhase)
-                        val ax = center.x + ra * cos(theta)
-                        val ay = center.y + ra * sin(theta)
-                        if (i == 0) auraPath.moveTo(ax, ay) else auraPath.lineTo(ax, ay)
-                    }
-                    lavaPath.close()
-                    auraPath.close()
-
-                    drawPath(path = auraPath, color = sageGreenAura)
-                    drawPath(path = lavaPath, color = sageGreenPrimary)
-                }
-
-                // Developer Avatar character on top
                 Image(
                     painter = painterResource(id = R.drawable.img_developer_avatar),
                     contentDescription = stringResource(R.string.about_developer),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(118.dp)
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(160.dp)
+                        .graphicsLayer { rotationZ = -rotationDegrees }
                 )
             }
 

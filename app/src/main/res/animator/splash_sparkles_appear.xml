@@ -3,69 +3,53 @@
     android:ordering="together">
 
     <set android:ordering="sequentially">
-        <!-- Hold invisible while coin is inside pot -->
+        <!-- Hold invisible while coin is jumping and inside pot: 0 to 860ms -->
         <objectAnimator
-            android:duration="600"
+            android:duration="860"
             android:propertyName="scaleX"
             android:valueFrom="0.0"
             android:valueTo="0.0"
             android:valueType="floatType" />
-        <!-- Burst -->
+        <!-- Burst: 860ms to 1020ms (160ms) -->
         <objectAnimator
-            android:duration="220"
+            android:duration="160"
             android:interpolator="@android:interpolator/overshoot"
             android:propertyName="scaleX"
             android:valueFrom="0.0"
-            android:valueTo="1.2"
+            android:valueTo="1.15"
             android:valueType="floatType" />
-        <!-- Settle -->
+        <!-- Settle: 1020ms to 1140ms (120ms) -->
         <objectAnimator
             android:duration="120"
             android:interpolator="@android:interpolator/decelerate_quad"
             android:propertyName="scaleX"
-            android:valueFrom="1.2"
+            android:valueFrom="1.15"
             android:valueTo="1.0"
             android:valueType="floatType" />
     </set>
 
     <set android:ordering="sequentially">
-        <!-- Hold invisible while coin is inside pot -->
+        <!-- Hold invisible while coin is jumping and inside pot: 0 to 860ms -->
         <objectAnimator
-            android:duration="600"
+            android:duration="860"
             android:propertyName="scaleY"
             android:valueFrom="0.0"
             android:valueTo="0.0"
             android:valueType="floatType" />
-        <!-- Burst -->
+        <!-- Burst: 860ms to 1020ms (160ms) -->
         <objectAnimator
-            android:duration="220"
+            android:duration="160"
             android:interpolator="@android:interpolator/overshoot"
             android:propertyName="scaleY"
             android:valueFrom="0.0"
-            android:valueTo="1.2"
+            android:valueTo="1.15"
             android:valueType="floatType" />
-        <!-- Settle -->
+        <!-- Settle: 1020ms to 1140ms (120ms) -->
         <objectAnimator
             android:duration="120"
             android:interpolator="@android:interpolator/decelerate_quad"
             android:propertyName="scaleY"
-            android:valueFrom="1.2"
-            android:valueTo="1.0"
-            android:valueType="floatType" />
-    </set>
-
-    <set android:ordering="sequentially">
-        <objectAnimator
-            android:duration="600"
-            android:propertyName="alpha"
-            android:valueFrom="0.0"
-            android:valueTo="0.0"
-            android:valueType="floatType" />
-        <objectAnimator
-            android:duration="220"
-            android:interpolator="@android:interpolator/decelerate_quad"
-            android:propertyName="alpha"
-            android:valueFrom="0.0"
+            android:valueFrom="1.15"
             android:valueTo="1.0"
             android:valueType="floatType" />
     </set>
