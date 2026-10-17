@@ -42,8 +42,12 @@ android {
             keystorePropsFile.inputStream().use { stream -> load(stream) }
         }
     }
-    val releaseStoreFile = System.getenv("RELEASE_STORE_FILE")?.takeIf { it.isNotBlank() }
+    val rawReleaseStoreFile = System.getenv("RELEASE_STORE_FILE")?.takeIf { it.isNotBlank() }
         ?: keystoreProps.getProperty("storeFile")?.takeIf { it.isNotBlank() }
+    val releaseStoreFile = rawReleaseStoreFile?.let { path ->
+        val f = File(path)
+        if (f.isAbsolute) f.absolutePath else rootProject.file(path).absolutePath
+    }
     val releaseStorePassword = System.getenv("RELEASE_STORE_PASSWORD")?.takeIf { it.isNotBlank() }
         ?: keystoreProps.getProperty("storePassword")
     val releaseKeyAlias = System.getenv("RELEASE_KEY_ALIAS")?.takeIf { it.isNotBlank() }

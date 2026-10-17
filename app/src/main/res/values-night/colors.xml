@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_background">#12140D</color>
+    <color name="splash_pot_stroke">#D4E897</color>
+    <color name="splash_coin_fill">#5AC17A</color>
     <color name="widget_heatmap_empty_light">#14000000</color>
     <color name="widget_heatmap_empty_dark">#26FFFFFF</color>
 </resources>

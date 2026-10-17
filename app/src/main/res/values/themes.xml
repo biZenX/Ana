@@ -8,7 +8,7 @@
 
     <style name="Theme.Wafeer.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_wafeer_splash_logo</item>
         <item name="windowSplashScreenAnimationDuration">@integer/splash_icon_animation_duration</item>
         <item name="postSplashScreenTheme">@style/Theme.Wafeer</item>
     </style>
